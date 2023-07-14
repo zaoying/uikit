@@ -1,27 +1,116 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+.center {
+    text-align: center;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+.title {
+    font-size: large;
+    font-weight: bold;
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+.button {
+    display: inline-block;
+    padding: 0.5rem;
+    margin: 0.5rem;
+    border-radius: .5rem;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.primary.button {
+    background-color: deepskyblue;
+    color: white;
+}
+
+.second.button {
+    background-color: deeppink;
+    color: white;
+}
+
+.grey.button {
+    background-color: darkgrey;
+    color: white;
+}
+
+.dimmer {
+    position: absolute;
+    z-index: 999;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.3);
+    text-align: center;
+}
+
+.modal {
+    position: relative;
+    display: inline-block;
+    top: 10%;
+    max-width: 80%;
+    min-width: 40%;
+    max-height: 80%;
+    min-height: 40%;
+    border: solid #33333333 1px;
+    border-radius: .5rem;
+    background: white;
+}
+
+.modal > .header {
+    box-shadow: 0px 1px #33333333;
+    text-align: left;
+}
+
+.modal > .header .title {
+    margin: 0;
+    padding: 3%;
+}
+
+.modal > .footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    box-shadow:0px -1px #33333333;
+}
+
+.notification {
+    display: inline-block;
+    position: absolute;
+    right: 1%;
+    min-width: 30%;
+    max-width: 40%;
+    top: 10%;
+    bottom: 10%;
+    max-height: 80%;
+    list-style: none;
+}
+
+.notification > .item {
+    border-radius: .5rem;
+    box-shadow: 0px 0px 2px 1px #33333333;
+    margin: .5rem 0;
+    padding: .5rem;
+    background-color: white;
+}
+
+.notification > .item > .icon {
+    color: gray;
+    cursor: pointer;
+    display: inline-block;
+    position: absolute;
+    right: 2%;
+}
+
+.info {
+    color: deepskyblue
+}
+
+.warn {
+    color: orange;
+}
+
+.error {
+    color: red;
 }
