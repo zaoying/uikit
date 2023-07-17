@@ -1,6 +1,6 @@
 import { useIoC } from "Com/app/hooks/ioc";
 import { FC, ReactNode, useState } from "react";
-import { Button } from "../basic/button";
+import { Button } from "./basic/button";
 
 const {define, inject} = useIoC()
 

@@ -1,8 +1,7 @@
 "use client";
 
 import { Button } from "./components/basic/button";
-import { IconButton } from "./components/basic/iconButton";
-import { Body, Hint, Header, Modal, useModal } from "./components/modal/modal";
+import { Body, Hint, Header, Modal, useModal } from "./components/modal";
 import { useIoC } from "./hooks/ioc";
 import { useNotification } from "./components/notification";
 
@@ -27,7 +26,7 @@ export default function Home() {
   }
   return (
     <div>
-      <p>Icon Button: <IconButton onClick={doSomething}></IconButton></p>
+      <p>Icon Button: <Button onClick={doSomething}><span><i>🎨</i>打开模态框</span></Button></p>
       <p>Normal Button: <Button>普通按钮</Button></p>
       {modal}
       <Button onClick={() => notifier.info("info")}>通知</Button>
