@@ -56,7 +56,7 @@ export interface Context {
 function wrap<I,O>(originFunction: Func<I,O>, container: Container): Func<I,O> {
     const wrapped = function (props: I) {
         // 将当前组件的IoC容器上下文加入到组件参数中，传递给子组件
-        const newProps = {ioCContainer: container, ...props}
+        const newProps = {iocContainer: container, ...props}
         return originFunction(newProps)
     }
     // 由于typescript编译到js过程中会丢失类型信息，这里使用唯一的uuid代替原本的类型信息
@@ -83,11 +83,11 @@ function IoCContext(): Context {
             const componentId = component.prototype.componentId
             if (componentId) {
                 // 如果父级组件传递过来的参数中包含了IoC容器，就直接从父级IoC容器中获取组件的构造函数
-                if (props && props.ioCContainer) {
-                    const iocContainer: Container = props.ioCContainer
+                if (props && props.iocContainer) {
+                    const iocContainer: Container = props.iocContainer
                     const originFunction: Func<I,O> = iocContainer.get(componentId)
                     if (originFunction) {
-                        return wrap(originFunction, container)
+                        return originFunction
                     }
                 }
                 // 如果父级IoC容器为空，或者不存在componentId对应的构造函数，则尝试在当前的IoC容器中获取
@@ -96,7 +96,7 @@ function IoCContext(): Context {
                     // 如果父级或当前IoC容器找不到componentId对应的构造函数，则直接返回原型链上的originFunction
                     originFunction = component.prototype.originFunction ?? component
                 }
-                return wrap(originFunction, container)
+                return originFunction
             }
             // 如果componentId为空，就直接返回component
             return component

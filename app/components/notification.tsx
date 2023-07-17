@@ -34,13 +34,15 @@ export const Notification: FC<{msgs: Msg[], remove: (id: number) => void}> = def
     </ul>
 })
 
-export const useNotification: (props?: any) => [ReactNode, Notifier] = (props: any) => {
-    const notification = inject(Notification, props)
+type C = typeof Notification
+
+export const useNotification: (component?: C) => [ReactNode, Notifier] = (component) => {
+    const notification = component ?? inject(Notification)
     const [msgs, list] = useState(new Array<Msg>())
     useEffect(() => {
         const interval =setInterval(() => {
             const now = new Date().getTime()
-            list(old => old.filter(msg => msg.expiredAt > now))
+            list(old => old.length ? old.filter(msg => msg.expiredAt > now) : old)
         }, 1000)
         return () => clearInterval(interval)
     }, [])
