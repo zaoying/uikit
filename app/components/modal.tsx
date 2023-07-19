@@ -43,7 +43,7 @@ export const Modal: FC<ModalProps> = define((props) => {
     </div>
 })
 
-export interface Controller {
+export interface ModalController {
     title(text: string): void
     open(): void
     close(): void
@@ -51,15 +51,13 @@ export interface Controller {
     onCancel(cb: () => void): void
 }
 
-type C = typeof Modal
-
-export const useModal: (component?: C) => [ReactNode, Controller] = (component) => {
+export function useModal(component?: FC<ModalProps>): [ReactNode, ModalController] {
     const modal = component ?? inject(Modal)
     const [props, setProps] = useState<ModalProps>({})
     const toggle = function(visible: boolean) {
         setProps(p =>  ({...p, visible: visible}))
     }
-    const ctl: Controller = {
+    const ctl: ModalController = {
         title: (text) => setProps(p => ({...p, title: text})),
         open: () => toggle(true),
         close: () => toggle(false),

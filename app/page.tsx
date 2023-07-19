@@ -1,38 +1,59 @@
 "use client";
 
 import { Button } from "./components/basic/button";
-import { Body, Hint, Header, Modal, useModal } from "./components/modal";
+import { Body, Hint, Header, Modal, useModal, ModalController } from "./components/modal";
 import { useIoC } from "./hooks/ioc";
 import { useNotification } from "./components/notification";
+import { Field, Form, FormController, useForm } from "./components/form/form";
+import { Tab, TabItem, useTab } from "./components/tabs";
+import { According } from "./components/according";
 
 const {define} = useIoC()
 
-define(Header, () => <p className="title">注入成功！</p>)
+define(Header, () => <p className="title">请先登录</p>)
 
-define(Body, () => <div>我是被注入的内容</div>)
+define(Hint, () => ({confirm: "登录", cancel: "注册"}))
 
-define(Hint, () => ({confirm: "确定", cancel: "取消"}))
+const CustomForm = define(Form, (props) => {
+  return <Form>
+      <Field name="username" label="用户名" value="admin"></Field>
+      <Field name="password" label="密码" value=""></Field>
+  </Form>
+})
 
-const Customized = define(Modal)
+const CustomModal = define(Modal)
+const CustomTab = define(Tab, (props) => {
+  return <Tab {...props}>
+    <TabItem title="abc">123</TabItem>
+    <TabItem title="def">456</TabItem>
+  </Tab>
+})
+
+const doSomething = (modal: ModalController, form: FormController) => {
+  modal.onConfirm(() => {form.submit() && modal.close()})
+  modal.onCancel(modal.close)
+  modal.open()
+}
 
 export default function Home() {
-  const [modal, control] = useModal(Customized)
+  const [form, ctl] = useForm(CustomForm)
+  define(Body, (props) => form)
+  const [dimmer, modal] = useModal(CustomModal)
 
   const [notification, notifier] = useNotification()
-  const doSomething = () => {
-    control.onConfirm(control.close)
-    control.onCancel(control.close)
-    control.open()
-  }
+
+  const [holder, tabs] = useTab(CustomTab)
   return (
     <div>
-      <p>Icon Button: <Button onClick={doSomething}><span><i>🎨</i>打开模态框</span></Button></p>
+      <p>Icon Button: <Button onClick={() => doSomething(modal, ctl)}><span><i>🎨</i>打开模态框</span></Button></p>
       <p>Normal Button: <Button>普通按钮</Button></p>
-      {modal}
+      {dimmer}
       <Button onClick={() => notifier.info("info")}>通知</Button>
       <Button onClick={() => notifier.warn("warn")}>警告</Button>
       <Button onClick={() => notifier.error("error")}>错误</Button>
       {notification}
+      {holder}
+      <According summary="标题">详情</According>
     </div>
   );
 }

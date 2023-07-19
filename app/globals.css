@@ -1,3 +1,7 @@
+i {
+    text-decoration: none;
+    font-style: normal;
+}
 .center {
     text-align: center;
 }
@@ -118,4 +122,110 @@
 
 .error {
     color: red;
+}
+
+.tab {
+    display: block;
+    border-radius: 1rem;
+    box-shadow: 0 0 1px 1px #33333333;
+    padding: 1rem;
+    margin: .5rem;
+}
+
+.tab > .header {
+    border-bottom: solid #33333333 1px;
+}
+
+.tab > .header > .list {
+    margin: 0;
+    padding: 0;
+}
+
+.tab > .header > .list > .item.active {
+    color: deepskyblue;
+    border-bottom: solid deepskyblue 1px;
+}
+
+.tab > .body {
+    padding: 1rem;
+}
+
+.tab > .body > .content {
+    display: none;
+}
+
+.tab > .body > .content.active {
+    display: block;
+}
+
+.list {
+    list-style: none;
+    text-indent: 0;
+}
+
+.list.horizontal {
+    display: block;
+}
+
+.list.horizontal > .item {
+    display: inline-block;
+    padding: .5rem;
+    margin: 0 .5rem;
+    cursor: pointer;
+}
+
+.list.horizontal > .item:hover i {
+    opacity: 1;
+}
+
+.list.horizontal > .item i {
+    opacity: 0;
+    color: grey;
+    cursor: pointer;
+    margin-left: .5rem;
+}
+
+.list.horizontal > .item:hover i {
+    opacity: 1;
+}
+
+.compact {
+    display: inline-block;
+}
+
+.collapse {
+    display: inline;
+}
+
+.according {
+    display: block;
+    border-radius: .5rem;
+    border: solid #33333333 1px;
+}
+
+.according > .summary {
+    display: block;
+    position: relative;
+    cursor: pointer;
+    padding: .5rem 2.5rem .5rem 1rem;
+    border-radius: .5rem;
+    box-shadow: 0 0 1px 1px #33333333;
+}
+
+.according.show > .summary {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.according > .summary > .icon {
+    position: absolute;
+    right: 1rem;
+}
+
+.according > .detail {
+    display: none;
+    padding: .5rem;
+}
+.according.show > .detail {
+    display: block;
 }

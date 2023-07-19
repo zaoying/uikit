@@ -1,5 +1,6 @@
 import { useIoC } from "Com/app/hooks/ioc";
-import { FC, ReactNode, useEffect, useState } from "react";
+import { FC, ReactNode, useState } from "react";
+import { useInterval } from "../hooks/interval";
 
 const {define, inject} = useIoC()
 
@@ -21,7 +22,12 @@ function newMsg(type: MsgType, msg: string, timeout = 1000): Msg {
     return {type: type, text: msg, expiredAt: now + timeout}
 }
 
-export const Notification: FC<{msgs: Msg[], remove: (id: number) => void}> = define((props) => {
+export type NotificationProps = {
+    msgs: Msg[],
+    remove: (id: number) => void
+}
+
+export const Notification: FC<NotificationProps> = define((props) => {
     return <ul className="notification">
         {
             props.msgs.map(msg => (
@@ -34,18 +40,13 @@ export const Notification: FC<{msgs: Msg[], remove: (id: number) => void}> = def
     </ul>
 })
 
-type C = typeof Notification
-
-export const useNotification: (component?: C) => [ReactNode, Notifier] = (component) => {
+export function useNotification(component?: FC<NotificationProps>): [ReactNode, Notifier] {
     const notification = component ?? inject(Notification)
     const [msgs, list] = useState(new Array<Msg>())
-    useEffect(() => {
-        const interval =setInterval(() => {
-            const now = new Date().getTime()
-            list(old => old.length ? old.filter(msg => msg.expiredAt > now) : old)
-        }, 1000)
-        return () => clearInterval(interval)
-    }, [])
+    useInterval(() => {
+        const now = new Date().getTime()
+        list(old => old.length ? old.filter(msg => msg.expiredAt > now) : old)
+    }, 1000)
     
     const remove = function(id: number) {
         list(old => old.filter(msg => msg.expiredAt != id))
