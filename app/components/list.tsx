@@ -5,7 +5,7 @@ const {define, inject} = useIoC()
 
 export type ListType = "horizontal" | "vertical"
 export type ListProps = {
-    type: ListType
+    type?: ListType
     children: ReactNode[]
 }
 
@@ -22,10 +22,9 @@ export interface ListController {
     remove(index: number): void
 }
 
-export function useList(component?: FC<ListProps>, type?: ListType): [ReactNode, ListController] {
+export function useList(component?: FC<ListProps>): [ReactNode, ListController] {
     const list = component ?? inject(List)
     const [props, setProps] = useState<ListProps>({
-        type: type ?? "vertical",
         children: []
     })
     const ctl: ListController = {

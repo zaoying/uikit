@@ -5,29 +5,27 @@ const {define, inject} = useIoC()
 
 export interface TabController {
     addTab(tabItem: TabItemProps): void
-    onClick(title: string): void
-    onClose(title: string): void
+    setActiveTab(title: string): void
     removeTab(title: string): void
     closeAll(): void
 }
 
-const tabController: ({}) => TabController = define(() => ({
+export const NewTabController: ({}) => TabController = define(() => ({
     addTab(item){},
-    onClick(title){},
-    onClose(title){},
+    setActiveTab(title){},
     removeTab(title){},
     closeAll(){}
 }))
 
 export const TabHeader: FC<TabProps> = define((props) => {
-    const ctl = inject(tabController, props)({})
+    const ctl = inject(NewTabController, props)({})
     return <ul className="list horizontal">
             {
                 props.tabs?.map(item => {
                     const isActiveTab = props.activeTab == item.title ? "active" : ""
                     return <li key={item.title} className={`item ${isActiveTab}`}>
-                        <a onClick={() => ctl.onClick(item.title)}>
-                            {item.title}<i onClick={() => ctl.onClose(item.title)}>x</i>
+                        <a onClick={() => ctl.setActiveTab(item.title)}>
+                            {item.title}<i onClick={() => ctl.removeTab(item.title)}>x</i>
                         </a>
                     </li>
                 })
@@ -52,7 +50,7 @@ export type TabItemProps = {
 }
 
 export const TabItem: FC<TabItemProps> = define((props) => {
-    const ctl = inject(tabController, props)({})
+    const ctl = inject(NewTabController, props)({})
     useEffect(() => ctl.addTab(props))
     return <></>
 })
@@ -108,12 +106,13 @@ export function useTab(component?: FC<TabProps>): [ReactNode, TabController] {
         removeTab(title) {
             setProps(p => excludeTab(p, title))
         },
-        onClick: (title) => setProps(p => setActiveTab(p, title)),
-        onClose: (title) => setProps(p => excludeTab(p, title)),
+        setActiveTab(title) {
+            setProps(p => setActiveTab(p, title))
+        },
         closeAll() {
             setProps(p => ({...p, tabs: []}))
         }
     }
-    define(tabController, () => ctl)
+    define(NewTabController, () => ctl)
     return [tab(props), ctl]
 }

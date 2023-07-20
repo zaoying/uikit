@@ -161,6 +161,13 @@ i {
 .list {
     list-style: none;
     text-indent: 0;
+    padding: .5rem;
+}
+
+.list > .item {
+    display: block;
+    margin: 0 .5rem;
+    cursor: pointer;
 }
 
 .list.horizontal {
@@ -169,9 +176,6 @@ i {
 
 .list.horizontal > .item {
     display: inline-block;
-    padding: .5rem;
-    margin: 0 .5rem;
-    cursor: pointer;
 }
 
 .list.horizontal > .item:hover i {
@@ -201,6 +205,7 @@ i {
     display: block;
     border-radius: .5rem;
     border: solid #33333333 1px;
+    margin: .5rem;
 }
 
 .according > .summary {

@@ -7,6 +7,7 @@ import { useNotification } from "./components/notification";
 import { Field, Form, FormController, useForm } from "./components/form/form";
 import { Tab, TabItem, useTab } from "./components/tabs";
 import { According } from "./components/according";
+import { List } from "./components/list";
 
 const {define} = useIoC()
 
@@ -48,9 +49,11 @@ export default function Home() {
       <p>Icon Button: <Button onClick={() => doSomething(modal, ctl)}><span><i>🎨</i>打开模态框</span></Button></p>
       <p>Normal Button: <Button>普通按钮</Button></p>
       {dimmer}
-      <Button onClick={() => notifier.info("info")}>通知</Button>
-      <Button onClick={() => notifier.warn("warn")}>警告</Button>
-      <Button onClick={() => notifier.error("error")}>错误</Button>
+      <List type="horizontal">
+        <Button onClick={() => notifier.info("info")}>通知</Button>
+        <Button onClick={() => notifier.warn("warn")}>警告</Button>
+        <Button onClick={() => notifier.error("error")}>错误</Button>
+      </List>
       {notification}
       {holder}
       <According summary="标题">详情</According>
