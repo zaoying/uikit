@@ -1,15 +1,15 @@
 "use client";
 
-import { Button } from "./components/basic/button";
-import { Body, Hint, Header, Modal, useModal, ModalController } from "./components/modal";
-import { useIoC } from "./hooks/ioc";
-import { useNotification } from "./components/notification";
-import { Field, Form, FormController, useForm } from "./components/form/form";
-import { Tab, TabItem, useTab } from "./components/tabs";
 import { According } from "./components/according";
+import { Button } from "./components/basic/button";
+import { Field, Form, FormController, useForm } from "./components/form/form";
 import { List } from "./components/list";
+import { Body, Header, Hint, Modal, ModalController, useModal } from "./components/modal";
+import { useNotification } from "./components/notification";
+import { Tab, TabItem, useTab } from "./components/tabs";
+import { useIoC as newIoC } from "./hooks/ioc";
 
-const {define} = useIoC()
+const {define} = newIoC()
 
 define(Header, () => <p className="title">请先登录</p>)
 
