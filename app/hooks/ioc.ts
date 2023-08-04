@@ -1,10 +1,12 @@
+import { createContext } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 // 组件的构造函数定义
-export type Func<I,O> = (args: I) => O
+export type Func<I extends {},O> = (args: I) => O
 
 // IoC容器的接口定义
 export interface Container {
+    name?: string
     /**
      * 将组件注册到IoC容器中
      * @param key 组件ID
@@ -19,9 +21,10 @@ export interface Container {
 }
 
 // IoC容器的具体实现
-function IoCContainer(): Container {
+function IoCContainer(name?: string): Container {
     let storage = new Map<string,any>()
     return {
+        name: name,
         register: function(key, val) {
             storage.set(key, val)
         },
@@ -38,14 +41,19 @@ export interface Context {
      * @param component 组件：原型链必须存在componentId
      * @param subType 组件构造函数的子类型，可以为空
      */
-    define<I, O>(component: Func<I,O>, subType?: Func<I,O>): Func<I,O>
+    define<I extends {}, O>(component: Func<I,O>, subType?: Func<I,O>): Func<I,O>
     /**
      * 从IoC容器中，根据componentId获取原始构造函数
      * @param component 组件：原型链必须存在componentId
      * @param props 父组件传递过来的IoC容器上下文
      */
-    inject<I, O>(component: Func<I,O>, props?: any): Func<I,O>
+    inject<I extends {}, O>(component: Func<I,O>, props?: any): Func<I,O>
 }
+
+export const IoCContext = createContext<Context>({
+    define(component, subType) { return component},
+    inject(component, props) { return component },
+})
 
 /**
  * 包装组件的构造函数
@@ -53,7 +61,7 @@ export interface Context {
  * @param container 组件的IoC容器上下文
  * @returns 返回包装函数
  */
-function wrap<I,O>(originFunction: Func<I,O>, container: Container): Func<I,O> {
+function wrap<I extends {}, O>(originFunction: Func<I,O>, container: Container): Func<I,O> {
     const wrapped = function (props: I) {
         // 将当前组件的IoC容器上下文加入到组件参数中，传递给子组件
         const newProps = {iocContainer: container, ...props}
@@ -67,10 +75,10 @@ function wrap<I,O>(originFunction: Func<I,O>, container: Container): Func<I,O> {
 }
 
 // IoC容器上下文的具体实现
-function IoCContext(): Context {
-    const container = IoCContainer()
+function NewIoCContext(name?: string): Context {
+    const container = IoCContainer(name)
     return {
-        define: function<I, O>(component: Func<I,O>, subType?: Func<I,O>): Func<I,O> {
+        define: function<I extends {}, O>(component: Func<I,O>, subType?: Func<I,O>): Func<I,O> {
             const originFunction = subType ?? component
             if (subType) {
                 // 如果参数subType不为空就将IoC容器中的componentId对应的原始构造函数替换为subType
@@ -79,7 +87,7 @@ function IoCContext(): Context {
             }
             return wrap(originFunction, container)
         },
-        inject: function<I, O>(component: Func<I,O>, props?: any): Func<I,O> {
+        inject: function<I extends {}, O>(component: Func<I,O>, props?: any): Func<I,O> {
             const componentId = component.prototype.componentId
             if (componentId) {
                 // 如果父级组件传递过来的参数中包含了IoC容器，就直接从父级IoC容器中获取组件的构造函数
@@ -107,6 +115,6 @@ function IoCContext(): Context {
 // 每次调用都会产生一个新的IoCContext实例，
 // 通过define函数将组件注册到IoCContext
 // 然后再通过inject函数将注册的组件注入到其他组件中
-export const useIoC = function(): Context {
-    return IoCContext()
+export const useIoC = function(name?: string): Context {
+    return NewIoCContext(name)
 }

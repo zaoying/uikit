@@ -1,15 +1,14 @@
-import { FC, ReactNode, useState } from "react"
+import { FC, ReactNode, useEffect, useState } from "react"
 import { useIoC as newIoC } from "../hooks/ioc"
 
 const {define, inject} = newIoC()
 
 export type K = string | number
 
-export interface UniqueController {
-    get(key: K): ReactNode
-    insert(key: K, child: ReactNode): void
-    update(key: K, child: ReactNode): void
-    remove(key: K): void
+export interface UniqueController<T> {
+    insert(item: T): void
+    update(item: T): void
+    remove(index: K): void
 }
 
 export type ContainerProps = {
@@ -19,54 +18,53 @@ export type ContainerProps = {
     children: ReactNode[]
 }
 
-export function NewUniqueController<T>(props: ContainerProps): UniqueController {
-    const [oldProps, setProps] = useState(props)
+export type DispatcherCallback<T> = (props: T) => T
+export type PropsDispatcher<T> = (cb: DispatcherCallback<T>) => void
+
+export const ContainerPropsDispatcher: PropsDispatcher<ContainerProps> = define((cb) => {})
+
+export function NewContainerController(setProps: PropsDispatcher<ContainerProps>): UniqueController<ItemProps> {
     return {
-        get(key) {
-            return oldProps.items.find((item) => item.key == key)?.children
+        insert({index, children}) {
+            const item = { index: index, children: children }
+            setProps(p => {
+                if (p.items.find(item => item.index == index)) {
+                    return p
+                }
+                return {...p, items: [...p.items, item]}
+            })
         },
-        insert(index, child) {
-            const item = { key: index, children: child }
-            setProps(p => ({...p, items: [...p.items, item]}))
-        },
-        update(index, child) {
+        update({index, children}) {
             const replace = (items: ItemProps[]) => {
-                const item = { key: index, children: child }
-                const filtered = items.filter(item => item.key != index)
+                const item = { index: index, children: children }
+                const filtered = items.filter(item => item.index != index)
                 return [...filtered, item]
             }
             setProps(p => ({...p, items: replace(p.items)}))
         },
         remove(index) {
-            setProps(p => ({...p, items: p.items.filter((item) => item.key != index)}))
+            setProps(p => ({...p, items: p.items.filter((item) => item.index != index)}))
         },
     }
 }
 
 export type ItemProps = {
-    key: K
+    index: K
     children: ReactNode
 }
 
-export const ItemController: (props: ItemProps) => UniqueController = define((props) => {
-    return {
-        get(key) { return null },
-        insert(key, child) {},
-        update(key, child) {},
-        remove(key) {}
-    }
-})
-
 export const Item: FC<ItemProps> = define((props) => {
-    const ctl = inject(ItemController, props)(props)
-    ctl.insert(props.key, props.children)
+    const dispatcher = inject(ContainerPropsDispatcher, props)
+    const ctl = NewContainerController(dispatcher)
+    useEffect(()=> ctl.insert(props))
     return <></>
 })
 
-export const Container: FC<ContainerProps> = define((props) => {
-    define(ItemController, () => NewUniqueController(props))
+export const Container: FC<ContainerProps> = define((old) => {
+    const [props, setProps] = useState(old)
+    define(ContainerPropsDispatcher, setProps)
     const children = props.items.length ? props.items.map(item =>
-                <li key={item.key} className={props.itemClass ?? "item"}>
+                <li key={item.index} className={props.itemClass ?? "item"}>
                     {item.children}
                 </li>
             ) : props.children.map((child, index) => 

@@ -1,58 +1,68 @@
-import { useIoC } from 'Com/app/hooks/ioc';
-import { ChangeEventHandler, FC, HTMLInputTypeAttribute, ReactNode, useState } from 'react';
+import { IoCContext, useIoC as newIoC } from 'Com/app/hooks/ioc';
+import { FC, ReactNode, useState } from 'react';
+import { PropsDispatcher, UniqueController } from '../container';
+import { FieldProps } from './field';
 
-const {define, inject} = useIoC()
-
-type ValueType = string | number | ReadonlyArray<string> | undefined
-export type FieldProps = {
-    name: string,
-    label: string,
-    value: ValueType,
-    type?: HTMLInputTypeAttribute,
-    onChange?: ChangeEventHandler,
-    validator?: (val: ValueType) => boolean
-}
-
-export const Field: FC<FieldProps> = define((props) =>  (<>
-        <label htmlFor={props.name} className="label">{props.label}</label>
-        <input id={props.name} name={props.name} type={props.type} defaultValue={props.value} onChange={props.onChange}/>
-    </>)
-)
+const {define, inject} = newIoC("form")
 
 export type FormProps = {
     action?: string
-    onSubmit?: () => boolean
+    onSubmit?: (props: FormProps) => boolean
+    fields?: FieldProps[]
     children?: ReactNode[]
 }
 
-export const Form: FC<FormProps> = define((props) => {
-    return <form className='form' action={props.action} onSubmit={props.onSubmit}>
-        {props.children?.map((field, index) => <div key={index} className='field'>{field}</div>)}
+export interface FormController extends UniqueController<FieldProps> {
+    onSubmit(cb: (props: FormProps) => boolean): void
+    reset(): void
+}
+
+export const FormPropsDispatcher: PropsDispatcher<FormProps> = define((cb) => {})
+
+export function NewFormController(setProps: PropsDispatcher<FormProps>): FormController {
+    return {
+        insert({name, children}) {
+            setProps(p => {
+                if (!p.fields) {
+                    const field = { name, children }
+                    return {...p, fields: [field]}
+                }
+                if (p.fields.find(field => field.name == name)) {
+                    return p
+                }
+                const field = { name, children }
+                return {...p, fields: [...p.fields, field]}
+            })
+            
+        },
+        update({name, children}) {
+            const replace = (fields: FieldProps[]) => {
+                const field = { name, children }
+                const filtered = fields.filter(field => field.name != name)
+                return [...filtered, field]
+            }
+            setProps(p => ({...p, fields: p.fields ? replace(p.fields) : p.fields}))
+        },
+        remove(name) {
+            setProps(p => ({...p, fields: p.fields ? p.fields.filter((field) => field.name != name) : p.fields}))
+        },
+        onSubmit: (cb) => setProps(p => ({...p, onSubmit: cb})),
+        reset: () => setProps(p => ({...p, fields: []}))
+    }
+}
+
+export const Form: FC<FormProps> = define((old) => {
+    const [props, setProps] = useState(old)
+    define(FormPropsDispatcher, setProps)
+    const children = props.fields?.length ? props.fields?.map((field) => 
+                <div key={field.name} className="field" > {field.children}</div>
+            ) : props.children?.map((child, index) =>
+                <div key={index} className='field'>{child}</div>
+            )
+    const onSubmit = () => props.onSubmit && props.onSubmit(props)
+    return <form className='form' action={props.action} onSubmit={onSubmit}>
+            <IoCContext.Provider value={{define, inject}}>
+                {children}
+            </IoCContext.Provider>
     </form>
 })
-
-export interface FormController {
-    onSubmit(cb: () => boolean): void
-    submit(): boolean
-    reset(): void
-    addField(fp: FieldProps, component?: FC<FieldProps>): void
-}
-
-function appendField<T>(p: FormProps, fp: FieldProps, component?: FC<FieldProps>): FormProps {
-    const children = component ?? inject(Field, p)
-    const field = children(fp)
-    const fields = p.children ? [...p.children, field] : [field]
-    return {...p, children: fields}
-}
-
-export function useForm(component?: FC<FormProps>): [ReactNode, FormController] {
-    const form = component ?? inject(Form)
-    const [props, setProps] = useState<FormProps>({children: []})
-    const ctl: FormController = {
-        onSubmit: (cb) => setProps(p => ({...p, onSubmit: cb})),
-        submit: () => props.onSubmit ? props.onSubmit() : true,
-        reset: () => setProps(p => ({...p, fields: []})),
-        addField: (fp, component) => setProps(p => appendField(p, fp, component)),
-    }
-    return [form(props), ctl]
-}

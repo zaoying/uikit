@@ -1,37 +1,83 @@
 import { FC, ReactNode, useEffect, useState } from 'react';
 import { useIoC as newIoC } from "../hooks/ioc";
-import { K, NewUniqueController, UniqueController } from './container';
+import { K, PropsDispatcher, UniqueController } from './container';
 
 const {define, inject} = newIoC()
 
-export interface TabController extends UniqueController {
+export interface TabController extends UniqueController<TabItemProps> {
     setActiveTab(title: K): void
     closeAll(): void
 }
 
-export const NewTabController: ({}) => TabController = define(() => ({
-    get(title){ return null },
-    insert(title, child){},
-    update(title, child){},
-    remove(title){},
-    setActiveTab(title){},
-    closeAll(){}
-}))
+export const TabPropsDispatcher: PropsDispatcher<TabProps> = define((props) => {})
+
+export function NewTabController(setProps: PropsDispatcher<TabProps>): TabController {
+    return {
+        insert({title, children, closeable}) {
+            const tab = { title: title, children: children, closeable }
+            setProps(p => {
+                if (p.tabs) {
+                    if (p.tabs.find(t => t.title == title)) {
+                        return p
+                    }
+                    return {...p, tabs: [...p.tabs, tab], activeTab: p.activeTab ?? title}
+                }
+                return {...p, tabs: [tab]}
+            })
+        },
+        update({title, children, closeable}) {
+            const replace = (tabs: TabItemProps[]) => {
+                const tab = {title, children, closeable}
+                const offset = tabs.findIndex(tab => tab.title == title)
+                return offset == -1 ? tabs : tabs.splice(offset, 1, tab)
+            }
+            setProps(p => p.tabs ? {...p, items: replace(p.tabs)}: p)
+        },
+        remove(index) {
+            setProps(p => {
+                if (!p.tabs) { return p }
+                let offset = p.tabs.findIndex((tab) => tab.title == index)
+                if (offset == -1) {
+                    return p
+                }
+                p.tabs.splice(offset, 1)
+                let activeTab = p.tabs.length ? p.activeTab : ""
+                if (activeTab == index) {
+                    offset = offset < 1 ? 0 : offset - 1;
+                    activeTab =  p.tabs[offset].title
+                }
+                return {...p, activeTab: activeTab}
+            })
+        },
+        setActiveTab(title) {
+            setProps(p => ({...p, activeTab: title}))
+        },
+        closeAll() {
+            setProps(p => ({...p, items: []}))
+        }
+    }
+}
 
 export const TabHeader: FC<TabProps> = define((props) => {
-    const ctl = inject(NewTabController, props)({})
+    const setProps = inject(TabPropsDispatcher ,props)
+    const ctl = NewTabController(setProps)
+    const onRemove = (title: K) => (e: any) => {
+        e.stopPropagation()
+        ctl.remove(title)
+    }
     return <ul className="list horizontal">
-            {
-                props.tabs?.map(tab => {
-                    const isActiveTab = props.activeTab == tab.title ? "active" : ""
-                    return <li key={tab.title} className={`item ${isActiveTab}`}>
-                        <a onClick={() => ctl.setActiveTab(tab.title)}>
-                            {tab.title}<i onClick={() => ctl.remove(tab.title)}>x</i>
-                        </a>
-                    </li>
-                })
-            }
-        </ul>
+        {
+            props.tabs?.map(tab => {
+                const isActiveTab = props.activeTab == tab.title ? "active" : ""
+                return <li key={tab.title} className={`item ${isActiveTab}`}>
+                    <a onClick={() => ctl.setActiveTab(tab.title)}>
+                        {tab.title}
+                        {tab.closeable && <i onClick={onRemove(tab.title)}>x</i>}
+                    </a>
+                </li>
+            })
+        }
+    </ul>
 })
 
 export const TabBody: FC<TabProps> = define((props) => {
@@ -47,12 +93,14 @@ export const TabBody: FC<TabProps> = define((props) => {
 
 export type TabItemProps = {
     title: K,
+    closeable?: boolean,
     children: ReactNode
 }
 
 export const TabItem: FC<TabItemProps> = define((props) => {
-    const ctl = inject(NewTabController, props)({})
-    useEffect(() => ctl.insert(props.title, props.children))
+    const setProps = inject(TabPropsDispatcher ,props)
+    const ctl = NewTabController(setProps)
+    useEffect(() => ctl.insert(props))
     return <></>
 })
 
@@ -62,42 +110,18 @@ export type TabProps = {
     children?: ReactNode[]
 }
 
-export const Tab: FC<TabProps> = define((props) => {
+export const Tab: FC<TabProps> = define((old) => {
+    const [props, setProps] = useState(old)
+    define(TabPropsDispatcher, setProps)
     const tabHeader = inject(TabHeader, props)
     const tabBody = inject(TabBody, props)
     return (<div className="tab">
+            {props.children}
         <div className="header">
             {tabHeader(props)}
         </div>
         <div className="body">
-            {props.children}
             {tabBody(props)}
         </div>
     </div>)
 })
-
-export function useTab(component?: FC<TabProps>): [ReactNode, TabController] {
-    const tab = component ?? inject(Tab)
-    const [props, setProps] = useState<TabProps>({
-        activeTab: "",
-        tabs: []
-    })
-
-    const items = props.tabs?.map((item) => ({key: item.title, children: item.children}))
-    const ctnProps = {
-        items: items ?? [],
-        children: props.children ?? []
-    }
-    const controller = NewUniqueController(ctnProps)
-    const ctl: TabController = {
-        ...controller,
-        setActiveTab(title) {
-            setProps(p => ({...p, activeTab: title}))
-        },
-        closeAll() {
-            setProps(p => ({...p, items: []}))
-        }
-    }
-    define(NewTabController, () => ctl)
-    return [tab(props), ctl]
-}

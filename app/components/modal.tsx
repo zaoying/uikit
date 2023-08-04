@@ -1,8 +1,8 @@
-import { useIoC } from "Com/app/hooks/ioc";
+import { useIoC as newIoC } from "Com/app/hooks/ioc";
 import { FC, ReactNode, useState } from "react";
 import { Button } from "./basic/button";
 
-const {define, inject} = useIoC()
+const {define, inject} = newIoC()
 
 export const Header: FC<{title?: string}> = define((props) => <h3>{props.title}</h3>)
 
@@ -34,10 +34,10 @@ export const Modal: FC<ModalProps> = define((props) => {
     const footer = inject(Footer, props)
     return <div className={`dimmer ${props.visible ? "show" : ""}`}>
         <div className="modal">
-            <div className="header">{header({title: props.title})}</div>
-            <div className="body">{body({})}</div>
+            <div className="header">{header(props)}</div>
+            <div className="body">{body(props)}</div>
             <div className="center footer">
-                {footer({...props})}
+                {footer(props)}
             </div>
         </div>
     </div>

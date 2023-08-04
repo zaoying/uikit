@@ -1,7 +1,7 @@
-import { useIoC } from 'Com/app/hooks/ioc';
+import { useIoC as newIoC } from 'Com/app/hooks/ioc';
 import { FC, ReactNode, useState } from 'react';
 
-const {define} = useIoC()
+const {define} = newIoC()
 
 export type AccordingProps = {
     summary: ReactNode
