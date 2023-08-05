@@ -1,7 +1,7 @@
-import { useIoC } from 'Com/app/hooks/ioc';
+import { NewIoCContext, useIoC } from 'Com/app/hooks/ioc';
 import { FC, ReactNode, useState } from 'react';
 
-const {define, inject} = useIoC()
+const {define, inject} = NewIoCContext()
 
 export type Trigger = "hover" | "click"
 export type DropdownProps = {
@@ -21,7 +21,8 @@ export interface DropdownController {
 }
 
 export function useDropdown(component?: FC<DropdownProps>, trigger?: Trigger): [ReactNode, DropdownController] {
-    const dropdown = component ?? inject(Dropdown)
+    const context = useIoC()
+    const dropdown = component ?? context.inject(Dropdown)
     const [props, setProps] = useState<DropdownProps>({
         trigger: trigger ?? "hover",
         children: <></>

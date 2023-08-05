@@ -1,8 +1,8 @@
 import { FC, ReactNode, useEffect, useState } from 'react';
-import { useIoC as newIoC } from "../hooks/ioc";
+import { NewIoCContext, useIoC } from "../hooks/ioc";
 import { K, PropsDispatcher, UniqueController } from './container';
 
-const {define, inject} = newIoC()
+const {define} = NewIoCContext("Tab")
 
 export interface TabController extends UniqueController<TabItemProps> {
     setActiveTab(title: K): void
@@ -59,7 +59,8 @@ export function NewTabController(setProps: PropsDispatcher<TabProps>): TabContro
 }
 
 export const TabHeader: FC<TabProps> = define((props) => {
-    const setProps = inject(TabPropsDispatcher ,props)
+    const context = useIoC()
+    const setProps = context.inject(TabPropsDispatcher ,props)
     const ctl = NewTabController(setProps)
     const onRemove = (title: K) => (e: any) => {
         e.stopPropagation()
@@ -98,7 +99,8 @@ export type TabItemProps = {
 }
 
 export const TabItem: FC<TabItemProps> = define((props) => {
-    const setProps = inject(TabPropsDispatcher ,props)
+    const context = useIoC()
+    const setProps = context.inject(TabPropsDispatcher)
     const ctl = NewTabController(setProps)
     useEffect(() => ctl.insert(props))
     return <></>
@@ -112,10 +114,11 @@ export type TabProps = {
 
 export const Tab: FC<TabProps> = define((old) => {
     const [props, setProps] = useState(old)
-    define(TabPropsDispatcher, setProps)
-    const tabHeader = inject(TabHeader, props)
-    const tabBody = inject(TabBody, props)
-    return (<div className="tab">
+    const context = useIoC()
+    context.define(TabPropsDispatcher, setProps)
+    const tabHeader = context.inject(TabHeader)
+    const tabBody = context.inject(TabBody)
+    return <div className="tab">
             {props.children}
         <div className="header">
             {tabHeader(props)}
@@ -123,5 +126,5 @@ export const Tab: FC<TabProps> = define((old) => {
         <div className="body">
             {tabBody(props)}
         </div>
-    </div>)
+    </div>
 })

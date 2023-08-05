@@ -1,9 +1,9 @@
-import { IoCContext, useIoC as newIoC } from 'Com/app/hooks/ioc';
+import { NewIoCContext } from 'Com/app/hooks/ioc';
 import { FC, ReactNode, useState } from 'react';
 import { PropsDispatcher, UniqueController } from '../container';
 import { FieldProps } from './field';
 
-const {define, inject} = newIoC("form")
+const {define, inject} = NewIoCContext("form")
 
 export type FormProps = {
     action?: string
@@ -54,6 +54,7 @@ export function NewFormController(setProps: PropsDispatcher<FormProps>): FormCon
 export const Form: FC<FormProps> = define((old) => {
     const [props, setProps] = useState(old)
     define(FormPropsDispatcher, setProps)
+    
     const children = props.fields?.length ? props.fields?.map((field) => 
                 <div key={field.name} className="field" > {field.children}</div>
             ) : props.children?.map((child, index) =>
@@ -61,8 +62,6 @@ export const Form: FC<FormProps> = define((old) => {
             )
     const onSubmit = () => props.onSubmit && props.onSubmit(props)
     return <form className='form' action={props.action} onSubmit={onSubmit}>
-            <IoCContext.Provider value={{define, inject}}>
-                {children}
-            </IoCContext.Provider>
+        {children}
     </form>
 })

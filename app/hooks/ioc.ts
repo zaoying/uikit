@@ -1,4 +1,4 @@
-import { createContext } from 'react';
+import { createContext, useContext } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 // 组件的构造函数定义
@@ -50,11 +50,6 @@ export interface Context {
     inject<I extends {}, O>(component: Func<I,O>, props?: any): Func<I,O>
 }
 
-export const IoCContext = createContext<Context>({
-    define(component, subType) { return component},
-    inject(component, props) { return component },
-})
-
 /**
  * 包装组件的构造函数
  * @param originFunction 组件的原生构造函数
@@ -74,8 +69,10 @@ function wrap<I extends {}, O>(originFunction: Func<I,O>, container: Container):
     return wrapped
 }
 
-// IoC容器上下文的具体实现
-function NewIoCContext(name?: string): Context {
+// 创建新的IoCContext实例，
+// 通过define函数将组件注册到IoCContext
+// 然后再通过inject函数将注册的组件注入到其他组件中
+export function NewIoCContext(name?: string): Context {
     const container = IoCContainer(name)
     return {
         define: function<I extends {}, O>(component: Func<I,O>, subType?: Func<I,O>): Func<I,O> {
@@ -112,9 +109,13 @@ function NewIoCContext(name?: string): Context {
     }
 }
 
-// 每次调用都会产生一个新的IoCContext实例，
-// 通过define函数将组件注册到IoCContext
-// 然后再通过inject函数将注册的组件注入到其他组件中
-export const useIoC = function(name?: string): Context {
-    return NewIoCContext(name)
+// 通过React useContext在组件树传递ioc context
+export const IoCContext = createContext<Context>({
+    define(component, subType) { return component},
+    inject(component, props) { return component },
+})
+
+// 从父级组件中获取ioc context
+export const useIoC = function(): Context {
+    return useContext(IoCContext)
 }

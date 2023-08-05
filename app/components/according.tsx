@@ -1,7 +1,7 @@
-import { useIoC as newIoC } from 'Com/app/hooks/ioc';
+import { NewIoCContext } from 'Com/app/hooks/ioc';
 import { FC, ReactNode, useState } from 'react';
 
-const {define} = newIoC()
+const {define} = NewIoCContext("According")
 
 export type AccordingProps = {
     summary: ReactNode

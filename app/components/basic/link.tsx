@@ -1,7 +1,7 @@
-import { useIoC } from 'Com/app/hooks/ioc';
+import { NewIoCContext } from 'Com/app/hooks/ioc';
 import { FC, ReactNode } from 'react';
 
-const {define} = useIoC()
+const {define} = NewIoCContext()
 
 export type LinkProps = {
   href?: string

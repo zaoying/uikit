@@ -1,8 +1,8 @@
 import { FC, ReactNode } from 'react';
-import { useIoC as newIoC } from "../hooks/ioc";
+import { NewIoCContext } from "../hooks/ioc";
 import { Container, ContainerProps, ItemProps } from './container';
 
-const {define} = newIoC()
+const {define} = NewIoCContext()
 
 export type ListType = "horizontal" | "vertical"
 export type ListProps = {

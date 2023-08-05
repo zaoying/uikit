@@ -1,8 +1,8 @@
-import { IoCContext, useIoC as newIoC } from 'Com/app/hooks/ioc';
+import { IoCContext, NewIoCContext } from 'Com/app/hooks/ioc';
 import { FC, useContext, useEffect, useState } from 'react';
 import { SetLabelFor } from './label';
 
-const {define} = newIoC("input")
+const {define} = NewIoCContext("input")
 
 export type InputProps<T> = {
     name: string

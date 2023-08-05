@@ -1,8 +1,8 @@
-import { useIoC as newIoC } from 'Com/app/hooks/ioc';
+import { NewIoCContext } from 'Com/app/hooks/ioc';
 import { FC, ReactNode, useEffect } from 'react';
 import { FormPropsDispatcher, NewFormController } from './form';
 
-const {define, inject} = newIoC("field")
+const {define, inject} = NewIoCContext("field")
 
 export type FieldProps = {
     name: string

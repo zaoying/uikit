@@ -1,7 +1,7 @@
+import { NewIoCContext } from "Com/app/hooks/ioc"
 import { FC, ReactNode } from "react"
-import {useIoC} from "Com/app/hooks/ioc"
 
-const {define} = useIoC()
+const {define} = NewIoCContext("Button")
 type ButtonType = "primary" | "second" | "grey"
 
 type ButtonProps = {

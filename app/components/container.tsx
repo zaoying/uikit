@@ -1,7 +1,7 @@
 import { FC, ReactNode, useEffect, useState } from "react"
-import { useIoC as newIoC } from "../hooks/ioc"
+import { NewIoCContext } from "../hooks/ioc"
 
-const {define, inject} = newIoC()
+const {define, inject} = NewIoCContext()
 
 export type K = string | number
 
