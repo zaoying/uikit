@@ -3,7 +3,7 @@ import { FC, useState } from "react";
 import { Button } from "./basic/button";
 import { PropsDispatcher } from "./container";
 
-const {define} = NewIoCContext("Modal")
+const {define} = NewIoCContext()
 
 export const Header: FC<{title?: string}> = define((props) => <h3>{props.title}</h3>)
 
@@ -21,7 +21,7 @@ export type FooterProps = {
 
 export const Footer: FC<FooterProps> = define((props) => {
     const context = useIoC()
-    const hint = context.inject(Hint, props)({})
+    const hint = context.inject(Hint)({})
     
     const setProps = context.inject(ModalPropsDispatcher)
     const ctl = NewModalController(setProps)
@@ -48,20 +48,16 @@ export interface ModalController {
     title(text: string): void
     open(): void
     close(): void
-    onConfirm(cb: () => boolean): void
-    onCancel(cb: () => boolean): void
 }
 
 export function NewModalController(setProps: PropsDispatcher<ModalProps>): ModalController {
     const toggle = function(visible: boolean) {
-        setProps(p =>  ({...p, visible: visible}))
+        setProps(p => p.visible == visible ? p : {...p, visible: visible})
     }
     return {
-        title: (text) => setProps(p => ({...p, title: text})),
+        title: (text) => setProps(p => p.title == text ? p : {...p, title: text}),
         open: () => toggle(true),
-        close: () => toggle(false),
-        onConfirm: (cb) => setProps(p => ({...p, onConfirm: cb})),
-        onCancel: (cb) => setProps(p => ({...p, onCancel: cb}))
+        close: () => toggle(false)
     }
 }
 

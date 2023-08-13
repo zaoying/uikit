@@ -2,7 +2,7 @@ import { FC, ReactNode, useEffect, useState } from 'react';
 import { NewIoCContext, useIoC } from "../hooks/ioc";
 import { K, PropsDispatcher, UniqueController } from './container';
 
-const {define} = NewIoCContext("Tab")
+const {define} = NewIoCContext()
 
 export interface TabController extends UniqueController<TabItemProps> {
     setActiveTab(title: K): void
@@ -60,7 +60,7 @@ export function NewTabController(setProps: PropsDispatcher<TabProps>): TabContro
 
 export const TabHeader: FC<TabProps> = define((props) => {
     const context = useIoC()
-    const setProps = context.inject(TabPropsDispatcher ,props)
+    const setProps = context.inject(TabPropsDispatcher)
     const ctl = NewTabController(setProps)
     const onRemove = (title: K) => (e: any) => {
         e.stopPropagation()

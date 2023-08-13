@@ -1,9 +1,16 @@
-import { NewIoCContext } from 'Com/app/hooks/ioc';
-import { FC, ReactNode, useState } from 'react';
+import { NewIoCContext, useIoC } from 'Com/app/hooks/ioc';
+import { FC, ReactNode, RefObject, useEffect, useRef, useState } from 'react';
 import { PropsDispatcher, UniqueController } from '../container';
-import { FieldProps } from './field';
 
-const {define, inject} = NewIoCContext("form")
+const {define} = NewIoCContext()
+
+export type InputType = string | ReadonlyArray<string> | number | undefined
+
+export type FieldProps = {
+    name: string
+    validate: (val: InputType) => string | undefined
+    errorMsg?: string
+}
 
 export type FormProps = {
     action?: string
@@ -13,55 +20,95 @@ export type FormProps = {
 }
 
 export interface FormController extends UniqueController<FieldProps> {
-    onSubmit(cb: (props: FormProps) => boolean): void
+    submit(): void
+    validate(formRef: RefObject<HTMLFormElement>): void
     reset(): void
 }
 
 export const FormPropsDispatcher: PropsDispatcher<FormProps> = define((cb) => {})
 
+export const FormRefrence: ({}) => RefObject<HTMLFormElement> = define(()=>useRef<HTMLFormElement>(null))
+
 export function NewFormController(setProps: PropsDispatcher<FormProps>): FormController {
     return {
-        insert({name, children}) {
+        insert(field) {
             setProps(p => {
                 if (!p.fields) {
-                    const field = { name, children }
                     return {...p, fields: [field]}
                 }
-                if (p.fields.find(field => field.name == name)) {
+                if (p.fields.find(f => f.name == field.name)) {
                     return p
                 }
-                const field = { name, children }
                 return {...p, fields: [...p.fields, field]}
             })
             
         },
-        update({name, children}) {
-            const replace = (fields: FieldProps[]) => {
-                const field = { name, children }
-                const filtered = fields.filter(field => field.name != name)
-                return [...filtered, field]
+        update(field) {
+            const replace = (fields?: FieldProps[]) => {
+                return fields ? fields.map(f => f.name == field.name ? field : f) : fields
             }
-            setProps(p => ({...p, fields: p.fields ? replace(p.fields) : p.fields}))
+            setProps(p => ({...p, fields: replace(p.fields)}))
         },
         remove(name) {
-            setProps(p => ({...p, fields: p.fields ? p.fields.filter((field) => field.name != name) : p.fields}))
+            const filter = (fields: FieldProps[]) => fields.filter(field => field.name != name)
+            setProps(p => ({...p, fields: p.fields ? filter(p.fields) : p.fields}))
         },
-        onSubmit: (cb) => setProps(p => ({...p, onSubmit: cb})),
+        submit() {
+            setProps(p => {
+                const shouldSubmit = p.onSubmit && p.onSubmit(p); 
+                return {...p, shouldSubmit}
+            })
+        },
+        validate(formRef) {
+            if (formRef.current) {
+                const formData = new FormData(formRef.current)
+                formData.forEach((val, name) => {
+                    if (val instanceof File) {
+                        return
+                    }
+                    setProps(p => {
+                        if (!p.fields) {
+                            return p
+                        }
+                        const fields = p.fields.map(field => {
+                            if (field.name != name) {
+                                return field
+                            }
+                            const errMsg = field.validate(val)
+                            return {...field, errorMsg: errMsg}
+                        })
+                        return {...p, fields: [...fields]}
+                    })
+                })
+            }
+        },
         reset: () => setProps(p => ({...p, fields: []}))
     }
 }
 
 export const Form: FC<FormProps> = define((old) => {
+    const formRef = useRef<HTMLFormElement>(null)
     const [props, setProps] = useState(old)
-    define(FormPropsDispatcher, setProps)
+    const context = useIoC()
+    context.define(FormPropsDispatcher, setProps)
+    useEffect(() => {context.define(FormRefrence, () => formRef)})
     
-    const children = props.fields?.length ? props.fields?.map((field) => 
-                <div key={field.name} className="field" > {field.children}</div>
-            ) : props.children?.map((child, index) =>
-                <div key={index} className='field'>{child}</div>
-            )
-    const onSubmit = () => props.onSubmit && props.onSubmit(props)
-    return <form className='form' action={props.action} onSubmit={onSubmit}>
+    const children = props.children?.map((child, index) => {
+        const field = props.fields?.at(index)
+        const key = field?.name || index;
+        return <div key={key} className='field'>
+            {child}
+            {field?.errorMsg && <span className="error">{field.errorMsg}</span>}
+        </div>
+    })
+    const onSubmit = (e: any) => {
+        // Prevent the browser from reloading the page
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        console.info(formData)
+        return props.onSubmit && props.onSubmit(props)
+    }
+    return <form ref={formRef} className='form' action={props.action} onSubmit={onSubmit}>
         {children}
     </form>
 })

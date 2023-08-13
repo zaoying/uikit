@@ -2,7 +2,7 @@ import { NewIoCContext } from "Com/app/hooks/ioc";
 import { FC, ReactNode, useState } from "react";
 import { useInterval } from "../hooks/interval";
 
-const {define, inject} = NewIoCContext("Notification")
+const {define, inject} = NewIoCContext()
 
 export interface Notifier {
     info(msg: string, timeout?: number): void

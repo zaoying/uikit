@@ -1,7 +1,7 @@
-import { FC, ReactNode, useEffect, useState } from "react"
-import { NewIoCContext } from "../hooks/ioc"
+import { FC, ReactNode, useContext, useEffect, useState } from "react"
+import { IoCContext, NewIoCContext } from "../hooks/ioc"
 
-const {define, inject} = NewIoCContext()
+const {define} = NewIoCContext()
 
 export type K = string | number
 
@@ -54,7 +54,8 @@ export type ItemProps = {
 }
 
 export const Item: FC<ItemProps> = define((props) => {
-    const dispatcher = inject(ContainerPropsDispatcher, props)
+    const context = useContext(IoCContext)
+    const dispatcher = context.inject(ContainerPropsDispatcher)
     const ctl = NewContainerController(dispatcher)
     useEffect(()=> ctl.insert(props))
     return <></>
