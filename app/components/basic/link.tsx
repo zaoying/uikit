@@ -5,9 +5,12 @@ const {define} = NewIoCContext()
 
 export type LinkProps = {
   href?: string
+  onClick?: (e: any) => void
   children?: ReactNode
 }
 
 export const Link: FC<LinkProps> = define((props) => {
-  return <a href={props.href}>{props.children}</a>
+  return <a className="link" href={props.href} onClick={props.onClick}>
+    {props.children}
+  </a>
 });
