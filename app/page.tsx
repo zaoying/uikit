@@ -1,14 +1,17 @@
 "use client";
 
+import { useState } from "react";
 import { According } from "./components/according";
 import { Button } from "./components/basic/button";
-import { Form, FormPropsDispatcher, FormRefrence, NewFormController } from "./components/form/form";
+import { Dropdown } from "./components/dropdown";
+import { Form, FormPropsDispatcher, FormRefrence, InputType, NewFormController } from "./components/form/form";
 import { Input } from "./components/form/input";
 import { Label } from "./components/form/label";
 import { List } from "./components/list";
 import { Body, Footer, Header, Hint, Modal, ModalPropsDispatcher, NewModalController } from "./components/modal";
 import { useNotification } from "./components/notification";
 import { Tab, TabItem } from "./components/tabs";
+import { Direction, Tooltip } from "./components/tooltip";
 import { IoCContext, NewIoCContext, useIoC } from "./hooks/ioc";
 
 const { define, inject } = NewIoCContext()
@@ -18,7 +21,7 @@ define(Header, () => <p className="title">修改密码</p>)
 define(Hint, () => ({ confirm: "确认", cancel: "取消" }))
 
 define(Body, () => {
-    const checkPassword = (val: string | ReadonlyArray<string> | number | undefined) => {
+    const checkPassword = (val: InputType) => {
         if (!val) return "密码不能为空"
         return ""
     }
@@ -58,6 +61,7 @@ export default function Home() {
         const ctl = NewModalController(setProps)
         ctl.open()
     }
+    const [direct, setDirect] = useState<Direction>("bottom")
     return (<IoCContext.Provider value={{ define, inject }}>
         <div>
             <p>Icon Button:
@@ -65,7 +69,18 @@ export default function Home() {
                     <span><i>🎨</i>打开模态框</span>
                 </Button>
             </p>
-            <p>Normal Button: <Button>普通按钮</Button></p>
+            <div>Normal Button: 
+                <Tooltip message="普通按钮" direction={direct}>
+                    <Button>普通按钮</Button>
+                </Tooltip>
+                <Dropdown trigger="click">
+                    <Button type="grey">请选择方向<i className="icon">﹀</i></Button>
+                    <a onClick={()=> setDirect("top")}>上</a>
+                    <a onClick={()=> setDirect("bottom")}>下</a>
+                    <a onClick={()=> setDirect("left")}>左</a>
+                    <a onClick={()=> setDirect("right")}>右</a>
+                </Dropdown>
+            </div>
             <Modal width={360}></Modal>
             <List type="horizontal">
                 <Button onClick={() => notifier.info("info")}>通知</Button>
@@ -78,7 +93,7 @@ export default function Home() {
                 <TabItem title="def">456</TabItem>
                 <TabItem title="ghi">789</TabItem>
             </Tab>
-            <According summary="标题">详情</According>
+            <According summary="标题" visible={true}>详情</According>
         </div>
     </IoCContext.Provider>);
 }

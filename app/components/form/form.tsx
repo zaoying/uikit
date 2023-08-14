@@ -4,7 +4,7 @@ import { PropsDispatcher, UniqueController } from '../container';
 
 const {define} = NewIoCContext()
 
-export type InputType = string | ReadonlyArray<string> | number | undefined
+export type InputType = string | File | ReadonlyArray<string> | number | undefined
 
 export type FieldProps = {
     name: string
@@ -15,6 +15,7 @@ export type FieldProps = {
 export type FormProps = {
     action?: string
     onSubmit?: (props: FormProps) => boolean
+    validity?: boolean
     fields?: FieldProps[]
     children?: ReactNode[]
 }
@@ -55,30 +56,27 @@ export function NewFormController(setProps: PropsDispatcher<FormProps>): FormCon
         },
         submit() {
             setProps(p => {
-                const shouldSubmit = p.onSubmit && p.onSubmit(p); 
-                return {...p, shouldSubmit}
+                p.onSubmit && p.onSubmit(p);
+                return p
             })
         },
         validate(formRef) {
             if (formRef.current) {
                 const formData = new FormData(formRef.current)
-                formData.forEach((val, name) => {
-                    if (val instanceof File) {
-                        return
+                setProps(p => {
+                    if (!p.fields) {
+                        return {...p, validity: true}
                     }
-                    setProps(p => {
-                        if (!p.fields) {
-                            return p
+                    const fields = p.fields.map(field => {
+                        const val = formData.get(field.name)
+                        if (val == null) {
+                            return field
                         }
-                        const fields = p.fields.map(field => {
-                            if (field.name != name) {
-                                return field
-                            }
-                            const errMsg = field.validate(val)
-                            return {...field, errorMsg: errMsg}
-                        })
-                        return {...p, fields: [...fields]}
+                        const errMsg = field.validate(val)
+                        return {...field, errorMsg: errMsg}
                     })
+                    const validity = fields.filter(field => field.errorMsg).length == 0
+                    return {...p, fields: fields, validity: validity}
                 })
             }
         },
@@ -104,8 +102,6 @@ export const Form: FC<FormProps> = define((old) => {
     const onSubmit = (e: any) => {
         // Prevent the browser from reloading the page
         e.preventDefault();
-        const formData = new FormData(e.target);
-        console.info(formData)
         return props.onSubmit && props.onSubmit(props)
     }
     return <form ref={formRef} className='form' action={props.action} onSubmit={onSubmit}>

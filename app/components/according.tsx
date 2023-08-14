@@ -5,15 +5,16 @@ const {define} = NewIoCContext()
 
 export type AccordingProps = {
     summary: ReactNode
+    visible?: boolean
     children?: ReactNode
 }
 
 export const According: FC<AccordingProps> = define((props) => {
-    const [collapse, setCollapse] = useState(true)
-    return <div className={`according ${collapse ? "" : "show"}`}>
-        <a className="summary" onClick={() => setCollapse(c => !c)}>
+    const [visible, setVisible] = useState(props.visible)
+    return <div className={`according ${visible ? "show" : ""}`}>
+        <a className="summary" onClick={() => setVisible(c => !c)}>
             {props.summary}
-            <i className='icon'>{collapse ? "〉" : "﹀"}</i>
+            <i className='icon'>{visible ? "﹀" : "〉"}</i>
         </a>
         <div className="detail">
             {props.children}

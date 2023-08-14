@@ -1,5 +1,5 @@
-import { IoCContext, NewIoCContext } from 'Com/app/hooks/ioc';
-import { FC, useContext, useEffect } from 'react';
+import { NewIoCContext, useIoC } from 'Com/app/hooks/ioc';
+import { FC, useEffect } from 'react';
 import { FormPropsDispatcher, InputType, NewFormController } from './form';
 import { GetLabelID } from './label';
 
@@ -15,8 +15,15 @@ export type InputProps = {
     validate?: (val: InputType) => string
 }
 
+function transformValue(val: InputType)  {
+    if (val instanceof File) {
+        return undefined
+    }
+    return val
+}
+
 export const Input: FC<InputProps> = define((props) => {    
-    const context = useContext(IoCContext)
+    const context = useIoC()
     const labelId = context.inject(GetLabelID)({})
 
     const validate = function(v: InputType) {
@@ -34,7 +41,7 @@ export const Input: FC<InputProps> = define((props) => {
         ctl.update(newItem)
     }
     return <>
-        <input id={labelId} name={props.name} type={props.type} value={props.value} 
+        <input id={labelId} name={props.name} type={props.type} value={transformValue(props.value)} 
             onChange={onChange} placeholder={props.placeholder}
             readOnly={props.readonly}/>
     </>

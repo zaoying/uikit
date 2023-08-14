@@ -257,3 +257,63 @@ i {
     margin: 0 .5rem;
     margin-left: 32%;
 }
+
+.tooltip {
+    display: inline-block;
+    position: relative;
+}
+
+.tooltip > .tip {
+    position: absolute;
+    display: none;
+    color: white;
+    padding: .3rem;
+    background-color: #000000bb;
+    border-radius: .2rem;
+}
+
+.tooltip:hover > .tip {
+    display: block;
+    z-index: 99;
+}
+
+.tip.left {
+    top: 25%;
+    left: -75%;
+}
+
+.tip.right {
+    top: 25%;
+    right: -75%;
+}
+
+.tip.top {
+    top: -50%;
+    left: 10%;
+}
+
+.tip.bottom {
+    bottom: -50%;
+    left: 10%;
+}
+
+.dropdown {
+    display: inline-block;
+    position: relative;
+}
+
+.dropdown > .list {
+    position: absolute;
+    display: none;
+    color: white;
+    margin: 0;
+    padding: .3rem;
+    background-color: #000000bb;
+    border-radius: .2rem;
+    overflow-y: visible;
+}
+
+.dropdown.show > .list {
+    display: block;
+    z-index: 99;
+}
