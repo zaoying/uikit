@@ -35,6 +35,11 @@ i {
     color: white;
 }
 
+.danger.button {
+    background-color: red;
+    color: white;
+}
+
 .dimmer {
     display: none;
     position: absolute;
@@ -88,7 +93,6 @@ i {
     min-width: 30%;
     max-width: 40%;
     top: 10%;
-    bottom: 10%;
     max-height: 80%;
     list-style: none;
 }
@@ -316,4 +320,21 @@ i {
 .dropdown.show > .list {
     display: block;
     z-index: 99;
+}
+
+.table > table {
+    text-align: center;
+    width: 100%;
+}
+
+.table > table > thead > tr {
+    border-bottom: solid 1px grey;
+}
+
+.table > table > tbody > tr {
+    border-bottom: solid 1px grey;
+}
+
+.table > .footer{
+    text-align: right;
 }

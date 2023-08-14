@@ -2,7 +2,7 @@ import { NewIoCContext } from "Com/app/hooks/ioc"
 import { FC, ReactNode } from "react"
 
 const {define} = NewIoCContext()
-type ButtonType = "primary" | "second" | "grey"
+type ButtonType = "primary" | "second" | "grey" | "danger"
 
 type ButtonProps = {
     onClick?: () => void

@@ -10,6 +10,7 @@ import { Label } from "./components/form/label";
 import { List } from "./components/list";
 import { Body, Footer, Header, Hint, Modal, ModalPropsDispatcher, NewModalController } from "./components/modal";
 import { useNotification } from "./components/notification";
+import { NewTableController, Table, TableColumn, TablePropsDispatcher } from "./components/table/table";
 import { Tab, TabItem } from "./components/tabs";
 import { Direction, Tooltip } from "./components/tooltip";
 import { IoCContext, NewIoCContext, useIoC } from "./hooks/ioc";
@@ -94,6 +95,26 @@ export default function Home() {
                 <TabItem title="ghi">789</TabItem>
             </Tab>
             <According summary="标题" visible={true}>详情</According>
+            <Table data={[{id: 0, name: "张三", age: 35}, {id: 1, name: "李四", age: 28}, {id: 2, name: "王五", age: 40}]}>
+                <TableColumn name="id" title="编号">
+                    {(name, rowNum, data) => <input type="checkbox" name="ids" value={data.id}/>}
+                </TableColumn>
+                <TableColumn name="name" title="名字">
+                    {(name, rowNum, data) => data.name}
+                </TableColumn>
+                <TableColumn name="age" title="年龄">
+                    {(name, rowNum, data) => data.age}
+                </TableColumn>
+                <TableColumn name="operation" title="操作">
+                    {
+                        (name, rowNum, data) => {
+                            const setTable = inject(TablePropsDispatcher)
+                            const ctl =NewTableController(setTable)
+                            return <Button type="danger" onClick={()=> ctl.removeData(rowNum)}>删除</Button>
+                        }
+                    }
+                </TableColumn>
+            </Table>
         </div>
     </IoCContext.Provider>);
 }
