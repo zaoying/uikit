@@ -7,6 +7,7 @@ const {define} = NewIoCContext()
 export type TableColumnProps = {
     name: string
     title: ReactNode
+    width?: number
     children: (name: string, rowNum: number, data: any) => ReactNode
 }
 
@@ -26,7 +27,12 @@ export type TableProps = {
 
 export const TableHeader: FC<TableProps> = define((props) => {
     return <thead><tr>
-        {props.columns?.map(col => <th key={col.name}>{col.title}</th>)}
+        {
+            props.columns?.map(col => (
+                <th key={col.name} style={{width: `${col.width}%`}}>
+                    {col.title}
+                </th>
+            ))}
     </tr></thead>
 })
 
