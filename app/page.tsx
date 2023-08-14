@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { According } from "./components/according";
 import { Button } from "./components/basic/button";
+import { Link } from "./components/basic/link";
+import { Breadcrumb } from "./components/breadcrumb";
 import { Dropdown } from "./components/dropdown";
 import { Form, FormPropsDispatcher, FormRefrence, InputType, NewFormController } from "./components/form/form";
 import { Input } from "./components/form/input";
@@ -65,6 +67,11 @@ export default function Home() {
     const [direct, setDirect] = useState<Direction>("bottom")
     return (<IoCContext.Provider value={{ define, inject }}>
         <div>
+            <Breadcrumb>
+                <>主页</>
+                <>页面管理</>
+                <Link onClick={() => alert("test")}>样例</Link>
+            </Breadcrumb>
             <p>Icon Button:
                 <Button onClick={openModal}>
                     <span><i>🎨</i>打开模态框</span>

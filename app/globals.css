@@ -346,3 +346,22 @@ i {
 .table > .footer{
     text-align: right;
 }
+
+.breadcrumb {
+    list-style: none;
+    text-indent: 0;
+    padding: .5rem;
+}
+
+.breadcrumb > .item {
+    display: inline-block;
+    cursor: pointer;
+    margin: 0;
+    margin-right: .5rem;
+}
+
+.breadcrumb > .item > .icon {
+    color: grey;
+    margin: 0;
+    margin-left: .5rem;
+}
