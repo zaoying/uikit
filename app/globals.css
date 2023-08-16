@@ -259,7 +259,7 @@ i {
     margin: 0 .5rem;
 }
 
-.form .field > input {
+.form .field > :nth-child(2) {
     width: 60%;
     margin: 0 .5rem;
 }
