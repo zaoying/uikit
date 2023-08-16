@@ -8,7 +8,7 @@ export type TableColumnProps = {
     name: string
     title: ReactNode
     width?: number
-    children: (name: string, rowNum: number, data: any) => ReactNode
+    children: FC<{name: string, rowNum: number, data: any}>
 }
 
 export const TableColumn: FC<TableColumnProps> = define((props) => {
@@ -43,7 +43,7 @@ export const TableBody: FC<TableProps> = define((props) => {
                 {
                     props.columns?.map((col, j) => (
                         <td key={`${i}-${j}`}>
-                            {col.children(col.name, i, row)}
+                            {col.children({name: col.name, rowNum: i, data:row})}
                         </td>
                     ))
                 }

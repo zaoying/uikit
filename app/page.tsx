@@ -104,17 +104,17 @@ export default function Home() {
             <According summary="标题" visible={true}>详情</According>
             <Table data={[{id: 0, name: "张三", age: 35}, {id: 1, name: "李四", age: 28}, {id: 2, name: "王五", age: 40}]}>
                 <TableColumn name="id" title="编号" width={10}>
-                    {(name, rowNum, data) => <input type="checkbox" name="ids" value={data.id}/>}
+                    {({data}) => <input type="checkbox" name="ids" value={data.id}/>}
                 </TableColumn>
                 <TableColumn name="name" title="名字" width={40}>
-                    {(name, rowNum, data) => data.name}
+                    {({data}) => data.name}
                 </TableColumn>
                 <TableColumn name="age" title="年龄" width={20}>
-                    {(name, rowNum, data) => data.age}
+                    {({data}) => data.age}
                 </TableColumn>
                 <TableColumn name="operation" title="操作" width={20}>
                     {
-                        (name, rowNum, data) => {
+                        ({rowNum}) => {
                             const setTable = inject(TablePropsDispatcher)
                             const ctl =NewTableController(setTable)
                             return <Button type="danger" onClick={()=> ctl.removeData(rowNum)}>删除</Button>
