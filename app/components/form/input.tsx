@@ -12,6 +12,7 @@ export type InputProps = {
     placeholder?: string
     readonly?: boolean
     onChange?: (val: InputType) => void
+    onBlur?: (e: any) => void
     validate?: (val: InputType) => string
 }
 
@@ -42,7 +43,7 @@ export const Input: FC<InputProps> = define((props) => {
     }
     return <>
         <input id={labelId} name={props.name} type={props.type} value={transformValue(props.value)} 
-            onChange={onChange} placeholder={props.placeholder}
+            onChange={onChange} onBlur={props.onBlur} placeholder={props.placeholder}
             readOnly={props.readonly}/>
     </>
 })
