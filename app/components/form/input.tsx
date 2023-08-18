@@ -1,12 +1,12 @@
 import { NewIoCContext, useIoC } from 'Com/app/hooks/ioc';
 import { FC, useEffect } from 'react';
 import { FormPropsDispatcher, InputType, NewFormController } from './form';
-import { GetLabelID } from './label';
 
 const {define} = NewIoCContext()
 
 export type InputProps = {
     name: string
+    id?: string
     value?: InputType
     type?: string
     placeholder?: string
@@ -25,7 +25,6 @@ function transformValue(val: InputType)  {
 
 export const Input: FC<InputProps> = define((props) => {    
     const context = useIoC()
-    const labelId = context.inject(GetLabelID)({})
 
     const validate = function(v: InputType) {
         return props.validate && props.validate(v)
@@ -41,9 +40,7 @@ export const Input: FC<InputProps> = define((props) => {
         const newItem = {name: props.name, validate: validate, errorMsg: errMsg}
         ctl.update(newItem)
     }
-    return <>
-        <input id={labelId} name={props.name} type={props.type} value={transformValue(props.value)} 
-            onChange={onChange} onBlur={props.onBlur} placeholder={props.placeholder}
-            readOnly={props.readonly}/>
-    </>
+    return <input id={props.id} name={props.name} type={props.type} value={transformValue(props.value)} 
+        onChange={onChange} onBlur={props.onBlur} placeholder={props.placeholder}
+        readOnly={props.readonly}/>
 })

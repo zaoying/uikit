@@ -30,7 +30,7 @@ export const TableHeader: FC<TableProps> = define((props) => {
         {
             props.columns?.map(col => (
                 <th key={col.name} style={{width: `${col.width}%`}}>
-                    {col.title}
+                    {col.title ?? col.name}
                 </th>
             ))}
     </tr></thead>
