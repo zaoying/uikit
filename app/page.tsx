@@ -97,9 +97,9 @@ export default function Home() {
             </List>
             {notification}
             <Tab activeTab="abc">
-                <TabItem title="abc">123</TabItem>
-                <TabItem title="def">456</TabItem>
-                <TabItem title="ghi">789</TabItem>
+                <TabItem name="abc" title="abc">123</TabItem>
+                <TabItem name="def" title="def">456</TabItem>
+                <TabItem name="ghi" title="ghi">789</TabItem>
             </Tab>
             <According summary="标题" visible={true}>详情</According>
             <Table data={[{id: 0, name: "张三", age: 35}, {id: 1, name: "李四", age: 28}, {id: 2, name: "王五", age: 40}]}>
