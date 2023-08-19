@@ -1,21 +1,32 @@
 import { NewIoCContext } from 'Com/app/hooks/ioc';
-import { FC, ReactNode, useState } from 'react';
+import { FC, ReactNode, useId, useState } from 'react';
 
 const {define} = NewIoCContext()
 
 export type Trigger = "hover" | "click"
 export type DropdownProps = {
     trigger?: Trigger
+    visible?: boolean
     children: ReactNode[]
 }
 
 export const Dropdown: FC<DropdownProps> = define((props) => {
-    const [visible, setVisible] = useState(false)
-    const onClick = (e: any) => setVisible(flag => !flag)
+    const uniqueID = useId()
+    const [visible, setVisible] = useState(props.visible)
+    const onClick = (e: any) => {
+        e.stopPropagation();
+        setVisible(true)
+    }
     const onPointerEnter = (e: any) => setVisible(true)
     const onPointerLeave = (e: any) => setVisible(false)
-    const eventListener = props.trigger == "click" ? {onClick} : {
-        onClick,
+    const onBlur = (e: any) => {
+        if (e.target.id == uniqueID) {
+            setVisible(false)
+        } else {
+            setTimeout(() => setVisible(false), 250)
+        }
+    }
+    const eventListener = props.trigger == "click" ? {onClick, onBlur} : {
         onPointerEnter,
         onPointerLeave
     }
@@ -26,11 +37,12 @@ export const Dropdown: FC<DropdownProps> = define((props) => {
         setVisible(false)
     }
     const restChildren = props.children.filter((_, i) => i != 0)
-        .map((item, i) => <li onClick={onItemClick} key={i} className="item">{item}</li>)
-    return <div className={`dropdown ${visible ? "show" : ""}`} {...eventListener}>
+        .map((item, i) => <li onClick={onItemClick} key={i} className="item">{item}</li>);
+    
+    return <div id={uniqueID} tabIndex={-1} className={`dropdown ${visible ? "show" : ""}`} {...eventListener}>
         {firstChild}
         {
-            visible && <ul className="list">
+            <ul className="list">
                 {restChildren}
             </ul>
         }

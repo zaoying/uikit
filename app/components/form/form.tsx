@@ -28,7 +28,7 @@ export interface FormController extends UniqueController<FieldProps> {
 
 export const FormPropsDispatcher: PropsDispatcher<FormProps> = define((cb) => {})
 
-export const FormRefrence: ({}) => RefObject<HTMLFormElement> = define(()=>useRef<HTMLFormElement>(null))
+export const FormReference: ({}) => RefObject<HTMLFormElement> = define(()=>useRef<HTMLFormElement>(null))
 
 export function NewFormController(setProps: PropsDispatcher<FormProps>): FormController {
     return {
@@ -89,7 +89,7 @@ export const Form: FC<FormProps> = define((old) => {
     const [props, setProps] = useState(old)
     const context = useIoC()
     context.define(FormPropsDispatcher, setProps)
-    useEffect(() => {context.define(FormRefrence, () => formRef)})
+    useEffect(() => {context.define(FormReference, () => formRef)})
     
     const children = props.children?.map((child, index) => {
         const field = props.fields?.at(index)

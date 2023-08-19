@@ -6,9 +6,10 @@ import { Button } from "./components/basic/button";
 import { Link } from "./components/basic/link";
 import { Breadcrumb } from "./components/breadcrumb";
 import { Dropdown } from "./components/dropdown";
-import { Form, FormPropsDispatcher, FormRefrence, InputType, NewFormController } from "./components/form/form";
+import { Form, FormPropsDispatcher, FormReference, InputType, NewFormController } from "./components/form/form";
 import { Input } from "./components/form/input";
 import { Label } from "./components/form/label";
+import { Select, SelectItem } from "./components/form/select";
 import { List } from "./components/list";
 import { Body, Footer, Header, Hint, Modal, ModalPropsDispatcher, NewModalController } from "./components/modal";
 import { useNotification } from "./components/notification";
@@ -30,16 +31,18 @@ define(Body, () => {
     }
     return <Form action="">
         <Label label="用户名">
-            <Input name="username" value="admin" />
+            {({id}) => <Input id={id} name="username" value="admin" />}
         </Label>
         <Label label="旧密码">
-            <Input name="oldPWD" type="password" validate={checkPassword} />
+            {({id}) => <Input id={id} name="password" type="password" validate={checkPassword} />}
         </Label>
-        <Label label="新密码">
-            <Input name="newPWD" type="password" validate={checkPassword} />
-        </Label>
-        <Label label="重复密码">
-            <Input name="repeat" type="password" validate={checkPassword} />
+        <Label label="账号类型">
+            {
+                ({id}) => <Select id={id} name="account">
+                    <SelectItem name="系统管理员" value="admin"></SelectItem>
+                    <SelectItem name="普通用户" value="user"></SelectItem>
+                </Select>
+            }
         </Label>
     </Form>
 })
@@ -49,7 +52,7 @@ define(Footer, () => {
     const onConfirm = () => {
         const setForm = context.inject(FormPropsDispatcher)
         const formCtl = NewFormController(setForm)
-        const formRef = context.inject(FormRefrence)({})
+        const formRef = context.inject(FormReference)({})
         formCtl.validate(formRef)
         formCtl.submit()
         return true
