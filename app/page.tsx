@@ -13,6 +13,7 @@ import { Select, SelectItem } from "./components/form/select";
 import { List } from "./components/list";
 import { Body, Footer, Header, Hint, Modal, ModalPropsDispatcher, NewModalController } from "./components/modal";
 import { useNotification } from "./components/notification";
+import { Pager } from "./components/pager";
 import { NewTableController, Table, TableColumn, TablePropsDispatcher } from "./components/table/table";
 import { Tab, TabItem } from "./components/tabs";
 import { Direction, Tooltip } from "./components/tooltip";
@@ -75,12 +76,10 @@ export default function Home() {
                 <>页面管理</>
                 <Link onClick={() => alert("test")}>样例</Link>
             </Breadcrumb>
-            <p>Icon Button:
+            <div>
                 <Button onClick={openModal}>
                     <span><i>🎨</i>打开模态框</span>
                 </Button>
-            </p>
-            <div>Normal Button: 
                 <Tooltip message="普通按钮" direction={direct}>
                     <Button>普通按钮</Button>
                 </Tooltip>
@@ -124,6 +123,7 @@ export default function Home() {
                         }
                     }
                 </TableColumn>
+                <Pager current={3} interval={5} total={10} onChange={(page) => console.info(page)}></Pager>
             </Table>
         </div>
     </IoCContext.Provider>);
