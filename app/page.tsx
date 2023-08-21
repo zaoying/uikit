@@ -125,9 +125,9 @@ export default function Home() {
                 </TableColumn>
                 <TableColumn name="operation" title="操作" width={20}>
                     {
-                        ({rowNum}) => {
-                            const setTable = inject(TablePropsDispatcher)
-                            const ctl =NewTableController(setTable)
+                        ({ctx, rowNum}) => {
+                            const setTable = ctx.inject(TablePropsDispatcher)
+                            const ctl = NewTableController(setTable)
                             return <Button type="danger" onClick={()=> ctl.removeData(rowNum)}>删除</Button>
                         }
                     }

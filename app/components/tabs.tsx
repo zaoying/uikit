@@ -108,7 +108,7 @@ export const TabItem: FC<TabItemProps> = define((props) => {
 export type TabProps = {
     activeTab?: K
     tabs?: TabItemProps[]
-    children?: ReactNode[]
+    children?: ReactNode
 }
 
 export const Tab: FC<TabProps> = define((old) => {

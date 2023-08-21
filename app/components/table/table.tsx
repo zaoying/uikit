@@ -1,5 +1,5 @@
 import { FC, ReactNode, useEffect, useState } from 'react';
-import { NewIoCContext, useIoC } from "../../hooks/ioc";
+import { Context, NewIoCContext, useIoC } from "../../hooks/ioc";
 import { PropsDispatcher, UniqueController } from '../container';
 
 const {define} = NewIoCContext()
@@ -8,7 +8,7 @@ export type TableColumnProps = {
     name: string
     title: ReactNode
     width?: number
-    children: FC<{name: string, rowNum: number, data: any}>
+    children: FC<{ctx: Context, name: string, rowNum: number, data: any}>
 }
 
 export const TableColumn: FC<TableColumnProps> = define((props) => {
@@ -37,13 +37,14 @@ export const TableHeader: FC<TableProps> = define((props) => {
 })
 
 export const TableBody: FC<TableProps> = define((props) => {
+    const parent = useIoC()
     return <tbody>
         {
             props.data.map((row, i) => <tr key={i}>
                 {
                     props.columns?.map((col, j) => (
                         <td key={`${i}-${j}`}>
-                            {col.children({name: col.name, rowNum: i, data:row})}
+                            {col.children({ctx: parent, name: col.name, rowNum: i, data:row})}
                         </td>
                     ))
                 }
