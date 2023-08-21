@@ -15,7 +15,7 @@ import { Menu } from "./components/menu";
 import { Body, Modal, ModalDict } from "./components/modal";
 import { useNotification } from "./components/notification";
 import { Pager } from "./components/pager";
-import { NewTableController, Table, TableColumn, TablePropsDispatcher } from "./components/table/table";
+import { Table, TableColumn } from "./components/table/table";
 import { Tab, TabItem } from "./components/tabs";
 import { Direction, Tooltip } from "./components/tooltip";
 import { register } from "./hooks/i18n";
@@ -113,26 +113,33 @@ export default function Home() {
                 <TabItem name="ghi" title="ghi">789</TabItem>
             </Tab>
             <According summary="标题" visible={true}>详情</According>
-            <Table data={[{id: 0, name: "张三", age: 35}, {id: 1, name: "李四", age: 28}, {id: 2, name: "王五", age: 40}]}>
-                <TableColumn name="id" title={<input type="checkbox" name="ids" value="*"/>} width={10}>
-                    {({data}) => <input type="checkbox" name="ids" value={data.id}/>}
-                </TableColumn>
-                <TableColumn name="name" title="名字" width={40}>
-                    {({data}) => data.name}
-                </TableColumn>
-                <TableColumn name="age" title="年龄" width={20}>
-                    {({data}) => data.age}
-                </TableColumn>
-                <TableColumn name="operation" title="操作" width={20}>
-                    {
-                        ({ctx, rowNum}) => {
-                            const setTable = ctx.inject(TablePropsDispatcher)
-                            const ctl = NewTableController(setTable)
-                            return <Button type="danger" onClick={()=> ctl.removeData(rowNum)}>删除</Button>
-                        }
-                    }
-                </TableColumn>
-                <Pager current={3} interval={5} total={10} onChange={(page) => console.info(page)}></Pager>
+            <Table data={[]}>
+                {({ctl}) => {
+                    ctl.appendData(
+                        {id: 0, name: "张三", age: 35}, 
+                        {id: 1, name: "李四", age: 28},
+                        {id: 2, name: "王五", age: 40}
+                    )
+                    return <>
+                        <TableColumn name="id" title={<input type="checkbox" name="ids" value="*"/>} width={10}>
+                            {({data}) => <input type="checkbox" name="ids" value={data.id}/>}
+                        </TableColumn>
+                        <TableColumn name="name" title="名字" width={40}>
+                            {({data}) => data.name}
+                        </TableColumn>
+                        <TableColumn name="age" title="年龄" width={20}>
+                            {({data}) => data.age}
+                        </TableColumn>
+                        <TableColumn name="operation" title="操作" width={20}>
+                            {
+                                ({rowNum}) => {
+                                    return <Button type="danger" onClick={()=> ctl.removeData(rowNum)}>删除</Button>
+                                }
+                            }
+                        </TableColumn>
+                        <Pager current={3} interval={5} total={10}></Pager>
+                    </>}
+                }
             </Table>
         </div>
     </IoCContext.Provider>);
