@@ -388,3 +388,22 @@ input {
     margin: 0;
     margin-left: .5rem;
 }
+
+.pager .item {
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 5rem;
+    text-align: center;
+    padding: .2rem;
+}
+
+.pager .active.item {
+    color: white;
+    background-color: deepskyblue;
+}
+
+.pager .icon.item {
+    vertical-align: top;
+    padding-top: .1rem;
+}
