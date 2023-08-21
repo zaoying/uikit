@@ -429,7 +429,7 @@ input {
     border: solid 2px dodgerblue;
 }
 
-.stepper > .header .active.item > .icon {
+.stepper > .header .passed.item > .icon {
     color: white;
     background-color: dodgerblue;
     border-radius: 5rem;
@@ -443,7 +443,7 @@ input {
     background-color: #33333333;
 }
 
-.stepper > .header .active.item > .divider {
+.stepper > .header .passed.item > .divider {
     display: inline-block;
     height: 2px;
     width: 5rem;

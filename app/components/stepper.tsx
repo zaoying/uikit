@@ -60,9 +60,10 @@ export const StepperItem: FC<StepperItemProps> = define((props) => {
 export const StepperHeader: FC<StepperPops> = define((props) => {
     return <ul className="horizontal list">{
         props.items?.map((item, i) => {
-            const isActive = props.step == i ? "active" : ""
-            return <li key={i} className={`item ${isActive}`}>
-                <i className="icon">{i + 1}</i>
+            const step = props.step ?? 0
+            const passed = step >= i ? "passed" : ""
+            return <li key={i} className={`item ${passed}`}>
+                <i className="icon">{passed ? "✔" : i + 1}</i>
                 {item.title}
                 <span className="divider"></span>
             </li>
