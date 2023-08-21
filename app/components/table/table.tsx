@@ -1,6 +1,7 @@
 import { FC, ReactNode, useEffect, useState } from 'react';
 import { Context, NewIoCContext, useIoC } from "../../hooks/ioc";
 import { PropsDispatcher, UniqueController } from '../container';
+import { Once } from '../once';
 
 const {define} = NewIoCContext()
 
@@ -8,7 +9,7 @@ export type TableColumnProps = {
     name: string
     title: ReactNode
     width?: number
-    children: FC<{ctx: Context, name: string, rowNum: number, data: any}>
+    children: FC<{name: string, rowNum: number, data: any}>
 }
 
 export const TableColumn: FC<TableColumnProps> = define((props) => {
@@ -19,10 +20,17 @@ export const TableColumn: FC<TableColumnProps> = define((props) => {
     return <></>
 })
 
+export const TablePropsDispatcher: PropsDispatcher<TableProps> = define((props) => {})
+export interface TableController extends UniqueController<TableColumnProps> {
+    appendData(...data: any[]): void
+    updateData(rowNum: number, data: any): void
+    removeData(rowNum: number): void
+}
+
 export type TableProps = {
     columns?: TableColumnProps[]
     data: any[]
-    children: ReactNode
+    children: FC<{ctx: Context, ctl: TableController}>
 }
 
 export const TableHeader: FC<TableProps> = define((props) => {
@@ -37,14 +45,13 @@ export const TableHeader: FC<TableProps> = define((props) => {
 })
 
 export const TableBody: FC<TableProps> = define((props) => {
-    const parent = useIoC()
     return <tbody>
         {
             props.data.map((row, i) => <tr key={i}>
                 {
                     props.columns?.map((col, j) => (
                         <td key={`${i}-${j}`}>
-                            {col.children({ctx: parent, name: col.name, rowNum: i, data:row})}
+                            {col.children({name: col.name, rowNum: i, data:row})}
                         </td>
                     ))
                 }
@@ -52,13 +59,6 @@ export const TableBody: FC<TableProps> = define((props) => {
         }
     </tbody>
 })
-
-export const TablePropsDispatcher: PropsDispatcher<TableProps> = define((props) => {})
-export interface TableController extends UniqueController<TableColumnProps> {
-    updateData(rowNum: number, data: any): void
-    removeData(rowNum: number): void
-}
-
 
 export function NewTableController(setProps: PropsDispatcher<TableProps>): TableController {
     return {
@@ -87,6 +87,9 @@ export function NewTableController(setProps: PropsDispatcher<TableProps>): Table
                 return {...p, columns: columns}
             })
         },
+        appendData(...data: any[]) {
+            setProps(p => ({...p, data: [...p.data, ...data]}))
+        },
         updateData(rowNum, data) {
             const replace = (datas: any[]) => {
                 return datas.map((d, index) => index == rowNum ? data : d)
@@ -112,7 +115,12 @@ export const Table: FC<TableProps> = define((old) => {
             {tabBody(props)}
         </table>
         <div className="footer">
-            {props.children}
+            <Once>{
+                () => props.children && props.children({
+                    ctx: context,
+                    ctl: NewTableController(setProps)
+                })
+            }</Once>
         </div>
     </div>
 })

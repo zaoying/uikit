@@ -51,7 +51,7 @@ export type ModalProps = {
     height?: number
     confirm?: ReactNode
     cancel?: ReactNode
-    children?: FC<{ctl: ModalController, ctx: Context}>
+    children?: FC<{ctx: Context, ctl: ModalController}>
 }
 
 export const ModalPropsDispatcher: PropsDispatcher<ModalProps> = define((cb) => {})
@@ -90,13 +90,12 @@ export const Modal: FC<ModalProps> = define((old) => {
 
     parent.define(ModalPropsDispatcher, setProps)
     return <>
-        <Once>
-            {
-                () => props.children && props.children({
-                    ctl: NewModalController(setProps),
-                    ctx: parent
-                })}
-        </Once>
+        <Once>{
+            () => props.children && props.children({
+                ctx: parent,
+                ctl: NewModalController(setProps)
+            })
+        }</Once>
         <div className={`dimmer ${props.visible ? "show" : ""}`}>
         <div className="modal" style={{width: props.width, height: props.height}}>
                 <div className="header">{parent.inject(Header)(props)}</div>
