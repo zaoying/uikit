@@ -11,19 +11,22 @@ import { Input } from "./components/form/input";
 import { Label } from "./components/form/label";
 import { Select, SelectItem } from "./components/form/select";
 import { List } from "./components/list";
-import { Body, Footer, Header, Hint, Modal, ModalPropsDispatcher, NewModalController } from "./components/modal";
+import { Menu } from "./components/menu";
+import { Body, Modal, ModalDict } from "./components/modal";
 import { useNotification } from "./components/notification";
 import { Pager } from "./components/pager";
 import { NewTableController, Table, TableColumn, TablePropsDispatcher } from "./components/table/table";
 import { Tab, TabItem } from "./components/tabs";
 import { Direction, Tooltip } from "./components/tooltip";
-import { IoCContext, NewIoCContext, useIoC } from "./hooks/ioc";
+import { register } from "./hooks/i18n";
+import { IoCContext, NewIoCContext } from "./hooks/ioc";
 
 const { define, inject } = NewIoCContext()
 
-define(Header, () => <p className="title">修改密码</p>)
+register("zh-cn", (locale) => {
+    locale.define(ModalDict, () => ({confirm: "确定", cancel: "取消"}))
+})
 
-define(Hint, () => ({ confirm: "确认", cancel: "取消" }))
 
 define(Body, () => {
     const checkPassword = (val: InputType) => {
@@ -35,7 +38,13 @@ define(Body, () => {
             {({id}) => <Input id={id} name="username" value="admin" />}
         </Label>
         <Label label="旧密码">
-            {({id}) => <Input id={id} name="password" type="password" validate={checkPassword} />}
+            {({id}) => <Input id={id} name="oldPwd" type="password" validate={checkPassword} />}
+        </Label>
+        <Label label="新密码">
+            {({id}) => <Input id={id} name="newPwd" type="password" validate={checkPassword} />}
+        </Label>
+        <Label label="重复一遍">
+            {({id}) => <Input id={id} name="repeatPwd" type="password" validate={checkPassword} />}
         </Label>
         <Label label="账号类型">
             {
@@ -48,38 +57,39 @@ define(Body, () => {
     </Form>
 })
 
-define(Footer, () => {
-    const context = useIoC()
-    const onConfirm = () => {
-        const setForm = context.inject(FormPropsDispatcher)
-        const formCtl = NewFormController(setForm)
-        const formRef = context.inject(FormReference)({})
-        formCtl.validate(formRef)
-        formCtl.submit()
-        return true
-    }
-    return <Footer onConfirm={onConfirm}></Footer>
-})
-
 export default function Home() {
     const [notification, notifier] = useNotification()
-    const openModal = () => {
-        const setProps = inject(ModalPropsDispatcher)
-        const ctl = NewModalController(setProps)
-        ctl.open()
-    }
     const [direct, setDirect] = useState<Direction>("bottom")
     return (<IoCContext.Provider value={{ define, inject }}>
         <div>
+            <Menu>
+                <a className="grey button">个人</a>
+                <a>设置</a>
+                <a>退出</a>
+            </Menu>
             <Breadcrumb>
                 <>主页</>
                 <>页面管理</>
                 <Link onClick={() => alert("test")}>样例</Link>
             </Breadcrumb>
             <div>
-                <Button onClick={openModal}>
-                    <span><i>🎨</i>打开模态框</span>
-                </Button>
+                <Modal width={360} title="修改用户资料">
+                    {
+                        ({ctl, ctx}) => {
+                            ctl.onConfirm(() => {
+                                const setForm = ctx.inject(FormPropsDispatcher)
+                                const formCtl = NewFormController(setForm)
+                                const formRef = ctx.inject(FormReference)({})
+                                formCtl.validate(formRef);
+                                return true
+                            })
+                            return <Button onClick={ctl.open}>
+                                <span><i>🎨</i>打开模态框</span>
+                            </Button>
+                        }
+                    }
+                </Modal>
+                
                 <Tooltip message="普通按钮" direction={direct}>
                     <Button>普通按钮</Button>
                 </Tooltip>
@@ -91,7 +101,6 @@ export default function Home() {
                     <a onClick={()=> setDirect("right")}>右</a>
                 </Dropdown>
             </div>
-            <Modal width={360}></Modal>
             <List type="horizontal">
                 <Button onClick={() => notifier.info("info")}>通知</Button>
                 <Button onClick={() => notifier.warn("warn")}>警告</Button>
@@ -105,7 +114,7 @@ export default function Home() {
             </Tab>
             <According summary="标题" visible={true}>详情</According>
             <Table data={[{id: 0, name: "张三", age: 35}, {id: 1, name: "李四", age: 28}, {id: 2, name: "王五", age: 40}]}>
-                <TableColumn name="id" title="编号" width={10}>
+                <TableColumn name="id" title={<input type="checkbox" name="ids" value="*"/>} width={10}>
                     {({data}) => <input type="checkbox" name="ids" value={data.id}/>}
                 </TableColumn>
                 <TableColumn name="name" title="名字" width={40}>
