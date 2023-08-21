@@ -54,7 +54,7 @@ export interface Context {
  * @param container 组件的IoC容器上下文
  * @returns 返回包装函数
  */
-function wrap<I, O>(originFunction: Func<I,O>, container: Container): Func<I,O> {
+function wrap<I, O>(originFunction: Func<I,O>): Func<I,O> {
     const wrapped = function (props: I) {
         return originFunction(props)
     }
@@ -78,7 +78,7 @@ export function NewIoCContext(parent?: Context): Context {
                 const componentId = component.prototype.componentId
                 componentId && container.register(componentId, originFunction)
             }
-            return wrap(originFunction, container)
+            return wrap(originFunction)
         },
         inject: function<I, O>(component: Func<I,O>): Func<I,O> {
             const componentId = component.prototype?.componentId
