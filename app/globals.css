@@ -209,7 +209,7 @@ input {
 }
 
 .compact {
-    display: inline-block;
+    display: inline-block !important;
 }
 
 .collapse {
@@ -406,4 +406,53 @@ input {
 .pager .icon.item {
     vertical-align: top;
     padding-top: .1rem;
+}
+
+.stepper > .header > * {
+    display: inline-block;
+    padding: 1rem 0;
+    margin: 0;
+    border-radius: .5rem;
+    box-shadow: 0 0 1px 1px #33333333;
+}
+
+.stepper > .header .item > .icon {
+    opacity: 100;
+    display: inline-block;
+    width: 2rem;
+    height: 2rem;
+    font-size: 1.5rem;
+    color: dodgerblue;
+    background-color: white;
+    border-radius: 5rem;
+    margin-right: .5rem;
+    border: solid 2px dodgerblue;
+}
+
+.stepper > .header .active.item > .icon {
+    color: white;
+    background-color: dodgerblue;
+    border-radius: 5rem;
+}
+
+.stepper > .header .item > .divider {
+    display: inline-block;
+    height: 2px;
+    width: 5rem;
+    margin: .3rem .5rem;
+    background-color: #33333333;
+}
+
+.stepper > .header .active.item > .divider {
+    display: inline-block;
+    height: 2px;
+    width: 5rem;
+    background-color: dodgerblue;
+}
+
+.stepper > .body > .content {
+    display: none;
+}
+.stepper > .body > .active.content {
+    display: block;
 }

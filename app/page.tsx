@@ -15,6 +15,7 @@ import { Menu } from "./components/menu";
 import { Body, Modal, ModalDict } from "./components/modal";
 import { useNotification } from "./components/notification";
 import { Pager } from "./components/pager";
+import { Stepper, StepperItem } from "./components/stepper";
 import { Table, TableColumn } from "./components/table/table";
 import { Tab, TabItem } from "./components/tabs";
 import { Direction, Tooltip } from "./components/tooltip";
@@ -73,22 +74,20 @@ export default function Home() {
                 <Link onClick={() => alert("test")}>样例</Link>
             </Breadcrumb>
             <div>
-                <Modal width={360} title="修改用户资料">
-                    {
-                        ({ctl, ctx}) => {
-                            ctl.onConfirm(() => {
-                                const setForm = ctx.inject(FormPropsDispatcher)
-                                const formCtl = NewFormController(setForm)
-                                const formRef = ctx.inject(FormReference)({})
-                                formCtl.validate(formRef);
-                                return true
-                            })
-                            return <Button onClick={ctl.open}>
-                                <span><i>🎨</i>打开模态框</span>
-                            </Button>
-                        }
+                <Modal width={360} title="修改用户资料">{
+                    ({ctl, ctx}) => {
+                        ctl.onConfirm(() => {
+                            const setForm = ctx.inject(FormPropsDispatcher)
+                            const formCtl = NewFormController(setForm)
+                            const formRef = ctx.inject(FormReference)({})
+                            formCtl.validate(formRef);
+                            return true
+                        })
+                        return <Button onClick={ctl.open}>
+                            <span><i>🎨</i>打开模态框</span>
+                        </Button>
                     }
-                </Modal>
+                }</Modal>
                 
                 <Tooltip message="普通按钮" direction={direct}>
                     <Button>普通按钮</Button>
@@ -113,8 +112,8 @@ export default function Home() {
                 <TabItem name="ghi" title="ghi">789</TabItem>
             </Tab>
             <According summary="标题" visible={true}>详情</According>
-            <Table data={[]}>
-                {({ctl}) => {
+            <Table data={[]}>{
+                ({ctl}) => {
                     ctl.appendData(
                         {id: 0, name: "张三", age: 35}, 
                         {id: 1, name: "李四", age: 28},
@@ -130,17 +129,68 @@ export default function Home() {
                         <TableColumn name="age" title="年龄" width={20}>
                             {({data}) => data.age}
                         </TableColumn>
-                        <TableColumn name="operation" title="操作" width={20}>
-                            {
-                                ({rowNum}) => {
-                                    return <Button type="danger" onClick={()=> ctl.removeData(rowNum)}>删除</Button>
-                                }
+                        <TableColumn name="operation" title="操作" width={20}>{
+                            ({rowNum}) => {
+                                return <Button type="danger" onClick={()=> ctl.removeData(rowNum)}>删除</Button>
                             }
-                        </TableColumn>
+                        }</TableColumn>
                         <Pager current={3} interval={5} total={10}></Pager>
                     </>}
-                }
-            </Table>
+            }</Table>
+            <Stepper>{
+                ({ctl}) => <>
+                    <StepperItem title="登记信息">
+                        <Form>
+                            <Label label="姓名">
+                                {({id}) => <Input id={id} name="username"/>}
+                            </Label>
+                            <Label label="联系方式">
+                                {({id}) => <Input id={id} name="contact" type="tel"/>}
+                            </Label>
+                            <Label label="住址">
+                                {({id}) => <Input id={id} name="address" type="tel"/>}
+                            </Label>
+                            <div className="actions center">
+                                <Button type="primary" onClick={ctl.next}>下一步</Button>
+                            </div>
+                        </Form>
+                    </StepperItem>
+                    <StepperItem title="选择房间">
+                        <Form>
+                            <Label label="房价号">
+                                {({id}) => <Input id={id} name="room"/>}
+                            </Label>
+                            <Label label="入住日期">
+                                {({id}) => <Input id={id} name="start" type="date"/>}
+                            </Label>
+                            <Label label="退房日期">
+                                {({id}) => <Input id={id} name="end" type="date"/>}
+                            </Label>
+                            <div className="actions center">
+                                <Button type="grey" onClick={ctl.previous}>上一步</Button>
+                                <Button type="primary" onClick={ctl.next}>下一步</Button>
+                            </div>
+                        </Form>
+                    </StepperItem>
+                    <StepperItem title="完成支付">
+                        <Form>
+                            <Label label="房间号">
+                                {({id}) => <Input id={id} name="price" readonly value={100}/>}
+                            </Label>
+                            <Label label="支付方式">{
+                                ({id}) => <Select id={id} name="payment">
+                                    <SelectItem name="支付宝" value="alipay"></SelectItem>
+                                    <SelectItem name="微信" value="wechat"></SelectItem>
+                                </Select>
+                            }</Label>
+                            <div className="actions center">
+                                <Button type="grey" onClick={ctl.previous}>上一步</Button>
+                                <Button type="primary">提交</Button>
+                            </div>
+                        </Form>
+                    </StepperItem>
+                </>
+            }</Stepper>
         </div>
     </IoCContext.Provider>);
 }
