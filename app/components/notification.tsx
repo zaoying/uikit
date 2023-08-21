@@ -1,13 +1,15 @@
-import { NewIoCContext } from "Com/app/hooks/ioc";
-import { FC, ReactNode, useState } from "react";
+import { Context, NewIoCContext, useIoC } from "Com/app/hooks/ioc";
+import { FC, useState } from "react";
 import { useInterval } from "../hooks/interval";
+import { PropsDispatcher } from "./container";
 
-const {define, inject} = NewIoCContext()
+const {define} = NewIoCContext()
 
 export interface Notifier {
     info(msg: string, timeout?: number): void
     warn(msg: string, timeout?: number): void
     error(msg: string, timeout?: number): void
+    remove(expireAt: number): void
 }
 
 export type MsgType = "info" | "warn" | "error";
@@ -23,45 +25,58 @@ function newMsg(type: MsgType, msg: string, timeout = 1000): Msg {
 }
 
 export type NotificationProps = {
-    msgs: Msg[],
-    remove: (id: number) => void
+    msgs?: Msg[],
+    children: FC<{ctx: Context, ctl: Notifier}>
 }
 
-export const Notification: FC<NotificationProps> = define((props) => {
-    return <ul className="notification">
-        {
-            props.msgs.map(msg => (
-                <li key={msg.expiredAt} className={`${msg.type} item`}>
-                    <span>{msg.text}</span>
-                    <a className="icon" onClick={() => props.remove(msg.expiredAt)}>x</a>
-                </li>
-            ))
-        }
-    </ul>
-})
+export const NotificationPropsDispatcher: PropsDispatcher<NotificationProps> = define(() => {})
 
-export function useNotification(component?: FC<NotificationProps>): [ReactNode, Notifier] {
-    const notification = component ?? inject(Notification)
-    const [msgs, list] = useState(new Array<Msg>())
+export function NewNotifier(setProps: PropsDispatcher<NotificationProps>): Notifier {
     useInterval(() => {
         const now = new Date().getTime()
-        list(old => old.length ? old.filter(msg => msg.expiredAt > now) : old)
+        setProps(p => ({
+            ...p, 
+            msgs: p.msgs ? p.msgs.filter(msg => msg.expiredAt > now) : p.msgs
+        }))
     }, 1000)
     
-    const remove = function(id: number) {
-        list(old => old.filter(msg => msg.expiredAt != id))
+    const add = function(msg: Msg) {
+        setProps(p => ({
+            ...p,
+            msgs: p.msgs ? [...p.msgs, msg] : [msg]
+        }))
     }
-
-    const notifier: Notifier = {
+    return {
         info: function(msg: string, timeout = 5000) {
-            list((old)=> [...old, newMsg("info", msg, timeout)])
+            add(newMsg("info", msg, timeout))
         },
         warn: function(msg: string, timeout = 5000) {
-            list((old)=> [...old, newMsg("warn", msg, timeout)])
+            add(newMsg("warn", msg, timeout))
         },
         error: function(msg: string, timeout = 5000) {
-            list((old)=> [...old, newMsg("error", msg, timeout)])
-        }
+            add(newMsg("error", msg, timeout))
+        },
+        remove(expireAt) {
+            setProps(p => ({...p, msgs: p.msgs ? p.msgs.filter(msg => msg.expiredAt != expireAt) : p.msgs}))
+        },
     }
-    return [notification({msgs: msgs, remove: remove}), notifier]
 }
+
+export const Notification: FC<NotificationProps> = define((old) => {
+    const [props, setProps] = useState(old)
+    const context = useIoC()
+    context.define(NotificationPropsDispatcher, setProps)
+    const ctl = NewNotifier(setProps)
+    
+    return <>
+        {props.children({ctx: context, ctl: ctl})}
+        <ul className="notification">{
+            props.msgs?.map(msg => (
+                <li key={msg.expiredAt} className={`${msg.type} item`}>
+                    <span>{msg.text}</span>
+                    <a className="icon" onClick={() => ctl.remove(msg.expiredAt)}>x</a>
+                </li>
+            ))
+        }</ul>
+    </>
+})

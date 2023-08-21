@@ -13,7 +13,7 @@ import { Select, SelectItem } from "./components/form/select";
 import { List } from "./components/list";
 import { Menu } from "./components/menu";
 import { Body, Modal, ModalDict } from "./components/modal";
-import { useNotification } from "./components/notification";
+import { Notification } from "./components/notification";
 import { Pager } from "./components/pager";
 import { Stepper, StepperItem } from "./components/stepper";
 import { Table, TableColumn } from "./components/table/table";
@@ -27,7 +27,6 @@ const { define, inject } = NewIoCContext()
 register("zh-cn", (locale) => {
     locale.define(ModalDict, () => ({confirm: "确定", cancel: "取消"}))
 })
-
 
 define(Body, () => {
     const checkPassword = (val: InputType) => {
@@ -59,7 +58,6 @@ define(Body, () => {
 })
 
 export default function Home() {
-    const [notification, notifier] = useNotification()
     const [direct, setDirect] = useState<Direction>("bottom")
     return (<IoCContext.Provider value={{ define, inject }}>
         <div>
@@ -100,12 +98,14 @@ export default function Home() {
                     <a onClick={()=> setDirect("right")}>右</a>
                 </Dropdown>
             </div>
-            <List type="horizontal">
-                <Button onClick={() => notifier.info("info")}>通知</Button>
-                <Button onClick={() => notifier.warn("warn")}>警告</Button>
-                <Button onClick={() => notifier.error("error")}>错误</Button>
-            </List>
-            {notification}
+            <Notification>{
+                ({ctl}) => <List type="horizontal">
+                    <Button onClick={() => ctl.info("info")}>通知</Button>
+                    <Button onClick={() => ctl.warn("warn")}>警告</Button>
+                    <Button onClick={() => ctl.error("error")}>错误</Button>
+                </List>
+            }</Notification>
+            
             <Tab activeTab="abc">
                 <TabItem name="abc" title="abc">123</TabItem>
                 <TabItem name="def" title="def">456</TabItem>
