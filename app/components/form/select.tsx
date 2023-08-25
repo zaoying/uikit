@@ -5,23 +5,23 @@ import { Dropdown } from '../dropdown';
 
 const {define} = NewIoCContext()
 
-export type SelectItemProps<T> = {
-    name: string
-    value: T
+export type SelectItemProps = {
+    value: string
+    children: string
 }
 
 export type SelectProps = {
     id: string
     name: string
     value?: string
-    options?: SelectItemProps<any>[]
-    filterFunc?: (op: SelectItemProps<any>) => boolean
+    options?: SelectItemProps[]
+    filterFunc?: (op: SelectItemProps) => boolean
     children?: ReactNode
 }
 
 export const SelectPropsDispatcher: PropsDispatcher<SelectProps> = define((cb) => {})
 
-export interface SelectController extends UniqueController<SelectItemProps<any>> {
+export interface SelectController extends UniqueController<SelectItemProps> {
 }
 
 export function NewSelectController(setProps: PropsDispatcher<SelectProps>):SelectController  {
@@ -31,7 +31,7 @@ export function NewSelectController(setProps: PropsDispatcher<SelectProps>):Sele
                 if (!p.options) {
                     return {...p, options: [op]}
                 }
-                if (p.options.find(o => o.name == op.name)) {
+                if (p.options.find(o => o.value == op.value)) {
                     return p
                 }
                 return {...p, options: [...p.options, op]}
@@ -42,23 +42,23 @@ export function NewSelectController(setProps: PropsDispatcher<SelectProps>):Sele
                 if (!p.options) {
                     return p
                 }
-                const options = p.options.map(o => o.name == op.name ? op : o)
+                const options = p.options.map(o => o.value == op.value ? op : o)
                 return {...p, options: options}
             })
         },
-        remove(name) {
+        remove(val) {
             setProps(p => {
                 if (!p.options) {
                     return p
                 }
-                const options = p.options.filter(o => o.name != name)
+                const options = p.options.filter(o => o.value != val)
                 return {...p, options: options}
             })
         }
     }
 }
 
-export const SelectItem: FC<SelectItemProps<any>> = define((props) => {
+export const SelectItem: FC<SelectItemProps> = define((props) => {
     const context = useIoC()
     const setProps = context.inject(SelectPropsDispatcher)
     const ctl = NewSelectController(setProps)
@@ -71,7 +71,7 @@ export const Select: FC<SelectProps> = define((old) => {
     const [props, setProps] = useState(old)
     context.define(SelectPropsDispatcher, setProps)
 
-    const [selected, setSelected] = useState(old.value)
+    const [selected, setSelected] = useState<SelectItemProps>({value: "", children: ""})
     
     const [value, setValue] = useState(old.value)
     const onChange = (e: any) => {
@@ -82,23 +82,27 @@ export const Select: FC<SelectProps> = define((old) => {
         setValue(val ? `${val}` : "")
     }
 
-    const defaultFilterFunc = function(op: SelectItemProps<any>) {
-        return value ? op.name.startsWith(value) : true
+    const defaultFilterFunc = function(op: SelectItemProps) {
+        return value ? op.children.startsWith(value) : true
     }
     const filterFunc = props.filterFunc ?? defaultFilterFunc
     
-    const select = <div key={props.id} className="select">
-        <input id={props.id} name={props.name} defaultValue={selected} onChange={onChange}/>
+    const select = <div key={props.id} className="header">
+        <input id={props.id} name={props.name} defaultValue={selected.children} onChange={onChange}/>
         <i className="icon">﹀</i>
     </div>
-    const options = props.options?.filter(filterFunc).map((op, i) => (
-        <a key={op.value} className="button" onClick={() => setSelected(op.name)}>
-            {op.name}
+    const onClick = (op: SelectItemProps) => {
+        setValue(op.children)
+        setSelected(op)
+    }
+    const options = props.options?.filter(filterFunc).map((op) => (
+        <a key={op.value} className="button" onClick={() => onClick(op)}>
+            {op.children}
         </a>
     ))
     return <>
         {props.children}
-        <Dropdown trigger="click">
+        <Dropdown className="select" trigger="click">
             {options ? [select, ...options] : [select]}
         </Dropdown>
     </>

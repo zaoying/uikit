@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { According } from "./components/according";
 import { Button } from "./components/basic/button";
 import { Link } from "./components/basic/link";
@@ -19,6 +18,7 @@ import { Stepper, StepperItem } from "./components/stepper";
 import { Table, TableColumn } from "./components/table/table";
 import { Tab, TabItem } from "./components/tabs";
 import { Direction, Tooltip } from "./components/tooltip";
+import { WithState } from "./components/with";
 import { register } from "./hooks/i18n";
 import { IoCContext, NewIoCContext } from "./hooks/ioc";
 
@@ -46,21 +46,18 @@ define(Body, () => {
         <Label label="重复一遍">
             {({id}) => <Input id={id} name="repeatPwd" type="password" validate={checkPassword} />}
         </Label>
-        <Label label="账号类型">
-            {
-                ({id}) => <Select id={id} name="account">
-                    <SelectItem name="系统管理员" value="admin"></SelectItem>
-                    <SelectItem name="普通用户" value="user"></SelectItem>
-                </Select>
-            }
-        </Label>
+        <Label label="账号类型">{
+            ({id}) => <Select id={id} name="account">
+                <SelectItem value="admin">系统管理员</SelectItem>
+                <SelectItem value="user">普通用户</SelectItem>
+            </Select>
+        }</Label>
     </Form>
 })
 
 export default function Home() {
-    const [direct, setDirect] = useState<Direction>("bottom")
     return (<IoCContext.Provider value={{ define, inject }}>
-        <div>
+        <div className="main">
             <Menu>
                 <a className="grey button">个人</a>
                 <a>设置</a>
@@ -87,16 +84,20 @@ export default function Home() {
                     }
                 }</Modal>
                 
-                <Tooltip message="普通按钮" direction={direct}>
-                    <Button>普通按钮</Button>
-                </Tooltip>
-                <Dropdown trigger="click">
-                    <Button type="grey">请选择方向<i className="icon">﹀</i></Button>
-                    <a onClick={()=> setDirect("top")}>上</a>
-                    <a onClick={()=> setDirect("bottom")}>下</a>
-                    <a onClick={()=> setDirect("left")}>左</a>
-                    <a onClick={()=> setDirect("right")}>右</a>
-                </Dropdown>
+                <WithState state={"bottom" as Direction}>{
+                    ({state, setState}) => <>
+                        <Tooltip message="普通按钮" direction={state}>
+                            <Button>普通按钮</Button>
+                        </Tooltip>
+                        <Dropdown trigger="click">
+                            <Button type="grey">请选择方向<i className="icon">﹀</i></Button>
+                            <a key="top" onClick={()=> setState("top")}>上</a>
+                            <a key="bottom"  onClick={()=> setState("bottom")}>下</a>
+                            <a key="left"  onClick={()=> setState("left")}>左</a>
+                            <a key="right"  onClick={()=> setState("right")}>右</a>
+                        </Dropdown>
+                    </>
+                }</WithState>
             </div>
             <Notification>{
                 ({ctl}) => <List type="horizontal">
@@ -130,9 +131,7 @@ export default function Home() {
                             {({data}) => data.age}
                         </TableColumn>
                         <TableColumn name="operation" title="操作" width={20}>{
-                            ({rowNum}) => {
-                                return <Button type="danger" onClick={()=> ctl.removeData(rowNum)}>删除</Button>
-                            }
+                            ({rowNum}) => <Button type="danger" onClick={()=> ctl.removeData(rowNum)}>删除</Button>
                         }</TableColumn>
                         <Pager current={3} interval={5} total={10}></Pager>
                     </>}
@@ -179,8 +178,8 @@ export default function Home() {
                             </Label>
                             <Label label="支付方式">{
                                 ({id}) => <Select id={id} name="payment">
-                                    <SelectItem name="支付宝" value="alipay"></SelectItem>
-                                    <SelectItem name="微信" value="wechat"></SelectItem>
+                                    <SelectItem value="alipay">支付宝</SelectItem>
+                                    <SelectItem value="wechat">微信</SelectItem>
                                 </Select>
                             }</Label>
                             <div className="actions center">

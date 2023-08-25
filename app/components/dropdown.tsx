@@ -6,6 +6,7 @@ const {define} = NewIoCContext()
 export type Trigger = "hover" | "click"
 export type DropdownProps = {
     trigger?: Trigger
+    className?: string
     visible?: boolean
     children: ReactNode[]
 }
@@ -39,7 +40,8 @@ export const Dropdown: FC<DropdownProps> = define((props) => {
     const restChildren = props.children.filter((_, i) => i != 0)
         .map((item, i) => <li onClick={onItemClick} key={i} className="item">{item}</li>);
     
-    return <div id={uniqueID} tabIndex={-1} className={`dropdown ${visible ? "show" : ""}`} {...eventListener}>
+    const className = `${props.className ?? "dropdown"} ${visible ? "show" : ""}`
+    return <div id={uniqueID} tabIndex={-1} className={className} {...eventListener}>
         {firstChild}
         {
             <ul className="list">

@@ -1,4 +1,4 @@
-import { FC, ReactNode, useEffect, useState } from "react"
+import { Dispatch, FC, ReactNode, SetStateAction, useEffect, useState } from "react"
 import { NewIoCContext, useIoC } from "../hooks/ioc"
 
 const {define} = NewIoCContext()
@@ -18,8 +18,7 @@ export type ContainerProps = {
     children: ReactNode[]
 }
 
-export type DispatcherCallback<T> = (props: T) => T
-export type PropsDispatcher<T> = (cb: DispatcherCallback<T>) => void
+export type PropsDispatcher<T> = Dispatch<SetStateAction<T>>
 
 export const ContainerPropsDispatcher: PropsDispatcher<ContainerProps> = define((cb) => {})
 

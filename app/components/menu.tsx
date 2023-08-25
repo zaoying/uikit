@@ -11,7 +11,7 @@ export type MenuProps = {
 }
 
 export const Menu: FC<MenuProps> = define((props) => {
-    return <Dropdown trigger={props.trigger}>
+    return <Dropdown className="menu" trigger={props.trigger}>
         {props.children}
     </Dropdown>
 })
