@@ -1,7 +1,5 @@
-import { NewIoCContext } from "Com/app/hooks/ioc"
 import { FC, ReactNode } from "react"
 
-const {define} = NewIoCContext()
 type ButtonType = "primary" | "second" | "grey" | "danger"
 
 type ButtonProps = {
@@ -10,10 +8,10 @@ type ButtonProps = {
     children?: ReactNode
 }
 
-export const Button: FC<ButtonProps> = define(function(props) {
+export const Button: FC<ButtonProps> = function(props) {
     return (
         <a className={`${props.type ?? "primary"} button`} onClick={props.onClick}>
             {props.children}
         </a>
     );
-})
+}

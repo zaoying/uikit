@@ -1,9 +1,7 @@
-import { NewIoCContext, useIoC } from 'Com/app/hooks/ioc';
+import { useIoC } from 'Com/app/hooks/ioc';
 import { FC, ReactNode, useEffect, useState } from 'react';
 import { PropsDispatcher, UniqueController } from '../container';
 import { Dropdown } from '../dropdown';
-
-const {define} = NewIoCContext()
 
 export type SelectItemProps = {
     value: string
@@ -19,7 +17,7 @@ export type SelectProps = {
     children?: ReactNode
 }
 
-export const SelectPropsDispatcher: PropsDispatcher<SelectProps> = define((cb) => {})
+export const SelectPropsDispatcher: PropsDispatcher<SelectProps> = (cb) => {}
 
 export interface SelectController extends UniqueController<SelectItemProps> {
 }
@@ -58,15 +56,15 @@ export function NewSelectController(setProps: PropsDispatcher<SelectProps>):Sele
     }
 }
 
-export const SelectItem: FC<SelectItemProps> = define((props) => {
+export const SelectItem: FC<SelectItemProps> = (props) => {
     const context = useIoC()
     const setProps = context.inject(SelectPropsDispatcher)
     const ctl = NewSelectController(setProps)
     useEffect(() => ctl.insert(props))
     return <></>
-})
+}
 
-export const Select: FC<SelectProps> = define((old) => {
+export const Select: FC<SelectProps> = (old) => {
     const context = useIoC()
     const [props, setProps] = useState(old)
     context.define(SelectPropsDispatcher, setProps)
@@ -106,4 +104,4 @@ export const Select: FC<SelectProps> = define((old) => {
             {options ? [select, ...options] : [select]}
         </Dropdown>
     </>
-})
+}

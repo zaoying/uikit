@@ -1,9 +1,7 @@
 import { FC, ReactNode, useEffect, useState } from 'react';
-import { Context, NewIoCContext, useIoC } from "../hooks/ioc";
+import { Context, useIoC } from "../hooks/ioc";
 import { PropsDispatcher } from './container';
 import { Once } from './once';
-
-const {define} = NewIoCContext()
 
 export type StepperItemProps = {
     title: ReactNode
@@ -23,7 +21,7 @@ export interface StepperController {
     next(): void
 }
 
-export const StepperPropsDispatcher: PropsDispatcher<StepperPops> = define((props) => {})
+export const StepperPropsDispatcher: PropsDispatcher<StepperPops> = (props) => {}
 
 export function NewStepperController(setProps: PropsDispatcher<StepperPops>): StepperController {
     return {
@@ -49,15 +47,15 @@ export function NewStepperController(setProps: PropsDispatcher<StepperPops>): St
     }
 }
 
-export const StepperItem: FC<StepperItemProps> = define((props) => {
+export const StepperItem: FC<StepperItemProps> = (props) => {
     const context = useIoC()
     const setProps = context.inject(StepperPropsDispatcher)
     const ctl = NewStepperController(setProps)
     useEffect(() => ctl.insert(props))
     return <></>
-})
+}
 
-export const StepperHeader: FC<StepperPops> = define((props) => {
+export const StepperHeader: FC<StepperPops> = (props) => {
     return <ul className="horizontal list">{
         props.items?.map((item, i) => {
             const step = props.step ?? 0
@@ -69,9 +67,9 @@ export const StepperHeader: FC<StepperPops> = define((props) => {
             </li>
         })
     }</ul>
-})
+}
 
-export const StepperBody: FC<StepperPops> = define((props) => {
+export const StepperBody: FC<StepperPops> = (props) => {
     return <>{
         props.items?.map((item, i) => {
             const isActive = props.step == i ? "active" : ""
@@ -80,9 +78,9 @@ export const StepperBody: FC<StepperPops> = define((props) => {
             </div>
         })
     }</>
-})
+}
 
-export const Stepper: FC<StepperPops> = define((old) => {
+export const Stepper: FC<StepperPops> = (old) => {
     const [props, setProps] = useState<StepperPops>({...old, step: old.step ?? 0})
     const context = useIoC()
     context.define(StepperPropsDispatcher, setProps)
@@ -101,4 +99,4 @@ export const Stepper: FC<StepperPops> = define((old) => {
             </div>
         </div>
     </>
-})
+}

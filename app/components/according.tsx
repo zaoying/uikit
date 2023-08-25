@@ -1,7 +1,5 @@
-import { NewIoCContext } from 'Com/app/hooks/ioc';
 import { FC, ReactNode, useState } from 'react';
 
-const {define} = NewIoCContext()
 
 export type AccordingProps = {
     summary: ReactNode
@@ -9,7 +7,7 @@ export type AccordingProps = {
     children?: ReactNode
 }
 
-export const According: FC<AccordingProps> = define((props) => {
+export const According: FC<AccordingProps> = (props) => {
     const [visible, setVisible] = useState(props.visible)
     return <div className={`according ${visible ? "show" : ""}`}>
         <a className="summary" onClick={() => setVisible(c => !c)}>
@@ -20,4 +18,4 @@ export const According: FC<AccordingProps> = define((props) => {
             {props.children}
         </div>
     </div>
-})
+}

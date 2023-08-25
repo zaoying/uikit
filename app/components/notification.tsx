@@ -1,9 +1,7 @@
-import { Context, NewIoCContext, useIoC } from "Com/app/hooks/ioc";
+import { Context, useIoC } from "Com/app/hooks/ioc";
 import { FC, useState } from "react";
 import { useInterval } from "../hooks/interval";
 import { PropsDispatcher } from "./container";
-
-const {define} = NewIoCContext()
 
 export interface Notifier {
     info(msg: string, timeout?: number): void
@@ -29,7 +27,7 @@ export type NotificationProps = {
     children: FC<{ctx: Context, ctl: Notifier}>
 }
 
-export const NotificationPropsDispatcher: PropsDispatcher<NotificationProps> = define(() => {})
+export const NotificationPropsDispatcher: PropsDispatcher<NotificationProps> = () => {}
 
 export function NewNotifier(setProps: PropsDispatcher<NotificationProps>): Notifier {
     useInterval(() => {
@@ -62,7 +60,7 @@ export function NewNotifier(setProps: PropsDispatcher<NotificationProps>): Notif
     }
 }
 
-export const Notification: FC<NotificationProps> = define((old) => {
+export const Notification: FC<NotificationProps> = (old) => {
     const [props, setProps] = useState(old)
     const context = useIoC()
     context.define(NotificationPropsDispatcher, setProps)
@@ -79,4 +77,4 @@ export const Notification: FC<NotificationProps> = define((old) => {
             ))
         }</ul>
     </>
-})
+}

@@ -1,7 +1,4 @@
 import { FC, useState } from 'react';
-import { NewIoCContext } from "../hooks/ioc";
-
-const {define} = NewIoCContext()
 
 export type PagerProps = {
     current: number
@@ -10,12 +7,12 @@ export type PagerProps = {
     onChange?: (page: number) => void
 }
 
-export const Pager: FC<PagerProps> = define((props) => {
+export const Pager: FC<PagerProps> = (props) => {
     const currentPage = Math.floor(props.current)
+    const [current, setCurrent] = useState(currentPage)
     if (currentPage < 1) {
         return <p className="error">current page must greater then 0.</p>
     }
-    const [current, setCurrent] = useState(currentPage)
 
     const total = Math.floor(props.total)
     if (total < 1) {
@@ -70,4 +67,4 @@ export const Pager: FC<PagerProps> = define((props) => {
             <li className="icon item" onClick={() => setPage(total)}>⟩⟩</li>
         </ul>
     </div>
-})
+}

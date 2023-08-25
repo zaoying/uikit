@@ -1,12 +1,10 @@
-import { NewIoCContext, useIoC } from "Com/app/hooks/ioc";
+import { useIoC } from "Com/app/hooks/ioc";
 import { FC, ReactNode, useState } from "react";
 import { Context } from "vm";
 import { i18n, useI18n } from "../hooks/i18n";
 import { Button } from "./basic/button";
 import { PropsDispatcher } from "./container";
 import { Once } from "./once";
-
-const {define} = NewIoCContext()
 
 export const ModalDict = i18n("en-us", () => {
     return {
@@ -15,12 +13,12 @@ export const ModalDict = i18n("en-us", () => {
     }
 })
 
-export const Header: FC<{title?: ReactNode}> = define((props) => {
+export const Header: FC<{title?: ReactNode}> = (props) => {
     const title = typeof props.title == "string" ? <p className="title">{props.title}</p> : props.title
     return title
-})
+}
 
-export const Body: FC = define(() => <></>)
+export const Body: FC = () => <></>
 
 export type FooterProps = {
     confirm?: ReactNode
@@ -29,7 +27,7 @@ export type FooterProps = {
     onCancel?: () => boolean
 }
 
-export const Footer: FC<FooterProps> = define((props) => {
+export const Footer: FC<FooterProps> = (props) => {
     const context = useIoC()    
     const setProps = context.inject(ModalPropsDispatcher)
     const ctl = NewModalController(setProps)
@@ -42,7 +40,7 @@ export const Footer: FC<FooterProps> = define((props) => {
         {props.confirm ?? confirm}
         {props.cancel ?? cancel}
     </div>
-})
+}
 
 export type ModalProps = {
     title?: ReactNode,
@@ -54,7 +52,7 @@ export type ModalProps = {
     children?: FC<{ctx: Context, ctl: ModalController}>
 }
 
-export const ModalPropsDispatcher: PropsDispatcher<ModalProps> = define((cb) => {})
+export const ModalPropsDispatcher: PropsDispatcher<ModalProps> = (cb) => {}
 
 export interface ModalController {
     title(text: ReactNode): void
@@ -84,7 +82,7 @@ export function NewModalController(setProps: PropsDispatcher<ModalProps>): Modal
     }
 }
 
-export const Modal: FC<ModalProps> = define((old) => {
+export const Modal: FC<ModalProps> = (old) => {
     const [props, setProps] = useState<ModalProps>(old)
     const parent = useIoC()
 
@@ -108,4 +106,4 @@ export const Modal: FC<ModalProps> = define((old) => {
         </div>
     </div>
     </>
-})
+}

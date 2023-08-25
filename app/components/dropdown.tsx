@@ -1,7 +1,4 @@
-import { NewIoCContext } from 'Com/app/hooks/ioc';
 import { FC, ReactNode, useId, useState } from 'react';
-
-const {define} = NewIoCContext()
 
 export type Trigger = "hover" | "click"
 export type DropdownProps = {
@@ -11,7 +8,7 @@ export type DropdownProps = {
     children: ReactNode[]
 }
 
-export const Dropdown: FC<DropdownProps> = define((props) => {
+export const Dropdown: FC<DropdownProps> = (props) => {
     const uniqueID = useId()
     const [visible, setVisible] = useState(props.visible)
     const onClick = (e: any) => {
@@ -49,4 +46,4 @@ export const Dropdown: FC<DropdownProps> = define((props) => {
             </ul>
         }
     </div>
-})
+}

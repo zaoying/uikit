@@ -1,7 +1,5 @@
 import { Dispatch, FC, ReactNode, SetStateAction, useEffect, useState } from "react"
-import { NewIoCContext, useIoC } from "../hooks/ioc"
-
-const {define} = NewIoCContext()
+import { useIoC } from "../hooks/ioc"
 
 export type K = string | number
 
@@ -20,7 +18,7 @@ export type ContainerProps = {
 
 export type PropsDispatcher<T> = Dispatch<SetStateAction<T>>
 
-export const ContainerPropsDispatcher: PropsDispatcher<ContainerProps> = define((cb) => {})
+export const ContainerPropsDispatcher: PropsDispatcher<ContainerProps> = (cb) => {}
 
 export function NewContainerController(setProps: PropsDispatcher<ContainerProps>): UniqueController<ItemProps> {
     return {
@@ -52,17 +50,18 @@ export type ItemProps = {
     children: ReactNode
 }
 
-export const Item: FC<ItemProps> = define((props) => {
+export const Item: FC<ItemProps> = (props) => {
     const context = useIoC()
     const dispatcher = context.inject(ContainerPropsDispatcher)
     const ctl = NewContainerController(dispatcher)
     useEffect(()=> ctl.insert(props))
     return <></>
-})
+}
 
-export const Container: FC<ContainerProps> = define((old) => {
+export const Container: FC<ContainerProps> = (old) => {
     const [props, setProps] = useState(old)
-    define(ContainerPropsDispatcher, setProps)
+    const context = useIoC()
+    context.define(ContainerPropsDispatcher, setProps)
     const children = props.items.length ? props.items.map(item =>
                 <li key={item.index} className={props.itemClass ?? "item"}>
                     {item.children}
@@ -74,4 +73,4 @@ export const Container: FC<ContainerProps> = define((old) => {
     return <ul className={props.containerClass ?? "container"}>
         { children }
     </ul>
-})
+}

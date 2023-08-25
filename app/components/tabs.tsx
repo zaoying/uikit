@@ -1,15 +1,13 @@
 import { FC, ReactNode, useEffect, useState } from 'react';
-import { NewIoCContext, useIoC } from "../hooks/ioc";
+import { useIoC } from "../hooks/ioc";
 import { K, PropsDispatcher, UniqueController } from './container';
-
-const {define} = NewIoCContext()
 
 export interface TabController extends UniqueController<TabItemProps> {
     setActiveTab(name: string): void
     closeAll(): void
 }
 
-export const TabPropsDispatcher: PropsDispatcher<TabProps> = define((props) => {})
+export const TabPropsDispatcher: PropsDispatcher<TabProps> = (props) => {}
 
 export function NewTabController(setProps: PropsDispatcher<TabProps>): TabController {
     return {
@@ -56,7 +54,7 @@ export function NewTabController(setProps: PropsDispatcher<TabProps>): TabContro
     }
 }
 
-export const TabHeader: FC<TabProps> = define((props) => {
+export const TabHeader: FC<TabProps> = (props) => {
     const context = useIoC()
     const setProps = context.inject(TabPropsDispatcher)
     const ctl = NewTabController(setProps)
@@ -77,9 +75,9 @@ export const TabHeader: FC<TabProps> = define((props) => {
             })
         }
     </ul>
-})
+}
 
-export const TabBody: FC<TabProps> = define((props) => {
+export const TabBody: FC<TabProps> = (props) => {
     return <>{
         props.tabs?.map(tab => {
             const isActiveTab = props.activeTab == tab.name ? "active" : ""
@@ -88,7 +86,7 @@ export const TabBody: FC<TabProps> = define((props) => {
             </div>
         })
     }</>
-})
+}
 
 export type TabItemProps = {
     name: string,
@@ -97,13 +95,13 @@ export type TabItemProps = {
     children: ReactNode
 }
 
-export const TabItem: FC<TabItemProps> = define((props) => {
+export const TabItem: FC<TabItemProps> = (props) => {
     const context = useIoC()
     const setProps = context.inject(TabPropsDispatcher)
     const ctl = NewTabController(setProps)
     useEffect(() => ctl.insert(props))
     return <></>
-})
+}
 
 export type TabProps = {
     activeTab?: K
@@ -111,7 +109,7 @@ export type TabProps = {
     children?: ReactNode
 }
 
-export const Tab: FC<TabProps> = define((old) => {
+export const Tab: FC<TabProps> = (old) => {
     const [props, setProps] = useState(old)
     const context = useIoC()
     context.define(TabPropsDispatcher, setProps)
@@ -126,4 +124,4 @@ export const Tab: FC<TabProps> = define((old) => {
             {tabBody(props)}
         </div>
     </div>
-})
+}

@@ -1,8 +1,6 @@
-import { NewIoCContext, useIoC } from 'Com/app/hooks/ioc';
+import { useIoC } from 'Com/app/hooks/ioc';
 import { FC, ReactNode, RefObject, useEffect, useRef, useState } from 'react';
 import { PropsDispatcher, UniqueController } from '../container';
-
-const {define} = NewIoCContext()
 
 export type InputType = string | File | ReadonlyArray<string> | number | undefined
 
@@ -26,9 +24,9 @@ export interface FormController extends UniqueController<FieldProps> {
     reset(): void
 }
 
-export const FormPropsDispatcher: PropsDispatcher<FormProps> = define((cb) => {})
+export const FormPropsDispatcher: PropsDispatcher<FormProps> = (cb) => {}
 
-export const FormReference: ({}) => RefObject<HTMLFormElement> = define(()=>useRef<HTMLFormElement>(null))
+export const FormReference: ({}) => RefObject<HTMLFormElement> = () => useRef<HTMLFormElement>(null)
 
 export function NewFormController(setProps: PropsDispatcher<FormProps>): FormController {
     return {
@@ -84,7 +82,7 @@ export function NewFormController(setProps: PropsDispatcher<FormProps>): FormCon
     }
 }
 
-export const Form: FC<FormProps> = define((old) => {
+export const Form: FC<FormProps> = (old) => {
     const formRef = useRef<HTMLFormElement>(null)
     const [props, setProps] = useState(old)
     const context = useIoC()
@@ -107,4 +105,4 @@ export const Form: FC<FormProps> = define((old) => {
     return <form ref={formRef} className='form' action={props.action} onSubmit={onSubmit}>
         {children}
     </form>
-})
+}
