@@ -13,6 +13,7 @@ import { Label } from "./components/form/label";
 import { Radio } from "./components/form/radio";
 import { Select, SelectItem } from "./components/form/select";
 import { Switch } from "./components/form/switch";
+import { Textarea } from "./components/form/textarea";
 import { List } from "./components/list";
 import { Menu } from "./components/menu";
 import { Body, Modal, ModalDict } from "./components/modal";
@@ -83,6 +84,9 @@ define(Body, () => {
                 <SelectItem value="user">普通用户</SelectItem>
             </Select>
         }</Label>
+        <Label label="描述">
+            {({id}) => <Textarea id={id} name="description" placeholder="100字以内" maxLen={100}></Textarea>}
+        </Label>
     </Form>
 })
 

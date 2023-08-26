@@ -26,6 +26,10 @@ input {
     outline: none;
 }
 
+input:focus {
+    outline: solid 1px dodgerblue;
+}
+
 .center {
     text-align: center;
 }
@@ -280,6 +284,7 @@ input {
     display: inline-block;
     width: 25%;
     margin: 0 .5rem;
+    vertical-align: top;
 }
 
 .form .field > :nth-child(2) {
@@ -342,6 +347,17 @@ input {
     padding-right: 0;
     padding-left: 1rem;
     background-color: dodgerblue;
+}
+
+textarea {
+    border: #00000066 solid 1px;
+    border-radius: .2rem;
+    padding: .2rem .5rem;
+    outline: none;
+}
+
+textarea:focus {
+    outline: solid 1px dodgerblue;
 }
 
 .tooltip > .tip {
@@ -433,6 +449,10 @@ input {
     min-width: 95%;
     opacity: 100;
     z-index: 99;
+}
+
+.select.show .header {
+    outline: solid 1px dodgerblue;
 }
 
 .select .header {
