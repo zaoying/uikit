@@ -272,6 +272,7 @@ input {
 }
 
 .form .field {
+    position: relative;
     margin: .5rem;
 }
 
@@ -280,7 +281,6 @@ input {
     width: 25%;
     margin: 0 .5rem;
 }
-
 .form .field > :nth-child(2) {
     width: 60%;
     margin: 0;
@@ -366,8 +366,6 @@ input {
 .select {
     display: inline-block;
     position: relative;
-    border: #00000066 solid 1px;
-    border-radius: .2rem;
 }
 
 .select > .list {
@@ -390,20 +388,32 @@ input {
     z-index: 99;
 }
 
+.select .header {
+    position: relative;
+    width: 100%;
+    padding-right: 1rem;
+    border: #00000066 solid 1px;
+    border-radius: .2rem;
+}
+
 .select .header > input {
     border: none;
     outline: none;
+    display: block;
+    width: 92%;
+    padding-right: 1rem;
+    margin-right: 0;
 }
 
 .select .header > .icon {
     vertical-align: bottom;
 }
 
-.select > .right.icon {
+.select .header > .right.icon {
     position: absolute;
     display: inline-block;
     top: 10%;
-    right: 3%;
+    right: .2rem;
 }
 
 .menu {

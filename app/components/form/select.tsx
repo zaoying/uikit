@@ -87,7 +87,7 @@ export const Select: FC<SelectProps> = (old) => {
     
     const select = <div key={props.id} className="header">
         <input id={props.id} name={props.name} defaultValue={selected.children} onChange={onChange}/>
-        <i className="icon">﹀</i>
+        <i className="right icon">﹀</i>
     </div>
     const onClick = (op: SelectItemProps) => {
         setValue(op.children)
