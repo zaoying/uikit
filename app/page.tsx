@@ -12,6 +12,7 @@ import { Input } from "./components/form/input";
 import { Label } from "./components/form/label";
 import { Radio } from "./components/form/radio";
 import { Select, SelectItem } from "./components/form/select";
+import { Switch } from "./components/form/switch";
 import { List } from "./components/list";
 import { Menu } from "./components/menu";
 import { Body, Modal, ModalDict } from "./components/modal";
@@ -70,10 +71,12 @@ define(Body, () => {
                 </>
             }</Group>
         }</Label>
-        <>
-            <CheckBox name="remember">记住密码</CheckBox>
-            <CheckBox name="autoLogin">自动登录</CheckBox>
-        </>
+        <Label label="记住密码">
+            {({id}) => <Switch id={id} name="remember"></Switch>}
+        </Label>
+        <Label label="自动登录">
+            {({id}) => <Switch id={id} name="autoLogin"></Switch>}
+        </Label>
         <Label label="账号类型">{
             ({id}) => <Select id={id} name="account">
                 <SelectItem value="admin">系统管理员</SelectItem>

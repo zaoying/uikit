@@ -287,6 +287,10 @@ input {
     margin: 0;
 }
 
+.form .field > button.switch {
+    width: auto;
+}
+
 .form .field > input[type=checkbox], .form .field > div.radio {
     width: auto;
 }
@@ -312,6 +316,32 @@ input {
 .tooltip {
     display: inline-block;
     position: relative;
+}
+
+.switch {
+    display: inline-block;
+    border: solid 1px #33333333;
+    height: 1.3rem;
+    padding-right: 1rem;
+    padding-left: 0;
+    border-radius: 5rem;
+    background-color: #00000066;
+    transition: padding background-color .3s;
+}
+
+.switch > .dot {
+    display: inline-block;
+    height: 1rem;
+    width: 1rem;
+    vertical-align: middle;
+    background-color: white;
+    border-radius: 5rem;
+}
+
+.switch.active {
+    padding-right: 0;
+    padding-left: 1rem;
+    background-color: dodgerblue;
 }
 
 .tooltip > .tip {
@@ -374,7 +404,7 @@ input {
 }
 
 .dropdown.show > .list {
-    transition: "opacity" 1s;
+    transition: opacity 1s;
     display: block;
     opacity: 100;
     z-index: 99;
@@ -398,7 +428,7 @@ input {
 }
 
 .select.show > .list {
-    transition: "opacity" 1s;
+    transition: opacity 1s;
     display: block;
     min-width: 95%;
     opacity: 100;
@@ -459,7 +489,7 @@ input {
 }
 
 .menu.show > .list {
-    transition: "opacity" 1s;
+    transition: opacity 1s;
     display: block;
     opacity: 100;
     z-index: 99;
