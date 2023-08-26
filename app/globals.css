@@ -314,8 +314,65 @@ input:focus {
     display: inline-block;
 }
 
+.checkbox input[type=checkbox] {
+    position: relative;
+    appearance: none;
+    width: 1rem;
+    height: 1rem;
+    vertical-align: top;
+    border: solid 1px #00000066;
+}
+
+.checkbox input[type=checkbox]:focus {
+    outline: none;
+}
+
+.checkbox input[type=checkbox]:checked {
+    border: solid 1px dodgerblue;
+    background-color: dodgerblue;
+}
+
+.checkbox input[type=checkbox]:checked::before {
+    font-size: 1rem;
+    position: absolute;
+    top: -0.2rem;
+    left: .1rem;
+    content: "✔";
+    color: white;
+}
+
 .radio {
     display: inline-block;
+}
+
+.radio input[type=radio] {
+    position: relative;
+    appearance: none;
+    width: 1rem;
+    height: 1rem;
+    vertical-align: top;
+    border: solid 1px #00000066;
+    border-radius: 5rem;
+}
+
+.radio input[type=radio]:focus {
+    outline: none;
+}
+
+.radio input[type=radio]:checked {
+    border: solid 1px dodgerblue;
+    background-color: dodgerblue;
+}
+
+.radio input[type=radio]:checked::before {
+    position: absolute;
+    content: "";
+    left: .27rem;
+    top: .22rem;
+    width: .5rem;
+    height: .5rem;
+    border-radius: 5rem;
+    background-color: white;
 }
 
 .tooltip {

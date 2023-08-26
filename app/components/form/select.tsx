@@ -68,8 +68,6 @@ export const Select: FC<SelectProps> = (old) => {
     const context = useIoC()
     const [props, setProps] = useState(old)
     context.define(SelectPropsDispatcher, setProps)
-
-    const [selected, setSelected] = useState<SelectItemProps>({value: "", children: ""})
     
     const [value, setValue] = useState(old.value ?? "")
     const onChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -88,7 +86,6 @@ export const Select: FC<SelectProps> = (old) => {
     </div>
     const onClick = (op: SelectItemProps) => {
         setValue(op.children)
-        setSelected(op)
     }
     const options = props.options?.filter(filterFunc).map((op) => (
         <a key={op.value} className="button" onClick={() => onClick(op)}>
