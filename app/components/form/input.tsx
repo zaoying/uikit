@@ -8,6 +8,7 @@ export type InputProps = {
     value?: InputType
     type?: string
     placeholder?: string
+    disabled?: boolean
     readonly?: boolean
     onChange?: (val: InputType) => void
     onBlur?: (e: any) => void
@@ -21,7 +22,7 @@ function transformValue(val: InputType)  {
     return val
 }
 
-export const Input: FC<InputProps> = (props) => {    
+export const Input: FC<InputProps> = (props) => {
     const context = useIoC()
 
     const validate = function(v: InputType) {
@@ -40,5 +41,5 @@ export const Input: FC<InputProps> = (props) => {
     }
     return <input id={props.id} name={props.name} type={props.type} value={transformValue(props.value)} 
         onChange={onChange} onBlur={props.onBlur} placeholder={props.placeholder}
-        readOnly={props.readonly}/>
+        readOnly={props.readonly} disabled={props.disabled}/>
 }

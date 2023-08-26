@@ -67,10 +67,7 @@ export function NewFormController(setProps: PropsDispatcher<FormProps>): FormCon
                     }
                     const fields = p.fields.map(field => {
                         const val = formData.get(field.name)
-                        if (val == null) {
-                            return field
-                        }
-                        const errMsg = field.validate(val)
+                        const errMsg = field.validate(val ?? "")
                         return {...field, errorMsg: errMsg}
                     })
                     const validity = fields.filter(field => field.errorMsg).length == 0

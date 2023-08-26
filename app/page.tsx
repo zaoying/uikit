@@ -5,9 +5,12 @@ import { Button } from "./components/basic/button";
 import { Link } from "./components/basic/link";
 import { Breadcrumb } from "./components/breadcrumb";
 import { Dropdown } from "./components/dropdown";
+import { CheckBox } from "./components/form/checkbox";
 import { Form, FormPropsDispatcher, FormReference, InputType, NewFormController } from "./components/form/form";
+import { Group } from "./components/form/group";
 import { Input } from "./components/form/input";
 import { Label } from "./components/form/label";
+import { Radio } from "./components/form/radio";
 import { Select, SelectItem } from "./components/form/select";
 import { List } from "./components/list";
 import { Menu } from "./components/menu";
@@ -33,6 +36,11 @@ define(Body, () => {
         if (!val) return "密码不能为空"
         return ""
     }
+    const checkPermission = (val: InputType) => {
+        console.info(val)
+        if (!val) return "权限不能为空"
+        return ""
+    }
     return <Form action="">
         <Label label="用户名">
             {({id}) => <Input id={id} name="username" value="admin" />}
@@ -46,6 +54,26 @@ define(Body, () => {
         <Label label="重复一遍">
             {({id}) => <Input id={id} name="repeatPwd" type="password" validate={checkPassword} />}
         </Label>
+        <Label label="性别">{
+            ({id}) => <Group name="gender">{
+                ({name}) => <>
+                    <Radio name={name} value="male" checked>男</Radio>
+                    <Radio name={name} value="female">女</Radio>
+                </>
+            }</Group>
+        }</Label>
+        <Label label="权限">{
+            ({id}) => <Group name="permission" validate={checkPermission}>{
+                ({name}) => <>
+                    <CheckBox name={name} value="user">用户管理</CheckBox>
+                    <CheckBox name={name} value="order">订单管理</CheckBox>
+                </>
+            }</Group>
+        }</Label>
+        <>
+            <CheckBox name="remember">记住密码</CheckBox>
+            <CheckBox name="autoLogin">自动登录</CheckBox>
+        </>
         <Label label="账号类型">{
             ({id}) => <Select id={id} name="account">
                 <SelectItem value="admin">系统管理员</SelectItem>

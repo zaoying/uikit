@@ -281,15 +281,32 @@ input {
     width: 25%;
     margin: 0 .5rem;
 }
+
 .form .field > :nth-child(2) {
     width: 60%;
     margin: 0;
+}
+
+.form .field > input[type=checkbox], .form .field > div.radio {
+    width: auto;
 }
 
 .form .field > .error {
     width: 60%;
     margin: 0 .5rem;
     margin-left: 32%;
+}
+
+.group {
+    display: inline-block;
+}
+
+.checkbox {
+    display: inline-block;
+}
+
+.radio {
+    display: inline-block;
 }
 
 .tooltip {
