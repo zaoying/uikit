@@ -1,5 +1,5 @@
 import { useIoC } from 'Com/app/hooks/ioc';
-import { FC, useEffect } from 'react';
+import { ChangeEvent, FC, useEffect } from 'react';
 import { FormPropsDispatcher, InputType, NewFormController } from './form';
 
 export type InputProps = {
@@ -11,7 +11,7 @@ export type InputProps = {
     disabled?: boolean
     readonly?: boolean
     onChange?: (val: InputType) => void
-    onBlur?: (e: any) => void
+    onBlur?: (e: ChangeEvent<HTMLInputElement>) => void
     validate?: (val: InputType) => string
 }
 
@@ -33,7 +33,7 @@ export const Input: FC<InputProps> = (props) => {
     const ctl = NewFormController(setForm)
     useEffect(() => ctl.insert({name: props.name, validate: validate}))
 
-    const onChange = function(e: any) {
+    const onChange = function(e: ChangeEvent<HTMLInputElement>) {
         props.onChange && props.onChange(e.target.value)
         const errMsg = validate(e.target.value)
         const newItem = {name: props.name, validate: validate, errorMsg: errMsg}

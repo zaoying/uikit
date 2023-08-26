@@ -1,5 +1,5 @@
 import { useIoC } from 'Com/app/hooks/ioc';
-import { FC, ReactNode, useEffect, useState } from 'react';
+import { ChangeEvent, FC, ReactNode, useEffect, useState } from 'react';
 import { PropsDispatcher, UniqueController } from '../container';
 import { Dropdown } from '../dropdown';
 
@@ -71,13 +71,10 @@ export const Select: FC<SelectProps> = (old) => {
 
     const [selected, setSelected] = useState<SelectItemProps>({value: "", children: ""})
     
-    const [value, setValue] = useState(old.value)
-    const onChange = (e: any) => {
+    const [value, setValue] = useState(old.value ?? "")
+    const onChange = (e: ChangeEvent<HTMLInputElement>) => {
         const val = e.target.value
-        if (val instanceof File) {
-            return setValue(val.name)
-        }
-        setValue(val ? `${val}` : "")
+        setValue(val)
     }
 
     const defaultFilterFunc = function(op: SelectItemProps) {
@@ -86,7 +83,7 @@ export const Select: FC<SelectProps> = (old) => {
     const filterFunc = props.filterFunc ?? defaultFilterFunc
     
     const select = <div key={props.id} className="header">
-        <input id={props.id} name={props.name} defaultValue={selected.children} onChange={onChange}/>
+        <input id={props.id} name={props.name} value={value} onChange={onChange}/>
         <i className="right icon">﹀</i>
     </div>
     const onClick = (op: SelectItemProps) => {
