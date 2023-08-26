@@ -12,6 +12,7 @@ import { Input } from "./components/form/input";
 import { Label } from "./components/form/label";
 import { Radio } from "./components/form/radio";
 import { Select, SelectItem } from "./components/form/select";
+import { Spinner } from "./components/form/spinner";
 import { Switch } from "./components/form/switch";
 import { Textarea } from "./components/form/textarea";
 import { List } from "./components/list";
@@ -98,6 +99,7 @@ export default function Home() {
                 <a>设置</a>
                 <a>退出</a>
             </Menu>
+            <Spinner name="money" min={0} max={100} value={10}></Spinner>
             <Breadcrumb>
                 <>主页</>
                 <>页面管理</>

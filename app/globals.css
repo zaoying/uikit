@@ -360,6 +360,14 @@ textarea:focus {
     outline: solid 1px dodgerblue;
 }
 
+.spinner {
+    display: inline-block;
+}
+
+.spinner > input {
+    margin: .2rem .5rem;
+}
+
 .tooltip > .tip {
     position: absolute;
     display: none;
