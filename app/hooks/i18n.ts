@@ -21,6 +21,9 @@ export function i18n<I, O>(locale: string, component: Func<I, O>): Func<I, O> {
 }
 
 export function useI18n<I, O>(dict: Func<I, O>): Func<I,O> {
+    if (!navigator) {
+        return dict
+    }
     const locale = navigator.languages?.length ? navigator.languages[0] : navigator.language;
     const localizeCtx = get(locale)
     return localizeCtx.inject(dict)
