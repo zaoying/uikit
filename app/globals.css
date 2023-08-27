@@ -375,11 +375,6 @@ input:focus {
     background-color: white;
 }
 
-.tooltip {
-    display: inline-block;
-    position: relative;
-}
-
 .switch {
     display: inline-block;
     border: solid 1px #33333333;
@@ -423,6 +418,55 @@ textarea:focus {
 
 .spinner > input {
     margin: .2rem .5rem;
+}
+
+.popover {
+    display: block;
+    position: relative;
+}
+
+.popover > .content {
+    display: none;
+    position: absolute;
+    z-index: 99;
+    box-shadow: 0 0 4px 1px #33333333;
+    border-radius: .5rem;
+    background-color: white;
+}
+
+.popover > .content > * {
+    margin: 0;
+    max-width: 100%;
+    height: 100%;
+}
+
+.popover.show > .content {
+    display: block;
+}
+
+.popover > .content.left {
+    top: 25%;
+    left: -75%;
+}
+
+.popover > .content.right {
+    top: 25%;
+    right: -75%;
+}
+
+.popover > .content.top {
+    top: -50%;
+    left: 10%;
+}
+
+.popover > .content.bottom {
+    bottom: -50%;
+    left: 10%;
+}
+
+.tooltip {
+    display: inline-block;
+    position: relative;
 }
 
 .tooltip > .tip {

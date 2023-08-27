@@ -1,5 +1,6 @@
 "use client";
 
+import { FC } from "react";
 import { According } from "./components/according";
 import { Button } from "./components/basic/button";
 import { Link } from "./components/basic/link";
@@ -20,6 +21,7 @@ import { Menu } from "./components/menu";
 import { Body, Modal, ModalDict } from "./components/modal";
 import { Notification } from "./components/notification";
 import { Pager } from "./components/pager";
+import { Popover, Toggle } from "./components/popover";
 import { Stepper, StepperItem } from "./components/stepper";
 import { Table, TableColumn } from "./components/table/table";
 import { Tab, TabItem } from "./components/tabs";
@@ -168,7 +170,23 @@ export default function Home() {
                             {({data}) => data.age}
                         </TableColumn>
                         <TableColumn name="operation" title="操作" width={20}>{
-                            ({rowNum}) => <Button type="danger" onClick={()=> ctl.removeData(rowNum)}>删除</Button>
+                            ({rowNum}) => {
+                                const content: FC<{toggle: Toggle}> = ({toggle}) => (
+                                <div className="modal" style={{width: "240px"}}>
+                                    <div className="header"><p className="title">危险</p></div>
+                                    <div className="body"><p>是否删除当前行？</p></div>
+                                    <div className="footer">
+                                        <Button type="grey" onClick={() => toggle(false)}>取消</Button>
+                                        <Button type="primary" onClick={()=> {
+                                            ctl.removeData(rowNum);
+                                            toggle(false);
+                                        }}>确定</Button>
+                                    </div>
+                                </div>)
+                                return <Popover direction="left" content={content}>
+                                    <Button type="danger">删除</Button>
+                                </Popover>
+                            }
                         }</TableColumn>
                         <Pager current={3} interval={5} total={10}></Pager>
                     </>}

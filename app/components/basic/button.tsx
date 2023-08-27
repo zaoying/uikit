@@ -1,9 +1,9 @@
-import { FC, ReactNode } from "react"
+import { FC, MouseEventHandler, ReactNode } from "react"
 
 type ButtonType = "primary" | "second" | "grey" | "danger"
 
 type ButtonProps = {
-    onClick?: () => void
+    onClick?: MouseEventHandler<HTMLAnchorElement>
     type?: ButtonType
     children?: ReactNode
 }
