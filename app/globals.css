@@ -464,6 +464,36 @@ textarea:focus {
     left: 10%;
 }
 
+.dialog {
+    position: relative;
+    display: inline-block;
+    top: 20%;
+    max-width: 80%;
+    max-height: 80%;
+    border: solid #33333333 1px;
+    border-radius: .5rem;
+    background: white;
+}
+
+.dialog > .header {
+    text-align: left;
+}
+
+.dialog > .header .title {
+    margin: 0;
+    padding: 3%;
+}
+
+.dialog > .body {
+    text-align: left;
+    padding: 0 1rem;
+}
+
+.dialog > .footer {
+    display: block;
+    text-align: right;
+}
+
 .tooltip {
     display: inline-block;
     position: relative;

@@ -5,6 +5,7 @@ import { According } from "./components/according";
 import { Button } from "./components/basic/button";
 import { Link } from "./components/basic/link";
 import { Breadcrumb } from "./components/breadcrumb";
+import { Dialog } from "./components/dialog";
 import { Dropdown } from "./components/dropdown";
 import { CheckBox } from "./components/form/checkbox";
 import { Form, FormPropsDispatcher, FormReference, InputType, NewFormController } from "./components/form/form";
@@ -137,6 +138,9 @@ export default function Home() {
                         </Dropdown>
                     </>
                 }</WithState>
+                <Dialog title="对话框" content={<p>点击按钮关闭</p>}>
+                    <Button>打开对话框</Button>
+                </Dialog>
             </div>
             <Notification>{
                 ({ctl}) => <List type="horizontal">

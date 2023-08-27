@@ -47,6 +47,7 @@ export type ModalProps = {
     visible?: boolean
     width?: number
     height?: number
+    className?: string
     confirm?: ReactNode
     cancel?: ReactNode
     children?: FC<{ctx: Context, ctl: ModalController}>
@@ -84,9 +85,10 @@ export function NewModalController(setProps: PropsDispatcher<ModalProps>): Modal
 
 export const Modal: FC<ModalProps> = (old) => {
     const [props, setProps] = useState<ModalProps>(old)
-    const parent = useIoC()
+    const context = useIoC()
+    context.define(ModalPropsDispatcher, setProps)
 
-    parent.define(ModalPropsDispatcher, setProps)
+    const className = props.className ?? "modal"
     return <>
         <Once>{
             () => props.children && props.children({
@@ -95,13 +97,13 @@ export const Modal: FC<ModalProps> = (old) => {
             })
         }</Once>
         <div className={`dimmer ${props.visible ? "show" : ""}`}>
-        <div className="modal" style={{width: props.width, height: props.height}}>
-                <div className="header">{parent.inject(Header)(props)}</div>
+        <div className={className} style={{width: props.width, height: props.height}}>
+                <div className="header">{context.inject(Header)(props)}</div>
                 <div className="body">
-                    {parent.inject(Body)(props)}
+                    {context.inject(Body)(props)}
                 </div>
                 <div className="center footer">
-                    {parent.inject(Footer)(props)}
+                    {context.inject(Footer)(props)}
                 </div>
         </div>
     </div>
