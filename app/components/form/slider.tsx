@@ -21,12 +21,10 @@ export const SliderThumb: FC<SliderThumbProps> = (props) => {
     const [shouldMove, setShouldMove] = useState(false)
     const [, setPositionX] = useState(0)
     const onDown: MouseEventHandler = (e) => {
-        console.info("down")
         setPositionX(e.clientX)
         setShouldMove(true)
     }
     const onUp: MouseEventHandler = (e) => {
-        console.info("up")
         setShouldMove(false)
     }
     const onMove: MouseEventHandler = (e) => {

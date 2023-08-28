@@ -544,36 +544,19 @@ textarea:focus {
 
 .tooltip > .tip {
     position: absolute;
-    display: none;
+    display: block;
+    opacity: 0;
     color: white;
+    white-space: nowrap;
     padding: .3rem;
     background-color: #000000bb;
     border-radius: .2rem;
+    z-index: -9;
 }
 
 .tooltip:hover > .tip {
-    display: block;
-    z-index: 99;
-}
-
-.tip.left {
-    top: 25%;
-    left: -75%;
-}
-
-.tip.right {
-    top: 25%;
-    right: -75%;
-}
-
-.tip.top {
-    top: -50%;
-    left: 10%;
-}
-
-.tip.bottom {
-    bottom: -50%;
-    left: 10%;
+    opacity: 100;
+    z-index: 9;
 }
 
 .dropdown {
@@ -590,7 +573,7 @@ textarea:focus {
 
 .dropdown > .list {
     position: absolute;
-    display: none;
+    display: block;
     opacity: 0;
     color: white;
     margin: 0;
@@ -599,13 +582,13 @@ textarea:focus {
     border-radius: .2rem;
     overflow-y: visible;
     white-space: nowrap;
+    z-index: -9;
 }
 
 .dropdown.show > .list {
     transition: opacity 1s;
-    display: block;
     opacity: 100;
-    z-index: 99;
+    z-index: 9;
 }
 
 .select {

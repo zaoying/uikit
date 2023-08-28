@@ -44,7 +44,6 @@ define(Body, () => {
         return ""
     }
     const checkPermission = (val: InputType) => {
-        console.info(val)
         if (!val) return "权限不能为空"
         return ""
     }
