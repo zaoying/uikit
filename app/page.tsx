@@ -14,6 +14,7 @@ import { Input } from "./components/form/input";
 import { Label } from "./components/form/label";
 import { Radio } from "./components/form/radio";
 import { Select, SelectItem } from "./components/form/select";
+import { Slider, SliderThumb } from "./components/form/slider";
 import { Spinner } from "./components/form/spinner";
 import { Switch } from "./components/form/switch";
 import { Textarea } from "./components/form/textarea";
@@ -102,7 +103,6 @@ export default function Home() {
                 <a>设置</a>
                 <a>退出</a>
             </Menu>
-            <Spinner name="money" min={0} max={100} value={10}></Spinner>
             <Breadcrumb>
                 <>主页</>
                 <>页面管理</>
@@ -141,7 +141,14 @@ export default function Home() {
                 <Dialog title="对话框" content={<p>点击按钮关闭</p>}>
                     <Button>打开对话框</Button>
                 </Dialog>
+                <Spinner name="money" min={0} max={100} value={10}></Spinner>
             </div>
+            <Slider name="percentage" min={0} max={100}>{
+                (parent) => <>
+                    <SliderThumb {...parent} value={20}></SliderThumb>
+                    <SliderThumb {...parent} value={70}></SliderThumb>
+                </>
+            }</Slider>
             <Notification>{
                 ({ctl}) => <List type="horizontal">
                     <Button onClick={() => ctl.info("info")}>通知</Button>

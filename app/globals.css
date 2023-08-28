@@ -34,6 +34,10 @@ input:focus {
     text-align: center;
 }
 
+.round {
+    border-radius: 5rem;
+}
+
 .title {
     font-size: large;
     font-weight: bold;
@@ -418,6 +422,45 @@ textarea:focus {
 
 .spinner > input {
     margin: .2rem .5rem;
+}
+
+.slider {
+    display: block;
+    position: relative;
+    margin: .2rem 1rem;
+    padding: 0 .5rem;
+}
+
+.slider > .thumb {
+    position: absolute;
+    cursor: pointer;
+    min-width: 1rem;
+    min-height: 1rem;
+    color: white;
+    border: solid 1px #eeeeeeee;
+    border-radius: 5rem;
+    box-shadow: 0 0 2px 1px #33333333;
+}
+
+.slider > .active.thumb {
+    transform: scale(1.2, 1.2);
+}
+
+.slider > .track {
+    position: absolute;
+    top: .4rem;
+    bottom: .4rem;
+    left: .5rem;
+    right: .5rem;
+    width: 100%;
+    min-height: .2rem;
+    border-radius: 5rem;
+    background-color: dodgerblue;
+    z-index: -1;
+}
+
+.slider button.thumb {
+    appearance: none;
 }
 
 .popover {
