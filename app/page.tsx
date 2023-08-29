@@ -25,6 +25,7 @@ import { Body, Modal, ModalDict } from "./components/modal";
 import { Notification } from "./components/notification";
 import { Pager } from "./components/pager";
 import { Popover, Toggle } from "./components/popover";
+import { Progress } from "./components/progress";
 import { Stepper, StepperItem } from "./components/stepper";
 import { Table, TableColumn } from "./components/table/table";
 import { Tab, TabItem } from "./components/tabs";
@@ -103,12 +104,13 @@ export default function Home() {
                 <a>设置</a>
                 <a>退出</a>
             </Menu>
-            <Loader>加载中...</Loader>
             <Breadcrumb>
                 <>主页</>
                 <>页面管理</>
                 <Link onClick={() => alert("test")}>样例</Link>
             </Breadcrumb>
+            <Loader>加载中...</Loader>
+            <Progress percentage={40}></Progress>
             <div>
                 <Modal width={360} title="修改用户资料">{
                     ({ctl, ctx}) => {

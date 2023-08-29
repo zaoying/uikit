@@ -719,6 +719,27 @@ textarea:focus {
     color: #000000bb;
 }
 
+.progress {
+    display: block;
+    position: relative;
+    padding: .5rem .2rem;
+    margin: .2rem;
+    background-color: #33333333;
+    border-radius: 5rem;
+    overflow: hidden;
+}
+
+.progress > .percentage {
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: white;
+    font-size: .8rem;
+    text-align: right;
+    background-color: dodgerblue;
+}
+
 .table > table {
     text-align: center;
     width: 100%;
