@@ -680,6 +680,45 @@ textarea:focus {
     z-index: 99;
 }
 
+.fan {
+    display: inline-block;
+    height: 2rem;
+    width: 2rem;
+    border: solid 3px dodgerblue;
+    border-top: solid 3px #33333333;
+    border-radius: 5rem;
+}
+
+@keyframes rotate {
+    0% {
+        transform: rotate(0)
+    }
+    50% {
+        transform: rotate(180deg)
+    }
+    100% {
+        transform: rotate(360deg)
+    }
+}
+
+.loader {
+    display: inline-block;
+    text-align: center;
+}
+
+.loader > .icon {
+    display: block;
+}
+
+.loader > .icon > * {
+    animation: rotate 1s infinite linear;
+}
+
+.loader > .tip {
+    display: block;
+    color: #000000bb;
+}
+
 .table > table {
     text-align: center;
     width: 100%;

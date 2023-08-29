@@ -19,6 +19,7 @@ import { Spinner } from "./components/form/spinner";
 import { Switch } from "./components/form/switch";
 import { Textarea } from "./components/form/textarea";
 import { List } from "./components/list";
+import { Loader } from "./components/loader";
 import { Menu } from "./components/menu";
 import { Body, Modal, ModalDict } from "./components/modal";
 import { Notification } from "./components/notification";
@@ -102,6 +103,7 @@ export default function Home() {
                 <a>设置</a>
                 <a>退出</a>
             </Menu>
+            <Loader>加载中...</Loader>
             <Breadcrumb>
                 <>主页</>
                 <>页面管理</>
