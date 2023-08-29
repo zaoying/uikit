@@ -29,10 +29,11 @@ import { Progress } from "./components/progress";
 import { Stepper, StepperItem } from "./components/stepper";
 import { Table, TableColumn } from "./components/table/table";
 import { Tab, TabItem } from "./components/tabs";
-import { Direction, Tooltip } from "./components/tooltip";
+import { Tooltip } from "./components/tooltip";
 import { WithState } from "./components/with";
 import { register } from "./hooks/i18n";
 import { IoCContext, NewIoCContext } from "./hooks/ioc";
+import { Direction } from "./utils/centered";
 
 const { define, inject } = NewIoCContext()
 

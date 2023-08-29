@@ -1,17 +1,10 @@
 import { FC, ReactNode, useEffect, useRef, useState } from 'react';
+import { Direction, Style, centered } from '../utils/centered';
 
-export type Direction = "top" | "bottom" | "left" | "right"
 export type TooltipProps = {
     message?: ReactNode
     direction?: Direction
     children: ReactNode
-}
-
-export type Style = {
-    top?: string,
-    left?: string,
-    bottom?: string, 
-    right?: string
 }
 
 export const Tooltip: FC<TooltipProps> = (props) => {
@@ -20,25 +13,12 @@ export const Tooltip: FC<TooltipProps> = (props) => {
     const parentRef = useRef<HTMLDivElement>(null)
     const tipRef = useRef<HTMLDivElement>(null)
     useEffect(() => {
-        const parentWidth = parentRef.current?.offsetWidth ?? 0
-        const parentHeight = parentRef.current?.offsetHeight ?? 0
-        const tipWidth = tipRef.current?.offsetWidth ?? 0
-        const tipHeight = tipRef.current?.offsetHeight ?? 0
-        const halfWidth = (parentWidth - tipWidth) / 2
-        const halfHeight = (parentHeight - tipHeight) / 2
-        switch(direction) {
-            case "left":
-                setStyle(s => ({top: halfHeight + "px", left: -tipWidth + "px"}))
-                break;
-            case "right":
-                setStyle(s => ({top: halfHeight + "px", left: parentWidth + "px"}))
-                break;
-            case "top":
-                setStyle(s => ({top: -tipHeight + "px", left: halfWidth + "px"}))
-                break;
-            default:
-                setStyle(s => ({top: parentHeight + "px", left: halfWidth + "px"}))
-                break;
+        const parent = parentRef.current
+        const child = tipRef.current
+        if (parent && child) {
+            const center = centered(parent, child, direction)
+            center.display = "none"
+            setStyle(center)
         }
     }, [direction])
     return <div className="tooltip" ref={parentRef}>

@@ -553,7 +553,6 @@ textarea:focus {
 
 .tooltip > .tip {
     position: absolute;
-    display: block;
     opacity: 0;
     color: white;
     white-space: nowrap;
@@ -566,6 +565,7 @@ textarea:focus {
 .tooltip:hover > .tip {
     opacity: 100;
     z-index: 9;
+    display: block!important;
 }
 
 .dropdown {
