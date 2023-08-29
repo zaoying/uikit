@@ -1,5 +1,5 @@
 import { FC, ReactNode, useEffect, useRef, useState } from 'react';
-import { Direction, Style, centered } from '../utils/centered';
+import { Centered, Direction, Style, centered } from '../utils/centered';
 
 export type TooltipProps = {
     message?: ReactNode
@@ -12,15 +12,21 @@ export const Tooltip: FC<TooltipProps> = (props) => {
     const [style, setStyle] = useState<Style>({})
     const parentRef = useRef<HTMLDivElement>(null)
     const tipRef = useRef<HTMLDivElement>(null)
+
+    const calculator = useRef<Centered>()
     useEffect(() => {
         const parent = parentRef.current
         const child = tipRef.current
         if (parent && child) {
-            const center = centered(parent, child, direction)
-            center.display = "none"
-            setStyle(center)
+            calculator.current = centered(parent, child)
         }
-    }, [direction])
+    }, [parentRef, tipRef])
+
+    useEffect(() => {
+        const result = calculator.current && calculator.current(direction)
+        result && setStyle({...result, display: "none"})
+    }, [direction, calculator])
+    
     return <div className="tooltip" ref={parentRef}>
         {props.children}
         <div className={`tip ${direction}`} ref={tipRef} style={style}>
