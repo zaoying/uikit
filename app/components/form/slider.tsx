@@ -7,17 +7,18 @@ export interface Range {
     max: number
 }
 
-export interface SliderThumbProps {
+export interface SliderTrackProps {
     name: string
     value: number
     range: Range
-    trackLen: number
+    sliderLen: number
+    first?: boolean
     children?: ReactNode
 }
 
-export const SliderThumb: FC<SliderThumbProps> = (props) => {
+export const SliderTrack: FC<SliderTrackProps> = (props) => {
     const [value, setValue] = useState(props.value)
-    const [left, setLeft] = useState(0)
+    const [width, setWidth] = useState(0)
     const [shouldMove, setShouldMove] = useState(false)
     const [, setPositionX] = useState(0)
     const onDown: MouseEventHandler = (e) => {
@@ -30,10 +31,10 @@ export const SliderThumb: FC<SliderThumbProps> = (props) => {
     const onMove: MouseEventHandler = (e) => {
         setPositionX(x => {
             setShouldMove(s => {
-                s && setLeft(l => {
+                s && setWidth(l => {
                     const offsetX = (e.clientX - x);
                     const newLeft = l + offsetX
-                    setValue(newLeft / props.trackLen * (props.range.max - props.range.min))
+                    setValue(newLeft / props.sliderLen * (props.range.max - props.range.min))
                     return newLeft
                 })
                 return s
@@ -44,23 +45,25 @@ export const SliderThumb: FC<SliderThumbProps> = (props) => {
 
     useEffect(() => {
         setValue(props.value)
-        const initial = props.value / Math.abs(props.range.max - props.range.min) * props.trackLen
-        setLeft(initial)
+        const initial = props.value / Math.abs(props.range.max - props.range.min) * props.sliderLen
+        setWidth(initial)
     }, [props])
-    const style = {left: `${left}px`}
+    const style = {width: `${width}px`}
     const className = `thumb ${shouldMove ? "active" : "" }`
-    return <button name={props.name} value={props.value} title={value.toFixed(2)}
-            style={style} type="button" className={className} onMouseDown={onDown}
-            onMouseMove={onMove} onMouseUp={onUp} onMouseLeave={onUp}>
-        {props.children}
-    </button>
+    return <div className={`track ${props.first ? "first" : ""}`} style={style}>
+            <button name={props.name} value={props.value} title={value.toFixed(2)}
+                 type="button" className={className} onMouseDown={onDown}
+                onMouseMove={onMove} onMouseUp={onUp} onMouseLeave={onUp}>
+            {props.children}
+        </button>
+    </div>
 }
 
 export interface SliderProps extends Range {
     name: string
     id?: string
     validate?: (v: InputType) => string
-    children: FC<{ctx: Context, name: string, range: Range, trackLen: number}>
+    children: FC<{ctx: Context, name: string, range: Range, sliderLen: number}>
 }
 
 export const Slider: FC<SliderProps> = (props) => {
@@ -73,16 +76,15 @@ export const Slider: FC<SliderProps> = (props) => {
     const ctl = NewFormController(setForm)
     useEffect(() => ctl.insert({name: props.name, validate: validate}))
     
-    const trackRef = useRef<HTMLDivElement>(null)
-    const [trackLen, setTrackLen] = useState(0)
+    const sliderRef = useRef<HTMLDivElement>(null)
+    const [sliderLen, setSliderLen] = useState(0)
     useEffect(() => {
-        const offsetWidth = trackRef.current?.offsetWidth ?? 0
-        setTrackLen(offsetWidth)
+        const offsetWidth = sliderRef.current?.offsetWidth ?? 0
+        setSliderLen(offsetWidth)
     }, [])
-    return <div className="slider">
-        <div className="track" ref={trackRef}></div>
+    return <div className="slider" ref={sliderRef}>
         {
-            props.children({ctx: context, name: props.name, range: props, trackLen: trackLen})
+            props.children({ctx: context, name: props.name, range: props, sliderLen: sliderLen})
         }
     </div>
 }

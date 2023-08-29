@@ -427,13 +427,39 @@ textarea:focus {
 .slider {
     display: block;
     position: relative;
-    margin: .2rem 1rem;
-    padding: 0 .5rem;
+    margin: 1rem;
+    border-radius: 5rem;
+    overflow: visible;
+    background-color: #d6d6d6;
 }
 
-.slider > .thumb {
+.slider > .track {
+    position: relative;
+    display: block;
+    min-height: .4rem;
+    max-height: .4rem;
+    border-radius: 5rem;
+    background-color: dodgerblue;
+}
+
+.slider > .track.first {
     position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background-color: #d6d6d6;
+    z-index: 1;
+}
+
+.slider button.thumb {
+    appearance: none;
+}
+
+.slider > .track > .thumb {
     cursor: pointer;
+    position: absolute;
+    top: -0.3rem;
+    right: 0;
     min-width: 1rem;
     min-height: 1rem;
     color: white;
@@ -442,25 +468,8 @@ textarea:focus {
     box-shadow: 0 0 2px 1px #33333333;
 }
 
-.slider > .active.thumb {
+.slider > .track > .active.thumb {
     transform: scale(1.2, 1.2);
-}
-
-.slider > .track {
-    position: absolute;
-    top: .4rem;
-    bottom: .4rem;
-    left: .5rem;
-    right: .5rem;
-    width: 100%;
-    min-height: .2rem;
-    border-radius: 5rem;
-    background-color: dodgerblue;
-    z-index: -1;
-}
-
-.slider button.thumb {
-    appearance: none;
 }
 
 .popover {

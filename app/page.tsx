@@ -14,7 +14,7 @@ import { Input } from "./components/form/input";
 import { Label } from "./components/form/label";
 import { Radio } from "./components/form/radio";
 import { Select, SelectItem } from "./components/form/select";
-import { Slider, SliderThumb } from "./components/form/slider";
+import { Slider, SliderTrack } from "./components/form/slider";
 import { Spinner } from "./components/form/spinner";
 import { Switch } from "./components/form/switch";
 import { Textarea } from "./components/form/textarea";
@@ -148,8 +148,8 @@ export default function Home() {
             </div>
             <Slider name="percentage" min={0} max={100}>{
                 (parent) => <>
-                    <SliderThumb {...parent} value={20}></SliderThumb>
-                    <SliderThumb {...parent} value={70}></SliderThumb>
+                    <SliderTrack first {...parent} value={20}></SliderTrack>
+                    <SliderTrack {...parent} value={70}></SliderTrack>
                 </>
             }</Slider>
             <Notification>{
