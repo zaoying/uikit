@@ -852,3 +852,24 @@ textarea:focus {
 .stepper > .body > .active.content {
     display: block;
 }
+
+.card {
+    display: inline-block;
+    margin: .5rem;
+    cursor: pointer;
+    border-radius: .5rem;
+    box-shadow: 0 0 4px 1px #33333333;
+    overflow: hidden;
+}
+
+.card > .header {
+    padding-bottom: .5rem 0;
+}
+
+.card > .body {
+    padding: 0;
+}
+
+.card > .footer {
+    padding-top: .5rem 0;
+}

@@ -5,6 +5,7 @@ import { According } from "./components/according";
 import { Button } from "./components/basic/button";
 import { Link } from "./components/basic/link";
 import { Breadcrumb } from "./components/breadcrumb";
+import { Card, CardBody, CardFooter, CardHeader } from "./components/card";
 import { Dialog } from "./components/dialog";
 import { Dropdown } from "./components/dropdown";
 import { CheckBox } from "./components/form/checkbox";
@@ -110,8 +111,19 @@ export default function Home() {
                 <>页面管理</>
                 <Link onClick={() => alert("test")}>样例</Link>
             </Breadcrumb>
-            <Loader>加载中...</Loader>
-            <Progress percentage={40}></Progress>
+            <Card>
+                <CardHeader>
+                    <p title="title">卡片</p></CardHeader>
+                <CardBody>
+                    <Loader>加载中...</Loader>
+                    <Progress percentage={40}></Progress>
+                </CardBody>
+                <CardFooter>
+                    <Dialog title="对话框" content={<p>点击按钮关闭</p>}>
+                        <Button>打开对话框</Button>
+                    </Dialog>
+                </CardFooter>
+            </Card>
             <div>
                 <Modal width={360} title="修改用户资料">{
                     ({ctl, ctx}) => {
@@ -142,9 +154,6 @@ export default function Home() {
                         </Dropdown>
                     </>
                 }</WithState>
-                <Dialog title="对话框" content={<p>点击按钮关闭</p>}>
-                    <Button>打开对话框</Button>
-                </Dialog>
                 <Spinner name="money" min={0} max={100} value={10}></Spinner>
             </div>
             <Slider name="percentage" min={0} max={100}>{
