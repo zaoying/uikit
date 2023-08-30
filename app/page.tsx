@@ -149,8 +149,8 @@ export default function Home() {
             </div>
             <Slider name="percentage" min={0} max={100}>{
                 (parent) => <>
-                    <SliderTrack first {...parent} value={20}></SliderTrack>
-                    <SliderTrack {...parent} value={70}></SliderTrack>
+                    <SliderTrack {...parent} value={20} validatePos={parent.validateLeftPos}></SliderTrack>
+                    <SliderTrack {...parent} value={70} validatePos={parent.validateRightPos}></SliderTrack>
                 </>
             }</Slider>
             <Notification>{

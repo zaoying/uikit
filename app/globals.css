@@ -442,7 +442,7 @@ textarea:focus {
     background-color: dodgerblue;
 }
 
-.slider > .track.first {
+.slider > .track:first-child {
     position: absolute;
     top: 0;
     left: 0;
