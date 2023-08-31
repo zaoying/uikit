@@ -1,6 +1,6 @@
 import { useIoC } from 'Com/app/hooks/ioc';
 import { FC, ReactNode, RefObject, useEffect, useRef, useState } from 'react';
-import { PropsDispatcher, UniqueController } from '../container';
+import { Controller, NameEqualizer, NewController, PropsDispatcher } from '../container';
 
 export type InputType = string | File | ReadonlyArray<string> | number | undefined
 
@@ -14,44 +14,33 @@ export type FormProps = {
     action?: string
     onSubmit?: (props: FormProps) => boolean
     validity?: boolean
-    fields?: FieldProps[]
     children?: ReactNode[]
 }
 
-export interface FormController extends UniqueController<FieldProps> {
+interface FP {
+    onSubmit?: (props: FormProps) => boolean
+    validity?: boolean
+    fields: FieldProps[]
+}
+
+export interface FormController extends Controller<FieldProps> {
     submit(): void
     validate(formRef: RefObject<HTMLFormElement>): void
     reset(): void
 }
 
-export const FormPropsDispatcher: PropsDispatcher<FormProps> = (cb) => {}
+export const FormPropsDispatcher: PropsDispatcher<FP> = (cb) => {}
 
 export const FormReference: ({}) => RefObject<HTMLFormElement> = () => useRef<HTMLFormElement>(null)
 
-export function NewFormController(setProps: PropsDispatcher<FormProps>): FormController {
+export function NewFormController(setProps: PropsDispatcher<FP>): FormController {
+    const setOptions: PropsDispatcher<FieldProps[]> = (action) => setProps(p => {
+        const fields = (typeof action == "function") ? action(p.fields) : action
+        return {...p, fields: fields}
+    })
+    const ctl = NewController<FieldProps>(setOptions, NameEqualizer)
     return {
-        insert(field) {
-            setProps(p => {
-                if (!p.fields) {
-                    return {...p, fields: [field]}
-                }
-                if (p.fields.find(f => f.name == field.name)) {
-                    return p
-                }
-                return {...p, fields: [...p.fields, field]}
-            })
-            
-        },
-        update(field) {
-            const replace = (fields?: FieldProps[]) => {
-                return fields ? fields.map(f => f.name == field.name ? field : f) : fields
-            }
-            setProps(p => ({...p, fields: replace(p.fields)}))
-        },
-        remove(name) {
-            const filter = (fields: FieldProps[]) => fields.filter(field => field.name != name)
-            setProps(p => ({...p, fields: p.fields ? filter(p.fields) : p.fields}))
-        },
+        ...ctl,
         submit() {
             setProps(p => {
                 p.onSubmit && p.onSubmit(p);
@@ -62,9 +51,6 @@ export function NewFormController(setProps: PropsDispatcher<FormProps>): FormCon
             if (formRef.current) {
                 const formData = new FormData(formRef.current)
                 setProps(p => {
-                    if (!p.fields) {
-                        return {...p, validity: true}
-                    }
                     const fields = p.fields.map(field => {
                         const val = formData.get(field.name)
                         const errMsg = field.validate(val ?? "")
@@ -81,13 +67,13 @@ export function NewFormController(setProps: PropsDispatcher<FormProps>): FormCon
 
 export const Form: FC<FormProps> = (old) => {
     const formRef = useRef<HTMLFormElement>(null)
-    const [props, setProps] = useState(old)
+    const [props, setProps] = useState<FP>({...old, fields: []})
     const context = useIoC()
     context.define(FormPropsDispatcher, setProps)
     useEffect(() => {context.define(FormReference, () => formRef)})
     
-    const children = props.children?.map((child, index) => {
-        const field = props.fields?.at(index)
+    const children = old.children?.map((child, index) => {
+        const field = props.fields.at(index)
         const key = field?.name || index;
         return <div key={key} className='field'>
             {child}
@@ -99,7 +85,7 @@ export const Form: FC<FormProps> = (old) => {
         e.preventDefault();
         return props.onSubmit && props.onSubmit(props)
     }
-    return <form ref={formRef} className='form' action={props.action} onSubmit={onSubmit}>
+    return <form ref={formRef} className='form' action={old.action} onSubmit={onSubmit}>
         {children}
     </form>
 }

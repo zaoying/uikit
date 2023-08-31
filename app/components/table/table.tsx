@@ -1,40 +1,50 @@
-import { FC, ReactNode, useEffect, useState } from 'react';
+import { FC, ReactNode, SetStateAction, useEffect, useState } from 'react';
 import { Context, useIoC } from "../../hooks/ioc";
-import { PropsDispatcher, UniqueController } from '../container';
+import { Controller, NameEqualizer, NewController, PropsDispatcher } from '../container';
 import { Once } from '../once';
 
-export type TableColumnProps = {
+export type TableColumnProps<T> = {
     name: string
     title: ReactNode
     width?: number
-    children: FC<{name: string, rowNum: number, data: any}>
+    children: FC<{name: string, rowNum: number, data: T}>
 }
 
-export const TableColumn: FC<TableColumnProps> = (props) => {
+export function TableColumn<T>(props: TableColumnProps<T>) {
     const context = useIoC()
     const setProps = context.inject(TablePropsDispatcher)
-    const ctl = NewTableController(setProps)
+    const ctl = NewTableController<T>(setProps)
     useEffect(() => ctl.insert(props))
     return <></>
 }
 
-export const TablePropsDispatcher: PropsDispatcher<TableProps> = (props) => {}
-export interface TableController extends UniqueController<TableColumnProps> {
-    appendData(...data: any[]): void
-    updateData(rowNum: number, data: any): void
+export function TablePropsDispatcher<T>(props: SetStateAction<T>) {}
+export interface TableController<T> extends Controller<TableColumnProps<T>> {
+    appendData(...data: T[]): void
+    updateData(rowNum: number, data: T): void
     removeData(rowNum: number): void
 }
 
-export type TableProps = {
-    columns?: TableColumnProps[]
-    data: any[]
-    children: FC<{ctx: Context, ctl: TableController}>
+export type TableArgs<T> = {
+    ctx: Context
+    ctl: TableController<T>
+    Column: FC<TableColumnProps<T>>
 }
 
-export const TableHeader: FC<TableProps> = (props) => {
+export type TableProps<T> = {
+    data: T[]
+    children: FC<TableArgs<T>>
+}
+
+interface TP<T> {
+    data: T[]
+    columns: TableColumnProps<T>[]
+}
+
+export function TableHeader<T>(props: TP<T>) {
     return <thead>
         <tr>{
-            props.columns?.map(col => (
+            props.columns.map(col => (
                 <th key={col.name} style={{width: `${col.width}%`}}>
                     {col.title ?? col.name}
                 </th>
@@ -43,51 +53,32 @@ export const TableHeader: FC<TableProps> = (props) => {
     </thead>
 }
 
-export const TableBody: FC<TableProps> = (props) => {
+export function TableBody<T>(props: TP<T>) {
     return <tbody>{
         props.data.map((row, i) => <tr key={i}>{
-            props.columns?.map((col, j) => (
+            props.columns.map((col, j) => (
                 <td key={`${i}-${j}`}>
-                    {col.children({name: col.name, rowNum: i, data:row})}
+                    {col.children({name: col.name, rowNum: i, data: row})}
                 </td>
             ))
         }</tr>)
     }</tbody>
 }
 
-export function NewTableController(setProps: PropsDispatcher<TableProps>): TableController {
+export function NewTableController<T>(setProps: PropsDispatcher<TP<T>>): TableController<T> {
+    const setColumns: PropsDispatcher<TableColumnProps<T>[]> = (action) => setProps(p => {
+        const columns = (typeof action == "function") ? action(p.columns) : action
+        return {...p, columns: columns}
+    })
+    const ctl = NewController<TableColumnProps<T>>(setColumns, NameEqualizer)
     return {
-        insert(column) {
-            setProps(p => {
-                if (p.columns) {
-                    if (p.columns.find(col => col.name == column.name)) {
-                        return p
-                    }
-                    return {...p, columns: [...p.columns, column]}
-                }
-                return {...p, columns: [column]}
-            })
-        },
-        update(column) {
-            const replace = (columns?: TableColumnProps[]) => {
-                if (!columns) return columns
-                return columns.map(col => col.name == column.name ? column : col)
-            }
-            setProps(p => ({...p, columns: replace(p.columns)}))
-        },
-        remove(name) {
-            setProps(p => {
-                if (!p.columns) { return p }
-                const columns = p.columns.filter(col => col.name != name)
-                return {...p, columns: columns}
-            })
-        },
-        appendData(...data: any[]) {
+        ...ctl,
+        appendData(...data: T[]) {
             setProps(p => ({...p, data: [...p.data, ...data]}))
         },
         updateData(rowNum, data) {
-            const replace = (datas: any[]) => {
-                return datas.map((d, index) => index == rowNum ? data : d)
+            const replace = (dataSet: T[]) => {
+                return dataSet.map((d, index) => index == rowNum ? data : d)
             }
             setProps(p => ({...p, data: replace(p.data)}))
         },
@@ -97,13 +88,13 @@ export function NewTableController(setProps: PropsDispatcher<TableProps>): Table
     }
 }
 
-export const Table: FC<TableProps> = (old) => {
-    const [props, setProps] = useState(old)
+export function Table<T>(old: TableProps<T>) {
+    const [props, setProps] = useState<TP<T>>({data: old.data, columns: []})
     const context = useIoC()
     context.define(TablePropsDispatcher, setProps)
 
-    const tabHeader = context.inject(TableHeader)
-    const tabBody = context.inject(TableBody)
+    const tabHeader = context.inject(TableHeader<T>)
+    const tabBody = context.inject(TableBody<T>)
     return <div className="table">
         <table>
             {tabHeader(props)}
@@ -111,9 +102,10 @@ export const Table: FC<TableProps> = (old) => {
         </table>
         <div className="footer">
             <Once>{
-                () => props.children && props.children({
+                () => old.children({
                     ctx: context,
-                    ctl: NewTableController(setProps)
+                    ctl: NewTableController<T>(setProps),
+                    Column: TableColumn<T>
                 })
             }</Once>
         </div>

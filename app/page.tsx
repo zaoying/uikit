@@ -28,7 +28,7 @@ import { Pager } from "./components/pager";
 import { Popover, Toggle } from "./components/popover";
 import { Progress } from "./components/progress";
 import { Stepper, StepperItem } from "./components/stepper";
-import { Table, TableColumn } from "./components/table/table";
+import { Table } from "./components/table/table";
 import { Tab, TabItem } from "./components/tabs";
 import { Tooltip } from "./components/tooltip";
 import { WithState } from "./components/with";
@@ -176,24 +176,24 @@ export default function Home() {
                 <TabItem name="ghi" title="ghi">789</TabItem>
             </Tab>
             <According summary="标题" visible={true}>详情</According>
-            <Table data={[]}>{
-                ({ctl}) => {
+            <Table data={new Array<{id: number, name: string, age: number}>()}>{
+                ({ctl, Column}) => {
                     ctl.appendData(
                         {id: 0, name: "张三", age: 35}, 
                         {id: 1, name: "李四", age: 28},
                         {id: 2, name: "王五", age: 40}
                     )
                     return <>
-                        <TableColumn name="id" title={<input type="checkbox" name="ids" value="*"/>} width={10}>
+                        <Column name="id" title={<input type="checkbox" name="ids" value="*"/>} width={10}>
                             {({data}) => <input type="checkbox" name="ids" value={data.id}/>}
-                        </TableColumn>
-                        <TableColumn name="name" title="名字" width={40}>
+                        </Column>
+                        <Column name="name" title="名字" width={40}>
                             {({data}) => data.name}
-                        </TableColumn>
-                        <TableColumn name="age" title="年龄" width={20}>
+                        </Column>
+                        <Column name="age" title="年龄" width={20}>
                             {({data}) => data.age}
-                        </TableColumn>
-                        <TableColumn name="operation" title="操作" width={20}>{
+                        </Column>
+                        <Column name="operation" title="操作" width={20}>{
                             ({rowNum}) => {
                                 const content: FC<{toggle: Toggle}> = ({toggle}) => (
                                 <div className="modal" style={{width: "240px"}}>
@@ -211,7 +211,7 @@ export default function Home() {
                                     <Button type="danger">删除</Button>
                                 </Popover>
                             }
-                        }</TableColumn>
+                        }</Column>
                         <Pager current={3} interval={5} total={10}></Pager>
                     </>}
             }</Table>

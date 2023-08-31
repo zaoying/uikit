@@ -92,7 +92,7 @@ export const Modal: FC<ModalProps> = (old) => {
     return <>
         <Once>{
             () => props.children && props.children({
-                ctx: parent,
+                ctx: context,
                 ctl: NewModalController(setProps)
             })
         }</Once>

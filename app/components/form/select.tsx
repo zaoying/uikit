@@ -1,6 +1,6 @@
 import { useIoC } from 'Com/app/hooks/ioc';
 import { ChangeEvent, FC, ReactNode, useEffect, useState } from 'react';
-import { PropsDispatcher, UniqueController } from '../container';
+import { Controller, NewController, PropsDispatcher, ValueEqualizer } from '../container';
 import { Dropdown } from '../dropdown';
 
 export type SelectItemProps = {
@@ -12,48 +12,27 @@ export type SelectProps = {
     id: string
     name: string
     value?: string
-    options?: SelectItemProps[]
     filterFunc?: (op: SelectItemProps) => boolean
     children?: ReactNode
 }
 
-export const SelectPropsDispatcher: PropsDispatcher<SelectProps> = (cb) => {}
-
-export interface SelectController extends UniqueController<SelectItemProps> {
+interface SP extends SelectProps {
+    id: string
+    name: string
+    value?: string
+    options: SelectItemProps[]
 }
 
-export function NewSelectController(setProps: PropsDispatcher<SelectProps>):SelectController  {
-    return {
-        insert(op) {
-            setProps(p => {
-                if (!p.options) {
-                    return {...p, options: [op]}
-                }
-                if (p.options.find(o => o.value == op.value)) {
-                    return p
-                }
-                return {...p, options: [...p.options, op]}
-            })
-        },
-        update(op) {
-            setProps(p => {
-                if (!p.options) {
-                    return p
-                }
-                const options = p.options.map(o => o.value == op.value ? op : o)
-                return {...p, options: options}
-            })
-        },
-        remove(val) {
-            setProps(p => {
-                if (!p.options) {
-                    return p
-                }
-                const options = p.options.filter(o => o.value != val)
-                return {...p, options: options}
-            })
-        }
-    }
+export const SelectPropsDispatcher: PropsDispatcher<SP> = (cb) => {}
+
+export interface SelectController extends Controller<SelectItemProps> {}
+
+export function NewSelectController(setProps: PropsDispatcher<SP>): SelectController {
+    const setOptions: PropsDispatcher<SelectItemProps[]> = (action) => setProps(p => {
+        const options = (typeof action == "function") ? action(p.options) : action
+        return {...p, options: options}
+    })
+    return NewController<SelectItemProps>(setOptions, ValueEqualizer)
 }
 
 export const SelectItem: FC<SelectItemProps> = (props) => {
@@ -66,13 +45,12 @@ export const SelectItem: FC<SelectItemProps> = (props) => {
 
 export const Select: FC<SelectProps> = (old) => {
     const context = useIoC()
-    const [props, setProps] = useState(old)
+    const [props, setProps] = useState<SP>({...old, options: []})
     context.define(SelectPropsDispatcher, setProps)
     
     const [value, setValue] = useState(old.value ?? "")
     const onChange = (e: ChangeEvent<HTMLInputElement>) => {
-        const val = e.target.value
-        setValue(val)
+        setValue(e.target.value)
     }
 
     const defaultFilterFunc = function(op: SelectItemProps) {
@@ -84,18 +62,16 @@ export const Select: FC<SelectProps> = (old) => {
         <input id={props.id} name={props.name} value={value} onChange={onChange}/>
         <i className="right icon">﹀</i>
     </div>
-    const onClick = (op: SelectItemProps) => {
-        setValue(op.children)
-    }
-    const options = props.options?.filter(filterFunc).map((op) => (
-        <a key={op.value} className="button" onClick={() => onClick(op)}>
+    
+    const options = props.options.filter(filterFunc).map((op) => (
+        <a key={op.value} className="button" onClick={() => setValue(op.children)}>
             {op.children}
         </a>
     ))
     return <>
         {props.children}
         <Dropdown className="select" trigger="click">
-            {options ? [select, ...options] : [select]}
+            {[select, ...options]}
         </Dropdown>
     </>
 }

@@ -1,6 +1,6 @@
 import { FC, ReactNode, useEffect, useId, useRef, useState } from 'react';
 import { Context, useIoC } from "../hooks/ioc";
-import { PropsDispatcher } from './container';
+import { Controller, IDEqualizer, NewController, PropsDispatcher } from './container';
 import { Once } from './once';
 
 export interface StepperItemProps {
@@ -14,52 +14,30 @@ interface SIP extends StepperItemProps {
 
 export type StepperPops = {
     step?: number
-    items?: SIP[]
-    children?: FC<{ctx: Context, ctl: StepperController}>
+    children: FC<{ctx: Context, ctl: StepperController}>
 }
 
-export interface StepperController {
-    insert(item: SIP): void
-    update(item: SIP): void
-    delete(id: string): void
+interface SP {
+    step: number
+    items: SIP[]
+}
+
+export interface StepperController extends Controller<SIP> {
     jump(step: number): void
     previous(): void
     next(): void
 }
 
-export const StepperPropsDispatcher: PropsDispatcher<StepperPops> = (props) => {}
+export const StepperPropsDispatcher: PropsDispatcher<SP> = (props) => {}
 
-export function NewStepperController(setProps: PropsDispatcher<StepperPops>): StepperController {
+export function NewStepperController(setProps: PropsDispatcher<SP>): StepperController {
+    const setItems: PropsDispatcher<SIP[]> = (action) => setProps(p => {
+        const items = (typeof action == "function") ? action(p.items) : action
+        return {...p, items: items}
+    })
+    const ctl = NewController(setItems, IDEqualizer)
     return {
-        insert(item) {
-            setProps(p => {
-                if (!p.items) {
-                    return {...p, items: [item]}
-                }
-                if (p.items.find(it => it.id == item.id)) {
-                    return p
-                }
-                return {...p, items: [...p.items, item]}
-            })
-        },
-        update(item) {
-            setProps(p => {
-                if (!p.items) {
-                    return p
-                }
-                const items = p.items.map(it => it.id == item.id ? item : it)
-                return {...p, items: items}
-            })
-        },
-        delete(id) {
-            setProps(p => {
-                if (!p.items) {
-                    return p
-                }
-                const items = p.items.filter(it => it.id != id)
-                return {...p, items: items}
-            })
-        },
+        ...ctl,
         jump(step) {
             setProps(p => ({...p, step: step}))
         },
@@ -88,9 +66,9 @@ export const StepperItem: FC<StepperItemProps> = (props) => {
     return <></>
 }
 
-export const StepperHeader: FC<StepperPops> = (props) => {
+export const StepperHeader: FC<SP> = (props) => {
     return <ul className="horizontal list">{
-        props.items?.map((item, i) => {
+        props.items.map((item, i) => {
             const step = props.step ?? 0
             const passed = step >= i ? "passed" : ""
             return <li key={i} className={`item ${passed}`}>
@@ -102,9 +80,9 @@ export const StepperHeader: FC<StepperPops> = (props) => {
     }</ul>
 }
 
-export const StepperBody: FC<StepperPops> = (props) => {
+export const StepperBody: FC<SP> = (props) => {
     return <>{
-        props.items?.map((item, i) => {
+        props.items.map((item, i) => {
             const isActive = props.step == i ? "active" : ""
             return <div key={i} className={`content ${isActive}`}>
                 {item.children}
@@ -114,7 +92,7 @@ export const StepperBody: FC<StepperPops> = (props) => {
 }
 
 export const Stepper: FC<StepperPops> = (old) => {
-    const [props, setProps] = useState<StepperPops>({...old, step: old.step ?? 0})
+    const [props, setProps] = useState<SP>({items: [], step: old.step ?? 0})
     const context = useIoC()
     context.define(StepperPropsDispatcher, setProps)
     const header = context.inject(StepperHeader)
@@ -123,7 +101,7 @@ export const Stepper: FC<StepperPops> = (old) => {
     const ctl = NewStepperController(setProps)
     return <>
         <Once>{
-            () => props.children && props.children({ctx: context, ctl: ctl})
+            () => old.children({ctx: context, ctl: ctl})
         }</Once>
         <div className="stepper">
             <div className="center header">
