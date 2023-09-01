@@ -1,6 +1,6 @@
 "use client";
 
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import { According } from "./components/according";
 import { Button } from "./components/basic/button";
 import { Link } from "./components/basic/link";
@@ -32,7 +32,7 @@ import { Table } from "./components/table/table";
 import { Tab, TabItem } from "./components/tabs";
 import { Tooltip } from "./components/tooltip";
 import { WithState } from "./components/with";
-import { register } from "./hooks/i18n";
+import { initLocale, register } from "./hooks/i18n";
 import { IoCContext, NewIoCContext } from "./hooks/ioc";
 import { Direction } from "./utils/centered";
 
@@ -99,6 +99,7 @@ define(Body, () => {
 })
 
 export default function Home() {
+    useEffect(() => initLocale())
     return (<IoCContext.Provider value={{ define, inject }}>
         <div className="main">
             <Menu>
