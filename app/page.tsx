@@ -179,11 +179,11 @@ export default function Home() {
             <According summary="标题" visible={true}>详情</According>
             <Table data={new Array<{id: number, name: string, age: number}>()}>{
                 ({ctl, Column}) => {
-                    ctl.appendData(
+                    ctl.setData([
                         {id: 0, name: "张三", age: 35}, 
                         {id: 1, name: "李四", age: 28},
                         {id: 2, name: "王五", age: 40}
-                    )
+                    ])
                     return <>
                         <Column name="id" title={<input type="checkbox" name="ids" value="*"/>} width={10}>
                             {({data}) => <input type="checkbox" name="ids" value={data.id}/>}

@@ -20,6 +20,7 @@ export function TableColumn<T>(props: TableColumnProps<T>) {
 
 export function TablePropsDispatcher<T>(props: SetStateAction<T>) {}
 export interface TableController<T> extends Controller<TableColumnProps<T>> {
+    setData(dataSet: T[]): void
     appendData(...data: T[]): void
     updateData(rowNum: number, data: T): void
     removeData(rowNum: number): void
@@ -73,6 +74,9 @@ export function NewTableController<T>(setProps: PropsDispatcher<TP<T>>): TableCo
     const ctl = NewController<TableColumnProps<T>>(setColumns, NameEqualizer)
     return {
         ...ctl,
+        setData(dataSet) {
+            setProps(p => ({...p, data: dataSet}))
+        },
         appendData(...data: T[]) {
             setProps(p => ({...p, data: [...p.data, ...data]}))
         },
