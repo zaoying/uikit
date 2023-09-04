@@ -1,6 +1,8 @@
 "use client";
 
 import { FC, useEffect } from "react";
+import { Exchange } from "./annotations/restful";
+import { UserResourceProvider } from "./apis/user";
 import { According } from "./components/according";
 import { Button } from "./components/basic/button";
 import { Link } from "./components/basic/link";
@@ -34,6 +36,8 @@ import { Tooltip } from "./components/tooltip";
 import { WithState } from "./components/with";
 import { initLocale, register } from "./hooks/i18n";
 import { IoCContext, NewIoCContext } from "./hooks/ioc";
+import { useMock } from "./hooks/mock";
+import { useResource } from "./hooks/resource";
 import { Direction } from "./utils/centered";
 
 const { define, inject } = NewIoCContext()
@@ -99,7 +103,23 @@ define(Body, () => {
 })
 
 export default function Home() {
+    useMock(UserResourceProvider, (exchange: Exchange) => {
+        const provider = UserResourceProvider(exchange)
+        provider.list = (page, pageSize) => Promise.resolve([])
+        provider.get = (id) => Promise.resolve({username: "", password: "", role: []})
+        provider.update = (id, user) => Promise.resolve(new Response("{}"))
+        provider.create = (user) => Promise.resolve(new Response("{}"))
+        provider.delete = (id) => Promise.resolve(new Response("{}"))
+        return provider
+    })
     useEffect(() => initLocale())
+    const userRes = useResource(UserResourceProvider)
+    userRes.list().then(console.info)
+    const user = {username: "", password: "", role: []}
+    userRes.get('1').then(console.info)
+    userRes.create(user).then(console.info)
+    userRes.update('1', user).then(console.info)
+    userRes.delete('1').then(console.info)
     return (<IoCContext.Provider value={{ define, inject }}>
         <div className="main">
             <Menu>
