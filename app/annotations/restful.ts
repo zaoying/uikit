@@ -94,7 +94,11 @@ export function PathVariable(name: string) {
 
 export const PV = PathVariable
 
-export function RequestBody(encoder: (body: any) => BodyInit) {
+export interface Encoder<T> {
+    (src: T): BodyInit
+}
+
+export function RequestBody<T>(encoder: Encoder<T>) {
     return function(target: Resource, propertyKey: string | symbol, parameterIndex: number) {
         if (!target.operations) {
             target.operations = {}
@@ -107,9 +111,13 @@ export function RequestBody(encoder: (body: any) => BodyInit) {
 }
 
 export function JSONBody() {
-    return RequestBody(JSON.stringify)
+    return RequestBody<Object>(JSON.stringify)
 }
 
 export function PlainBody() {
-    return RequestBody(String)
+    return RequestBody<Object>(String)
+}
+
+export function FileBody() {
+    return RequestBody<Blob>((src) => src)
 }

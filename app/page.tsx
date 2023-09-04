@@ -1,8 +1,8 @@
 "use client";
 
 import { FC, useEffect } from "react";
-import { Exchange } from "./annotations/restful";
-import { UserResourceProvider } from "./apis/user";
+import { Exchange, RESTful } from "./annotations/restful";
+import { User, UserResource, UserResourceProvider } from "./apis/user";
 import { According } from "./components/according";
 import { Button } from "./components/basic/button";
 import { Link } from "./components/basic/link";
@@ -104,13 +104,25 @@ define(Body, () => {
 
 export default function Home() {
     useMock(UserResourceProvider, (exchange: Exchange) => {
-        const provider = UserResourceProvider(exchange)
-        provider.list = (page, pageSize) => Promise.resolve([])
-        provider.get = (id) => Promise.resolve({username: "", password: "", role: []})
-        provider.update = (id, user) => Promise.resolve(new Response("{}"))
-        provider.create = (user) => Promise.resolve(new Response("{}"))
-        provider.delete = (id) => Promise.resolve(new Response("{}"))
-        return provider
+        @RESTful("http://mock-server:8080/backend", "users")
+        class UserResourceForMock extends UserResource {
+            async list(page: number, pageSize: number): Promise<User[]> {
+                return Promise.resolve([])
+            }
+            async create(user: User): Promise<Response> {
+                return Promise.resolve(new Response("{}"))
+            }
+            async get(id: string): Promise<User> {
+                return Promise.resolve({username: "", password: "", role: []})
+            }
+            async update(id: string, user: User): Promise<Response> {
+                return Promise.resolve(new Response("{}"))
+            }
+            async delete(id: string): Promise<Response> {
+                return Promise.resolve(new Response("{}"))
+            }
+        }
+        return new UserResourceForMock(exchange)
     })
     useEffect(() => initLocale())
     const userRes = useResource(UserResourceProvider)
