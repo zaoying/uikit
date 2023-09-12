@@ -13,6 +13,8 @@ test('goto users page', async ({ page }) => {
   // Click the get started link.
   await page.getByRole('link', { name: '用户管理' }).click();
 
+  await page.getByText('新增用户').click()
+
   // Expects page to have a heading with the name of Installation.
   await expect(page.getByText('创建用户')).toBeVisible();
 });

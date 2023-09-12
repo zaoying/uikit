@@ -74,7 +74,7 @@ export default function UserPage() {
                         formCtl.reset()
                         return false
                     })
-                    return <Button onClick={ctl.open}>创建用户</Button>
+                    return <Button onClick={ctl.open}>新增用户</Button>
                 }
             }</Modal>
         </div>
