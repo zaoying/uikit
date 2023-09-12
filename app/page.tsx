@@ -2,27 +2,27 @@
 
 import Link from "next/link";
 import { useEffect } from "react";
-import { According } from "../app/components/according";
-import { Button } from "../app/components/basic/button";
-import { Breadcrumb } from "../app/components/breadcrumb";
-import { Card, CardBody, CardFooter, CardHeader } from "../app/components/card";
-import { Dialog } from "../app/components/dialog";
-import { Dropdown } from "../app/components/dropdown";
-import { Slider, SliderTrack } from "../app/components/form/slider";
-import { Spinner } from "../app/components/form/spinner";
-import { List } from "../app/components/list";
-import { Loader } from "../app/components/loader";
-import { Menu } from "../app/components/menu";
-import { ModalDict } from "../app/components/modal";
-import { Notification } from "../app/components/notification";
-import { Progress } from "../app/components/progress";
-import { Tab, TabItem } from "../app/components/tabs";
-import { Tooltip } from "../app/components/tooltip";
-import { WithState } from "../app/components/with";
-import { initLocale, register } from "../app/hooks/i18n";
-import { IoCContext, NewIoCContext } from "../app/hooks/ioc";
-import { Direction } from "../app/utils/centered";
+import { According } from "./components/according";
+import { Button } from "./components/basic/button";
+import { Breadcrumb } from "./components/breadcrumb";
+import { Card, CardBody, CardFooter, CardHeader } from "./components/card";
+import { Dialog } from "./components/dialog";
+import { Dropdown } from "./components/dropdown";
+import { Slider, SliderTrack } from "./components/form/slider";
+import { Spinner } from "./components/form/spinner";
+import { List } from "./components/list";
+import { Loader } from "./components/loader";
+import { Menu } from "./components/menu";
+import { ModalDict } from "./components/modal";
+import { Notification } from "./components/notification";
+import { Progress } from "./components/progress";
+import { Tab, TabItem } from "./components/tabs";
+import { Tooltip } from "./components/tooltip";
+import { WithState } from "./components/with";
 import "./globals.css";
+import { initLocale, register } from "./hooks/i18n";
+import { IoCContext, NewIoCContext } from "./hooks/ioc";
+import { Direction } from "./utils/centered";
 
 const globalContext = NewIoCContext()
 

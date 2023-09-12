@@ -1,18 +1,20 @@
-import { Button } from "Com/basic/button"
-import { FormPropsDispatcher, FormReference, NewFormController } from "Com/form/form"
-import { Body, Modal } from "Com/modal"
-import { Pager } from "Com/pager"
-import { Popover, Toggle } from "Com/popover"
-import { Table } from "Com/table/table"
-import { FC, RefObject, useRef } from "react"
-import { v4 as uuidv4 } from 'uuid'
-import { useIoC } from "~/hooks/ioc"
-import { useResource } from "~/hooks/resource"
-import { NewForm } from "~/utils/form"
-import "../globals.css"
-import { User, UserResourceProvider } from "./api"
-import { UserForm } from "./form"
-import { useMockForDev } from "./mock"
+"use client";
+
+import { Button } from "Com/basic/button";
+import { FormPropsDispatcher, FormReference, NewFormController } from "Com/form/form";
+import { Body, Modal } from "Com/modal";
+import { Pager } from "Com/pager";
+import { Popover, Toggle } from "Com/popover";
+import { Table } from "Com/table/table";
+import { FC, RefObject, useRef } from "react";
+import { v4 as uuidv4 } from 'uuid';
+import { useIoC } from "~/hooks/ioc";
+import { useResource } from "~/hooks/resource";
+import { NewForm } from "~/utils/form";
+import "../globals.css";
+import { User, UserResourceProvider } from "./api";
+import { UserForm } from "./form";
+import { useMockForDev } from "./mock";
 
 const DeleteConfirm: FC<{onConfirm: () => void}> = (props) => {
     const content: FC<{ toggle: Toggle }> = ({ toggle }) => (
