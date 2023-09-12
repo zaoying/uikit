@@ -1,5 +1,5 @@
-import { useIoC } from 'Com/app/hooks/ioc';
 import { FC, useEffect, useId } from 'react';
+import { useIoC } from '~/hooks/ioc';
 import { FormPropsDispatcher, InputType, NewFormController } from './form';
 
 export type TextareaProps = {

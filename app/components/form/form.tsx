@@ -1,5 +1,5 @@
-import { useIoC } from 'Com/app/hooks/ioc';
 import { FC, ReactNode, RefObject, useEffect, useRef, useState } from 'react';
+import { useIoC } from '~/hooks/ioc';
 import { Controller, NameEqualizer, NewController, PropsDispatcher } from '../container';
 
 export type InputType = string | File | ReadonlyArray<string> | number | undefined
@@ -25,7 +25,7 @@ interface FP {
 
 export interface FormController extends Controller<FieldProps> {
     submit(): void
-    validate(formRef: RefObject<HTMLFormElement>): void
+    validate(formRef: RefObject<HTMLFormElement>, callback?: () => void): void
     reset(): void
 }
 
@@ -47,7 +47,7 @@ export function NewFormController(setProps: PropsDispatcher<FP>): FormController
                 return p
             })
         },
-        validate(formRef) {
+        validate(formRef, callback) {
             if (formRef.current) {
                 const formData = new FormData(formRef.current)
                 setProps(p => {
@@ -57,6 +57,7 @@ export function NewFormController(setProps: PropsDispatcher<FP>): FormController
                         return {...field, errorMsg: errMsg}
                     })
                     const validity = fields.filter(field => field.errorMsg).length == 0
+                    validity && callback && callback()
                     return {...p, fields: fields, validity: validity}
                 })
             }

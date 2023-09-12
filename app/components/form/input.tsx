@@ -1,5 +1,5 @@
-import { useIoC } from 'Com/app/hooks/ioc';
 import { ChangeEvent, FC, useEffect } from 'react';
+import { useIoC } from '~/hooks/ioc';
 import { FormPropsDispatcher, InputType, NewFormController } from './form';
 
 export type InputProps = {

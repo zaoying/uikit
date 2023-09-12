@@ -1,5 +1,5 @@
-import { Context, useIoC } from "Com/app/hooks/ioc";
 import { FC, MouseEventHandler, ReactNode, useEffect, useRef, useState } from "react";
+import { Context, useIoC } from "~/hooks/ioc";
 import { FormPropsDispatcher, InputType, NewFormController } from "./form";
 
 export interface Range {

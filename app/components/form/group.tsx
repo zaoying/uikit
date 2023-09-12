@@ -1,5 +1,5 @@
-import { Context, useIoC } from "Com/app/hooks/ioc"
 import { FC, useEffect } from "react"
+import { Context, useIoC } from "~/hooks/ioc"
 import { PropsDispatcher } from "../container"
 import { FormPropsDispatcher, InputType, NewFormController } from "./form"
 

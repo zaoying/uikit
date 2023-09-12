@@ -1,5 +1,5 @@
-import { Context, useIoC } from "Com/app/hooks/ioc";
 import { FC, useState } from "react";
+import { Context, useIoC } from "~/hooks/ioc";
 import { useInterval } from "../hooks/interval";
 import { PropsDispatcher } from "./container";
 

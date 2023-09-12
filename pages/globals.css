@@ -34,6 +34,10 @@ input:focus {
     text-align: center;
 }
 
+.right {
+    text-align: right;
+}
+
 .round {
     border-radius: 5rem;
 }
@@ -44,11 +48,12 @@ input:focus {
 }
 
 .link {
-    color: blue;
+    color: gray;
+    text-decoration: none;
 }
 
 .link:hover {
-    text-decoration: underline;
+    color: blue;
 }
 
 .button {

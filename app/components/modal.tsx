@@ -1,6 +1,6 @@
-import { useIoC } from "Com/app/hooks/ioc";
 import { FC, ReactNode, useState } from "react";
 import { Context } from "vm";
+import { useIoC } from "~/hooks/ioc";
 import { i18n, useI18n } from "../hooks/i18n";
 import { Button } from "./basic/button";
 import { PropsDispatcher } from "./container";

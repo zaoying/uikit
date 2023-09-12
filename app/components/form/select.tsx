@@ -1,5 +1,5 @@
-import { useIoC } from 'Com/app/hooks/ioc';
 import { ChangeEvent, FC, ReactNode, useEffect, useState } from 'react';
+import { useIoC } from '~/hooks/ioc';
 import { Controller, NewController, PropsDispatcher, ValueEqualizer } from '../container';
 import { Dropdown } from '../dropdown';
 
@@ -11,15 +11,13 @@ export type SelectItemProps = {
 export type SelectProps = {
     id: string
     name: string
+    label?: string
     value?: string
     filterFunc?: (op: SelectItemProps) => boolean
     children?: ReactNode
 }
 
 interface SP extends SelectProps {
-    id: string
-    name: string
-    value?: string
     options: SelectItemProps[]
 }
 
@@ -48,23 +46,25 @@ export const Select: FC<SelectProps> = (old) => {
     const [props, setProps] = useState<SP>({...old, options: []})
     context.define(SelectPropsDispatcher, setProps)
     
+    const [label, setLabel] = useState(old.label ?? "")
     const [value, setValue] = useState(old.value ?? "")
     const onChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setValue(e.target.value)
+        setLabel(e.target.value)
     }
 
     const defaultFilterFunc = function(op: SelectItemProps) {
-        return value ? op.children.startsWith(value) : true
+        return label ? op.children.startsWith(label) : true
     }
     const filterFunc = props.filterFunc ?? defaultFilterFunc
     
     const select = <div key={props.id} className="header">
-        <input id={props.id} name={props.name} value={value} onChange={onChange}/>
+        <input name={props.name} value={value} readOnly style={{display: "none"}}/>
+        <input id={props.id} value={label} onChange={onChange}/>
         <i className="right icon">﹀</i>
     </div>
     
     const options = props.options.filter(filterFunc).map((op) => (
-        <a key={op.value} className="button" onClick={() => setValue(op.children)}>
+        <a key={op.value} className="button" onClick={() => {setValue(op.value); setLabel(op.children)}}>
             {op.children}
         </a>
     ))

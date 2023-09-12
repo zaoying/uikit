@@ -1,11 +1,14 @@
-import { Exchange, RESTful } from "../annotations/restful"
-import { CURD } from "../hooks/resource"
+import { Exchange, RESTful } from "~/annotations/restful"
+import { CURD } from "~/hooks/resource"
 
 
 export interface User {
+    id: string
     username: string
-    password: string
-    role: string[]
+    gender: "male" | "females"
+    birthDate: Date
+    category: "admin" | "ordinary",
+    description?: string
 }
 
 @RESTful("localhost", "users")
