@@ -30,14 +30,6 @@ export type NotificationProps = {
 export const NotificationPropsDispatcher: PropsDispatcher<NotificationProps> = () => {}
 
 export function NewNotifier(setProps: PropsDispatcher<NotificationProps>): Notifier {
-    useInterval(() => {
-        const now = new Date().getTime()
-        setProps(p => ({
-            ...p, 
-            msgs: p.msgs ? p.msgs.filter(msg => msg.expiredAt > now) : p.msgs
-        }))
-    }, 1000)
-    
     const add = function(msg: Msg) {
         setProps(p => ({
             ...p,
@@ -64,6 +56,13 @@ export const Notification: FC<NotificationProps> = (old) => {
     const [props, setProps] = useState(old)
     const context = useIoC()
     context.define(NotificationPropsDispatcher, setProps)
+    useInterval(() => {
+        const now = new Date().getTime()
+        setProps(p => ({
+            ...p, 
+            msgs: p.msgs ? p.msgs.filter(msg => msg.expiredAt > now) : p.msgs
+        }))
+    }, 1000)
     const ctl = NewNotifier(setProps)
     
     return <>

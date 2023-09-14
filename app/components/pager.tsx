@@ -51,10 +51,16 @@ export const Pager: FC<PagerProps> = (props) => {
         props.onChange && props.onChange(page)
         return page
     })
+    const previous = () => setPage(page => page > 1 ? page - 1 : page)
+    const next = () => setPage(page => page < total ? page + 1 : page)
     return <div className="pager">
         <ul className="list horizontal">
-            <li className="icon item" onClick={() => setPage(1)}>⟨⟨</li>
-            <li className="icon item" onClick={() => setPage(page => page > 1 ? page - 1 : page)}>⟨</li>
+            <li className="item" onClick={() => setPage(1)}>
+                <i className="iconfont small icon-arrow-double-left"></i>
+            </li>
+            <li className="item" onClick={previous}>
+                <i className="iconfont small icon-arrow-left"></i>
+            </li>
             {
                 pages.map(page => (
                     <li key={page} className={`item ${page == current ? "active" : ""}`}
@@ -63,8 +69,12 @@ export const Pager: FC<PagerProps> = (props) => {
                     </li>
                 ))
             }
-            <li className="icon item" onClick={() => setPage(page => page < total ? page + 1 : page)}>⟩</li>
-            <li className="icon item" onClick={() => setPage(total)}>⟩⟩</li>
+            <li className="item" onClick={next}>
+                <i className="iconfont small icon-arrow-right"></i>
+            </li>
+            <li className="item" onClick={() => setPage(total)}>
+                <i className="iconfont small icon-arrow-double-right"></i>
+            </li>
         </ul>
     </div>
 }

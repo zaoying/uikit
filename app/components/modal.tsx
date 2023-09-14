@@ -14,8 +14,10 @@ export const ModalDict = i18n("en-us", () => {
 })
 
 export const Header: FC<{title?: ReactNode}> = (props) => {
-    const title = typeof props.title == "string" ? <p className="title">{props.title}</p> : props.title
-    return title
+    if (typeof props.title == "string") {
+        return <p className="title">{props.title}</p>
+    }
+    return props.title
 }
 
 export const Body: FC = () => <></>
@@ -98,7 +100,9 @@ export const Modal: FC<ModalProps> = (old) => {
         }</Once>
         <div className={`dimmer ${props.visible ? "show" : ""}`}>
         <div className={className} style={{width: props.width, height: props.height}}>
-                <div className="header">{context.inject(Header)(props)}</div>
+                <div className="header">
+                    {context.inject(Header)(props)}
+                </div>
                 <div className="body">
                     {context.inject(Body)(props)}
                 </div>

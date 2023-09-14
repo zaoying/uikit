@@ -1,10 +1,11 @@
-import { Button } from "Com/basic/button"
-import { Form } from "Com/form/form"
-import { Input } from "Com/form/input"
-import { Label } from "Com/form/label"
-import { Select, SelectItem } from "Com/form/select"
-import { Stepper, StepperItem } from "Com/stepper"
-import "../globals.css"
+"use client";
+
+import { Button } from "Com/basic/button";
+import { Form } from "Com/form/form";
+import { Input } from "Com/form/input";
+import { Label } from "Com/form/label";
+import { Select, SelectItem } from "Com/form/select";
+import { Stepper, StepperItem } from "Com/stepper";
 
 export default function Room() {
     return <Stepper>{

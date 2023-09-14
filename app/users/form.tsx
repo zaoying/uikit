@@ -31,7 +31,7 @@ export const UserForm = () => {
             ({id}) => <Group name="permission" validate={checkEmpty("权限")}>{
                 ({name}) => <>
                     <CheckBox name={name} value="users">用户管理</CheckBox>
-                    <CheckBox name={name} value="rooms">订单管理</CheckBox>
+                    <CheckBox name={name} value="rooms">房间管理</CheckBox>
                 </>
             }</Group>
         }</Label>

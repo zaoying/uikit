@@ -1,7 +1,8 @@
 import { Dispatch, FC, SetStateAction, useState } from "react"
-import { Context, useIoC } from "../hooks/ioc"
+import { useI18n } from "~/hooks/i18n"
+import { Context, Func, useIoC } from "../hooks/ioc"
 
-export type WithDependencyProps<D extends {}> = {
+export type DependencyProps<D extends {}> = {
     deps: D,
     context?: Context
     children: FC<{deps: D}>
@@ -9,7 +10,7 @@ export type WithDependencyProps<D extends {}> = {
 
 export const WD = WithDependency
 
-export function WithDependency<D extends {}>(props: WithDependencyProps<D>) {
+export function WithDependency<D extends {[key: string]: Func<any, any>}>(props: DependencyProps<D>) {
     const parent = useIoC()
     const context = props.context ?? parent
     const deps = Object.assign({}, props.deps)
@@ -32,4 +33,14 @@ export const WS = WithState
 export function WithState<S>(props: StateProps<S>) {
     const [state, setState] = useState(props.state)
     return props.children({state, setState})
+}
+
+export interface DictProps<I, O> {
+    dict: Func<I,O>
+    children: FC<{dict: Func<I,O>}>
+}
+
+export function WithDict<I,O>(props: DictProps<I,O>) {
+    const dict = useI18n(props.dict)
+    return props.children({dict})
 }

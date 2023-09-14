@@ -1,7 +1,7 @@
+import { Once } from 'Com/once';
 import { FC, ReactNode, SetStateAction, useEffect, useState } from 'react';
 import { Context, useIoC } from "../../hooks/ioc";
 import { Controller, NameEqualizer, NewController, PropsDispatcher } from '../container';
-import { Once } from '../once';
 
 export type TableColumnProps<T> = {
     name: string
@@ -12,14 +12,18 @@ export type TableColumnProps<T> = {
 
 export function TableColumn<T>(props: TableColumnProps<T>) {
     const context = useIoC()
-    const setProps = context.inject(TablePropsDispatcher)
-    const ctl = NewTableController<T>(setProps)
-    useEffect(() => ctl.insert(props))
+    
+    useEffect(() => {
+        const setProps = context.inject(TablePropsDispatcher)
+        const ctl = NewTableController<T>(setProps)
+        ctl.updateOrInsert(props)
+    }, [context, props])
     return <></>
 }
 
 export function TablePropsDispatcher<T>(props: SetStateAction<T>) {}
 export interface TableController<T> extends Controller<TableColumnProps<T>> {
+    updateOrInsert(column: TableColumnProps<T>): void
     setData(dataSet: T[]): void
     appendData(...data: T[]): void
     updateData(rowNum: number, data: T): void
@@ -74,6 +78,19 @@ export function NewTableController<T>(setProps: PropsDispatcher<TP<T>>): TableCo
     const ctl = NewController<TableColumnProps<T>>(setColumns, NameEqualizer)
     return {
         ...ctl,
+        updateOrInsert(column) {
+            setProps(p => {
+                const index = p.columns.findIndex(col => col.name == column.name)
+                if (index >= 0) {
+                    const matched = p.columns[index]
+                    if (matched.name == column.name && matched.title == column.title) {
+                        return p
+                    }
+                    return {...p, columns: p.columns.splice(index, 1, column)}
+                } 
+                return {...p, columns: [...p.columns, column]}
+            })
+        },
         setData(dataSet) {
             setProps(p => ({...p, data: dataSet}))
         },
