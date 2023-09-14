@@ -59,7 +59,7 @@ export function NewTabController(setProps: PropsDispatcher<TP>): TabController {
                 p.tabs.splice(offset, 1)
                 if (p.activeTab == tab.name) {
                     offset = offset < 1 ? 0 : offset - 1;
-                    const activeTab =  p.tabs[offset].name
+                    const activeTab = p.tabs.length ? p.tabs[offset].name : ""
                     return {...p, activeTab: activeTab}
                 }
                 return {...p}
@@ -88,7 +88,7 @@ export const TabHeader: FC<TP> = (props) => {
             return <li key={tab.name} className={`item ${isActiveTab}`}>
                 <a onClick={() => ctl.setActiveTab(tab.name)}>
                     {tab.title ?? tab.name}
-                    {tab.closeable && <i onClick={onRemove(tab)}>x</i>}
+                    {tab.closeable && <i className="iconfont icon-cross tiny" onClick={onRemove(tab)}></i>}
                 </a>
             </li>
         })

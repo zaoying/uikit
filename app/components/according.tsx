@@ -9,10 +9,11 @@ export type AccordingProps = {
 
 export const According: FC<AccordingProps> = (props) => {
     const [visible, setVisible] = useState(props.visible)
+    const iconClass = `icon iconfont small ${visible ? "icon-arrow-down" : "icon-arrow-right" }`
     return <div className={`according ${visible ? "show" : ""}`}>
         <a className="summary" onClick={() => setVisible(c => !c)}>
             {props.summary}
-            <i className='icon'>{visible ? "﹀" : "〉"}</i>
+            <i className={iconClass}></i>
         </a>
         <div className="detail">
             {props.children}

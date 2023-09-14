@@ -60,7 +60,7 @@ export const Select: FC<SelectProps> = (old) => {
     const select = <div key={props.id} className="header">
         <input name={props.name} value={value} readOnly style={{display: "none"}}/>
         <input id={props.id} value={label} onChange={onChange}/>
-        <i className="right icon">﹀</i>
+        <i className="icon iconfont icon-arrow-down small right"></i>
     </div>
     
     const options = props.options.filter(filterFunc).map((op) => (
