@@ -88,8 +88,8 @@ export const TabHeader: FC<TP> = (props) => {
             return <li key={tab.name} className={`item ${isActiveTab}`}>
                 <a onClick={() => ctl.setActiveTab(tab.name)}>
                     {tab.title ?? tab.name}
-                    {tab.closeable && <i className="iconfont icon-cross tiny" onClick={onRemove(tab)}></i>}
                 </a>
+                {tab.closeable && <i className="iconfont icon-cross tiny" onClick={onRemove(tab)}></i>}
             </li>
         })
     }</ul>

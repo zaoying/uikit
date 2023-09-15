@@ -81,7 +81,7 @@ export const Select: FC<SelectProps> = (old) => {
     </div>
     
     const options = props.options.filter(filterFunc).map((op) => (
-        <a key={op.value} className="button" onClick={() => {setValue(op.value); setLabel(op.children)}}>
+        <a key={op.value} onClick={() => {setValue(op.value); setLabel(op.children)}}>
             {op.children}
         </a>
     ))

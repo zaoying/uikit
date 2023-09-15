@@ -13,6 +13,11 @@ import { IoCContext, NewIoCContext } from './hooks/ioc';
 
 const inter = Inter({ subsets: ['latin'] })
 
+export const metadata = {
+    title: 'Demo',
+    description: 'A demo for dependency injection uikit',
+}
+
 export const MenuDict = i18n("en-us", () => ({
     menu: "Menu",
     user: "User Management",
@@ -55,7 +60,7 @@ export default function RootLayout(props: { children: React.ReactNode }) {
                             <I18nMenu></I18nMenu>
                         </div>
                         <div className="right">
-                            <Menu>
+                            <Menu direction='right'>
                                 <a className="button" title="international">
                                     <i className='iconfont icon-global'></i>
                                 </a>

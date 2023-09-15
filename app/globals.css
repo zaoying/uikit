@@ -125,7 +125,7 @@ input:focus {
 }
 
 .link:hover {
-    color: blue;
+    color: rgb(136, 186, 255);
 }
 
 .button {
@@ -257,9 +257,33 @@ input:focus {
     padding: 0;
 }
 
+.tab > .header > .list > .item {
+    position: relative;
+    text-align: center;
+}
+
+.tab > .header > .list > .item > * {
+    color: inherit;
+    margin: .2rem .5rem;
+}
+
+.tab > .header > .list > .item > i {
+    position: absolute;
+    top: .5rem;
+    right: -.5rem;
+    margin: 0;
+    opacity: 0;
+    color: grey;
+    cursor: pointer;
+}
+
+.tab > .header > .list > .item:hover > i {
+    opacity: 1;
+}
+
 .tab > .header > .list > .item.active {
-    color: deepskyblue;
-    border-bottom: solid deepskyblue 1px;
+    color: dodgerblue;
+    border-bottom: solid dodgerblue 1px;
 }
 
 .tab > .body {
@@ -292,21 +316,6 @@ input:focus {
 
 .list.horizontal > .item {
     display: inline-block;
-}
-
-.tab > .header > .list > .item:hover i {
-    opacity: 1;
-}
-
-.tab > .header > .list > .item i {
-    opacity: 0;
-    color: grey;
-    cursor: pointer;
-    margin-left: .5rem;
-}
-
-.tab > .header > .list > .item:hover i {
-    opacity: 1;
 }
 
 .compact {
@@ -632,10 +641,9 @@ textarea:focus {
 .tooltip > .tip {
     position: absolute;
     opacity: 0;
-    color: white;
     white-space: nowrap;
     padding: .3rem;
-    background-color: #000000bb;
+    background-color: #eeeeeeee;
     border-radius: .2rem;
     z-index: -9;
 }
@@ -662,10 +670,9 @@ textarea:focus {
     position: absolute;
     display: block;
     opacity: 0;
-    color: white;
     margin: 0;
     padding: .3rem;
-    background-color: #000000bb;
+    background-color: #eeeeeeee;
     border-radius: .2rem;
     overflow-y: visible;
     white-space: nowrap;
@@ -676,6 +683,22 @@ textarea:focus {
     transition: opacity 1s;
     opacity: 100;
     z-index: 9;
+}
+
+.dropdown > .list > .item {
+    margin: 0;
+    border-radius: .2rem;
+}
+
+.dropdown > .list > .item > *{
+    color: inherit;
+    display: block;
+    padding: .2rem .5rem;
+}
+
+.dropdown.show > .list > .item:hover {
+    color: white !important;
+    background-color: rgb(136, 186, 255);
 }
 
 .select {
@@ -695,12 +718,29 @@ textarea:focus {
     white-space: nowrap;
 }
 
+.select > .list > .item {
+    margin: 0;
+    border-radius: .2rem;
+}
+
+.select > .list > .item > *{
+    color: inherit;
+    display: block;
+    padding: .5rem;
+    border-radius: .2rem;
+}
+
 .select.show > .list {
     transition: opacity 1s;
     display: block;
     min-width: 95%;
     opacity: 100;
     z-index: 99;
+}
+
+.select.show > .list > .item:hover {
+    color: white !important;
+    background-color: rgb(136, 186, 255);
 }
 
 .select.show .header {
@@ -779,6 +819,22 @@ textarea:focus {
     display: block;
     opacity: 100;
     z-index: 99;
+}
+
+.menu.left > .list {
+    left: 0;
+}
+
+.menu.right > .list {
+    right: 0;
+}
+
+.menu.top > .list {
+    top: -100%;
+}
+
+.menu.bottom > .list {
+    top: 100%;
 }
 
 .menu.show > .list > .item:hover {
