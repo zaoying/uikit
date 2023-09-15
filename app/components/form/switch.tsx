@@ -22,7 +22,7 @@ export const Switch: FC<SwitchProps> = (props) => {
 
     const setForm = context.inject(FormPropsDispatcher)
     const ctl = NewFormController(setForm)
-    useEffect(() => ctl.insert({name: props.name, validate: validate}))
+    useEffect(() => ctl.updateOrInsert({name: props.name, validate: validate}))
     
     const [flag, setFlag] = useState(props.checked)
     const onClick = (e: any) => {

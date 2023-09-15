@@ -31,7 +31,7 @@ export const Input: FC<InputProps> = (props) => {
 
     const setForm = context.inject(FormPropsDispatcher)
     const ctl = NewFormController(setForm)
-    useEffect(() => ctl.insert({name: props.name, validate: validate}))
+    useEffect(() => ctl.updateOrInsert({name: props.name, validate: validate}))
 
     const onChange = function(e: ChangeEvent<HTMLInputElement>) {
         props.onChange && props.onChange(e.target.value)

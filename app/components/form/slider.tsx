@@ -89,7 +89,7 @@ export const Slider: FC<SliderProps> = (props) => {
 
     const setForm = context.inject(FormPropsDispatcher)
     const ctl = NewFormController(setForm)
-    useEffect(() => ctl.insert({name: props.name, validate: validate}))
+    useEffect(() => ctl.updateOrInsert({name: props.name, validate: validate}))
     
     const sliderRef = useRef<HTMLDivElement>(null)
     const [sliderLen, setSliderLen] = useState(0)

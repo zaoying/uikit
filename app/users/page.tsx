@@ -27,6 +27,14 @@ const UserDict = i18n("en-us", () => ({
     deleteBtn: "Delete",
     createUser: "Create User",
     addUser: "Add User",
+    gender: {
+        male: "Male",
+        female: "Female"
+    },
+    category: {
+        admin: "Admin",
+        ordinary: "Ordinary"
+    },
     columns: {
         name: "Name",
         gender: "Gender",
@@ -46,6 +54,14 @@ register("zh-cn", (context) => {
         deleteBtn: "删除",
         createUser: "创建用户",
         addUser: "新增用户",
+        gender: {
+            male: "男",
+            female: "女"
+        },
+        category: {
+            admin: "系统管理员",
+            ordinary: "普通用户"
+        },
         columns: {
             name: "名字",
             gender: "性别",
@@ -70,7 +86,7 @@ const DeleteConfirm: FC<{ onConfirm: () => void }> = (props) => {
             </div>
         </div>)
     return <Popover direction="left" content={content}>
-        <Button type="danger">删除</Button>
+        <Button type="danger">{dict.deleteBtn}</Button>
     </Popover>
 }
 
@@ -132,8 +148,7 @@ export default function UserPage() {
                 refresh.current()
                 return <WithDict dict={UserDict}>{
                     ({dict}) => {
-                    const columns = dict({}).columns
-                    console.info(columns)
+                    const {columns, gender, category} = dict({})
                     return <>
                         <Column name="id" title={<input type="checkbox" name="ids" value="*" />} width={5}>
                             {({ data }) => <input type="checkbox" name="ids" value={data.id} />}
@@ -142,10 +157,10 @@ export default function UserPage() {
                             {({ data }) => data.username}
                         </Column>
                         <Column name="gender" title={columns.gender} width={20}>
-                            {({ data }) => data.gender}
+                            {({ data }) => data.gender == "male" ? gender.male : gender.female}
                         </Column>
                         <Column name="category" title={columns.category} width={30}>
-                            {({ data }) => data.category}
+                            {({ data }) => data.category == "admin" ? category.admin : category.ordinary}
                         </Column>
                         <Column name="operation" title={columns.operation} width={20}>{
                             ({ data }) => {

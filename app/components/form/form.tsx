@@ -24,6 +24,7 @@ interface FP {
 }
 
 export interface FormController extends Controller<FieldProps> {
+    updateOrInsert(field: FieldProps): void
     submit(): void
     validate(formRef: RefObject<HTMLFormElement>, callback?: () => void): void
     reset(): void
@@ -41,6 +42,16 @@ export function NewFormController(setProps: PropsDispatcher<FP>): FormController
     const ctl = NewController<FieldProps>(setOptions, NameEqualizer)
     return {
         ...ctl,
+        updateOrInsert(field) {
+            setProps(p => {
+                const index = p.fields.findIndex(f => f.name == field.name)
+                if (index >= 0) {
+                    p.fields[index] = field
+                    return {...p, fields: [...p.fields]}
+                }
+                return {...p, columns: [...p.fields, field]}
+            })
+        },
         submit() {
             setProps(p => {
                 p.onSubmit && p.onSubmit(p);

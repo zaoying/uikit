@@ -32,7 +32,7 @@ export const Group = (props: GroupProps) => {
 
     const setForm = context.inject(FormPropsDispatcher)
     const ctl = NewFormController(setForm)
-    useEffect(() => ctl.insert({name: props.name, validate: validate}))
+    useEffect(() => ctl.updateOrInsert({name: props.name, validate: validate}))
 
     return <div className="group">
         {props.children({ctx: context, name: props.name})}

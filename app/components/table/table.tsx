@@ -86,7 +86,8 @@ export function NewTableController<T>(setProps: PropsDispatcher<TP<T>>): TableCo
                     if (matched.name == column.name && matched.title == column.title) {
                         return p
                     }
-                    return {...p, columns: p.columns.splice(index, 1, column)}
+                    p.columns[index] = column
+                    return {...p, columns: [...p.columns]}
                 } 
                 return {...p, columns: [...p.columns, column]}
             })
