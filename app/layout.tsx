@@ -13,11 +13,6 @@ import { IoCContext, NewIoCContext } from './hooks/ioc';
 
 const inter = Inter({ subsets: ['latin'] })
 
-export const metadata = {
-    title: 'Demo',
-    description: 'A demo for dependency injection uikit',
-}
-
 export const MenuDict = i18n("en-us", () => ({
     menu: "Menu",
     user: "User Management",
