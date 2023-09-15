@@ -11,6 +11,10 @@ i {
     font-style: normal;
 }
 
+button {
+    border: none;
+}
+
 body {
     position: relative;
     margin: 0;

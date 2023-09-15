@@ -20,8 +20,8 @@ export const metadata = {
 
 export const MenuDict = i18n("en-us", () => ({
     menu: "Menu",
-    user: "UserManagement",
-    room: "RoomManagement"
+    user: "User Management",
+    room: "Room Management"
 }))
 
 register("zh-cn", (locale) => {
@@ -61,7 +61,7 @@ export default function RootLayout(props: { children: React.ReactNode }) {
                         </div>
                         <div className="right">
                             <Menu>
-                                <a className="button">
+                                <a className="button" title="international">
                                     <i className='iconfont icon-global'></i>
                                 </a>
                                 <a onClick={() => setLocale("en-us")}>English</a>

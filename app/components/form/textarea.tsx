@@ -1,4 +1,4 @@
-import { FC, useEffect, useId } from 'react';
+import { FC, useEffect } from 'react';
 import { useIoC } from '~/hooks/ioc';
 import { FormPropsDispatcher, InputType, NewFormController } from './form';
 
@@ -32,8 +32,7 @@ export const Textarea: FC<TextareaProps> = (props) => {
         props.onChange && props.onChange(e.target.value)
     }
 
-    const id = useId()
-    return <textarea className="textarea" id={id} name={props.name} onChange={onChange}
+    return <textarea className="textarea" id={props.id} name={props.name} onChange={onChange}
         value={props.value} disabled={props.disabled} readOnly={props.readonly} 
         placeholder={props.placeholder} rows={props.rows} cols={props.cols}
         maxLength={props.maxLen} minLength={props.minLen}>
