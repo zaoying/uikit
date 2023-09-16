@@ -24,7 +24,7 @@ test('create user then delete user', async ({ page }) => {
 
     await expect(page.getByText('test')).toBeVisible();
 
-    await page.locator("body > div > div.user.page > div > div.table > table > tbody > tr:nth-child(4) > td:nth-child(5) > div > button").click()
+    await page.locator("body > div > div.user.page > div > div.table > table > tbody > tr:nth-child(4) > td:last-child > div > button").click()
     await page.getByRole('button', { name: "Confirm" }).click()
 
     await expect(page.getByText('test')).not.toBeAttached();
