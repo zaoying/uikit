@@ -1,13 +1,16 @@
 "use client";
 
 import { Button } from "Com/basic/button";
+import { CheckBox } from "Com/form/checkbox";
 import { FormPropsDispatcher, FormReference, NewFormController } from "Com/form/form";
+import { CheckboxGroup } from "Com/form/group";
 import { Body, Header, Modal } from "Com/modal";
+import { NewNotifier, NotificationPropsDispatcher } from "Com/notification";
 import { Pager } from "Com/pager";
 import { Popover, Toggle } from "Com/popover";
 import { Table } from "Com/table/table";
 import { WithDict } from "Com/with";
-import { FC, RefObject, useRef } from "react";
+import { FC, RefObject, useEffect, useRef } from "react";
 import { v4 as uuidv4 } from 'uuid';
 import { i18n, register, useI18n } from "~/hooks/i18n";
 import { useIoC } from "~/hooks/ioc";
@@ -25,7 +28,11 @@ const UserDict = i18n("en-us", () => ({
         cancel: "Cancel"
     },
     deleteBtn: "Delete",
+    deleteUserSucceed: "Delete user succeed!",
+    deleteUserFailed: "Delete user failed: ",
     createUser: "Create User",
+    createUserSucceed: "Create user succeed!",
+    createUserFailed: "Create user failed: ",
     addUser: "Add User",
     gender: {
         male: "Male",
@@ -52,7 +59,11 @@ register("zh-cn", (context) => {
             cancel: "取消"
         },
         deleteBtn: "删除",
+        deleteUserSucceed: "删除用户成功！",
+        deleteUserFailed: "删除用户失败：",
         createUser: "创建用户",
+        createUserSucceed: "创建用户成功！",
+        createUserFailed: "创建用户失败：",
         addUser: "新增用户",
         gender: {
             male: "男",
@@ -97,14 +108,18 @@ export default function UserPage() {
     context.define(Header, () => <p className="title">{dict.createUser}</p>)
     context.define(Body, UserForm)
 
-    const refresh = useRef(async () => { })
+    const refresh = useRef(async () => {})
     const openModal = useRef(() => {})
     const dict = useI18n(UserDict)({})
+    const dictRef = useRef(dict)
+    useEffect(() => {dictRef.current = dict})
     return (<div>
         <Modal width={360}>{
             ({ ctl, ctx }) => {
                 openModal.current = ctl.open
                 ctl.onConfirm(() => {
+                    const setProps = ctx.inject(NotificationPropsDispatcher)
+                    const notifier = NewNotifier(setProps)
                     const setForm = ctx.inject(FormPropsDispatcher)
                     const formCtl = NewFormController(setForm)
                     const formRef: RefObject<HTMLFormElement> = ctx.inject(FormReference)({})
@@ -113,15 +128,20 @@ export default function UserPage() {
                         const user: User = {
                             id: uuidv4(),
                             username: data.getString("username") ?? "",
-                            gender: data.getString("gender") == "male" ? "male" : "females",
+                            gender: data.getString("gender") == "male" ? "male" : "female",
                             birthDate: data.getDate("birthDate") ?? new Date(),
                             category: data.getString("category") === "admin" ? "admin" : "ordinary",
                             description: data.getString("description")
                         }
                         const callback = async () => {
                             const resp = await userRes.create(user)
-                            resp.ok && ctl.close()
-                            refresh.current()
+                            if (resp.ok) {
+                                ctl.close()
+                                notifier.info(dictRef.current.createUserSucceed)
+                                await refresh.current()
+                                return
+                            }
+                            notifier.error(dictRef.current.createUserFailed + resp.statusText)
                         }
                         formCtl.validate(formRef, callback);
                     }
@@ -140,7 +160,7 @@ export default function UserPage() {
             <Button onClick={openModal.current}>{dict.addUser}</Button>
         </div>
         <Table data={new Array<User>()}>{
-            ({ ctl, Column }) => {
+            ({ ctx, ctl, Column }) => {
                 refresh.current = async () => {
                     const users = await userRes.list()
                     ctl.setData(users)
@@ -148,11 +168,16 @@ export default function UserPage() {
                 refresh.current()
                 return <WithDict dict={UserDict}>{
                     ({dict}) => {
-                    const {columns, gender, category} = dict({})
+                    const {columns, gender, category, deleteUserSucceed, deleteUserFailed} = dict({})
                     return <>
-                        <Column name="id" title={<input type="checkbox" name="ids" value="*" />} width={5}>
-                            {({ data }) => <input type="checkbox" name="ids" value={data.id} />}
-                        </Column>
+                        <CheckboxGroup>{
+                            ({allSelected, toggleAll, toggle, init}) => {
+                                const all = <CheckBox name="ids" value="*" checked={allSelected} onChange={toggleAll}/>
+                                return <Column name="id" title={all} width={5}>{
+                                    ({ data }) => <CheckBox name="ids" value={data.id} checked={init(data.id)} onChange={toggle(data.id)}/>
+                                }</Column>
+                            }
+                        }</CheckboxGroup>
                         <Column name="name" title={columns.name} width={25}>
                             {({ data }) => data.username}
                         </Column>
@@ -165,8 +190,15 @@ export default function UserPage() {
                         <Column name="operation" title={columns.operation} width={20}>{
                             ({ data }) => {
                                 const callback = async () => {
-                                    await userRes.delete(data.id)
-                                    await refresh.current()
+                                    const setProps = ctx.inject(NotificationPropsDispatcher)
+                                    const notifier = NewNotifier(setProps)
+                                    const resp = await userRes.delete(data.id)
+                                    if (resp.ok) {
+                                        notifier.info(deleteUserSucceed)
+                                        await refresh.current()
+                                        return
+                                    }
+                                    notifier.error(deleteUserFailed + resp.statusText)
                                 }
                                 return <DeleteConfirm onConfirm={callback} />
                             }

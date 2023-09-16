@@ -49,7 +49,7 @@ export function NewFormController(setProps: PropsDispatcher<FP>): FormController
                     p.fields[index] = field
                     return {...p, fields: [...p.fields]}
                 }
-                return {...p, columns: [...p.fields, field]}
+                return {...p, fields: [...p.fields, field]}
             })
         },
         submit() {

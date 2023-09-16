@@ -5,7 +5,7 @@ import { CURD } from "~/hooks/resource"
 export interface User {
     id: string
     username: string
-    gender: "male" | "females"
+    gender: "male" | "female"
     birthDate: Date
     category: "admin" | "ordinary",
     description?: string

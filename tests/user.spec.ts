@@ -9,7 +9,7 @@ test('goto users page', async ({ page }) => {
 });
 
 
-test('create user', async ({ page }) => {
+test('create user then delete user', async ({ page }) => {
     await page.goto('http://localhost:3000/users');
 
     await page.getByText('Add User').click()
@@ -23,4 +23,9 @@ test('create user', async ({ page }) => {
     await page.getByRole('button', { name: "Confirm" }).click()
 
     await expect(page.getByText('test')).toBeVisible();
+
+    await page.locator("body > div > div.user.page > div > div.table > table > tbody > tr:nth-child(4) > td:nth-child(5) > div > button").click()
+    await page.getByRole('button', { name: "Confirm" }).click()
+
+    await expect(page.getByText('test')).not.toBeAttached();
 });
