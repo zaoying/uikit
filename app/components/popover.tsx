@@ -1,6 +1,6 @@
 import { FC, MouseEventHandler, ReactNode, useState } from 'react';
+import { Direction } from '~/utils/centered';
 import { PropsDispatcher } from './container';
-import { Direction } from './tooltip';
 
 export type Toggle = PropsDispatcher<boolean>
 
