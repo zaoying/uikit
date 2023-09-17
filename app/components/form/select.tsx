@@ -75,7 +75,7 @@ export const Select: FC<SelectProps> = (old) => {
     const filterFunc = old.filterFunc ?? defaultFilterFunc
     
     const select = <div key={old.id} className="header">
-        <input name={old.name} value={value} readOnly style={{display: "none"}}/>
+        <input name={old.name} value={value} type="hidden"/>
         <input id={old.id} value={label} onChange={onChange}/>
         <i className="icon iconfont icon-arrow-down small right"></i>
     </div>

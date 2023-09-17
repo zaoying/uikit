@@ -10,77 +10,16 @@ import { Pager } from "Com/pager";
 import { Popover, Toggle } from "Com/popover";
 import { Table } from "Com/table/table";
 import { WithDict } from "Com/with";
-import { FC, RefObject, useEffect, useRef } from "react";
-import { v4 as uuidv4 } from 'uuid';
-import { i18n, register, useI18n } from "~/hooks/i18n";
+import { FC, RefObject, useEffect, useRef, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
+import { useI18n } from "~/hooks/i18n";
 import { useIoC } from "~/hooks/ioc";
 import { useResource } from "~/hooks/resource";
 import { NewForm } from "~/utils/form";
 import { User, UserResourceProvider } from "./api";
 import { UserForm } from "./form";
+import { UserDict } from "./i18n";
 import { useMockForDev } from "./mock";
-
-const UserDict = i18n("en-us", () => ({
-    dialog: {
-        title: "Danger",
-        content: "Want to delete this row ?",
-        confirm: "Confirm",
-        cancel: "Cancel"
-    },
-    deleteBtn: "Delete",
-    deleteUserSucceed: "Delete user succeed!",
-    deleteUserFailed: "Delete user failed: ",
-    createUser: "Create User",
-    createUserSucceed: "Create user succeed!",
-    createUserFailed: "Create user failed: ",
-    addUser: "Add User",
-    gender: {
-        male: "Male",
-        female: "Female"
-    },
-    category: {
-        admin: "Admin",
-        ordinary: "Ordinary"
-    },
-    columns: {
-        name: "Name",
-        gender: "Gender",
-        category: "Category",
-        operation: "Operation"
-    }
-}))
-
-register("zh-cn", (context) => {
-    context.define(UserDict, () => ({
-        dialog: {
-            title: "危险",
-            content: "是否删除当前行？",
-            confirm: "确认",
-            cancel: "取消"
-        },
-        deleteBtn: "删除",
-        deleteUserSucceed: "删除用户成功！",
-        deleteUserFailed: "删除用户失败：",
-        createUser: "创建用户",
-        createUserSucceed: "创建用户成功！",
-        createUserFailed: "创建用户失败：",
-        addUser: "新增用户",
-        gender: {
-            male: "男",
-            female: "女"
-        },
-        category: {
-            admin: "系统管理员",
-            ordinary: "普通用户"
-        },
-        columns: {
-            name: "名字",
-            gender: "性别",
-            category: "账号类型",
-            operation: "操作"
-        }
-    }))
-})
 
 const DeleteConfirm: FC<{ onConfirm: () => void }> = (props) => {
     const dict = useI18n(UserDict)({})
@@ -101,15 +40,34 @@ const DeleteConfirm: FC<{ onConfirm: () => void }> = (props) => {
     </Popover>
 }
 
+const emptyUser: User = {
+    id: "",
+    username: "",
+    gender: "male",
+    birthDate: new Date(),
+    category: "ordinary",
+}
+
 export default function UserPage() {
     useMockForDev()
+    const [defaultUser, setDefaultUser] = useState<User>(emptyUser)
     const userRes = useResource(UserResourceProvider)
     const context = useIoC()
-    context.define(Header, () => <p className="title">{dict.createUser}</p>)
-    context.define(Body, UserForm)
+    context.define(Header, () => <p className="title">
+        {defaultUser.id ? dict.updateUser : dict.createUser}
+    </p>)
+    context.define(Body, () => <UserForm {...defaultUser}></UserForm>)
 
     const refresh = useRef(async () => {})
     const openModal = useRef(() => {})
+    const createUser = () => {
+        setDefaultUser(emptyUser)
+        openModal.current()
+    }
+    const updateUser = (user: User) => {
+        setDefaultUser(user)
+        openModal.current()
+    }
     const dict = useI18n(UserDict)({})
     const dictRef = useRef(dict)
     useEffect(() => {dictRef.current = dict})
@@ -126,7 +84,7 @@ export default function UserPage() {
                     if (formRef.current) {
                         const data = NewForm(formRef.current)
                         const user: User = {
-                            id: uuidv4(),
+                            id: data.getString("id") ?? "",
                             username: data.getString("username") ?? "",
                             gender: data.getString("gender") == "male" ? "male" : "female",
                             birthDate: data.getDate("birthDate") ?? new Date(),
@@ -134,14 +92,21 @@ export default function UserPage() {
                             description: data.getString("description")
                         }
                         const callback = async () => {
-                            const resp = await userRes.create(user)
+                            const tip = dictRef.current
+                            const userId = user.id
+                            if (!userId) {
+                                user.id = uuidv4()
+                            }
+                            const resp = await (userId ? userRes.update(user.id, user) : userRes.create(user))
                             if (resp.ok) {
                                 ctl.close()
-                                notifier.info(dictRef.current.createUserSucceed)
+                                const succeedTip = userId ? tip.updateUserSucceed : tip.createUserSucceed
+                                notifier.info(succeedTip)
                                 await refresh.current()
                                 return
                             }
-                            notifier.error(dictRef.current.createUserFailed + resp.statusText)
+                            const failedTip = userId ? tip.updateUserFailed : tip.createUserFailed
+                            notifier.error(failedTip + resp.statusText)
                         }
                         formCtl.validate(formRef, callback);
                     }
@@ -157,7 +122,7 @@ export default function UserPage() {
             }
         }</Modal>
         <div className="right">
-            <Button onClick={openModal.current}>{dict.addUser}</Button>
+            <Button onClick={createUser}>{dict.addUser}</Button>
         </div>
         <Table data={new Array<User>()}>{
             ({ ctx, ctl, Column }) => {
@@ -200,7 +165,12 @@ export default function UserPage() {
                                     }
                                     notifier.error(deleteUserFailed + resp.statusText)
                                 }
-                                return <DeleteConfirm onConfirm={callback} />
+                                return <>
+                                    <DeleteConfirm onConfirm={callback} />
+                                    <Button type="second" onClick={()=>updateUser(data)}>
+                                        {dictRef.current.updateBtn}
+                                    </Button>
+                                </>
                             }
                         }</Column>
                         <Pager current={3} interval={5} total={10}></Pager>

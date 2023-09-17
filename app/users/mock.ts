@@ -5,9 +5,9 @@ import { User, UserResource, UserResourceProvider } from "./api"
 export function useMockForDev() {
     useMock(UserResourceProvider, (exchange: Exchange) => {
         const users: User[] = [
-            { id: "0", username: "张三", birthDate: new Date(1973, 5), gender: "male", category: "admin" },
-            { id: "1", username: "李四", birthDate: new Date(1985, 7), gender: "male", category: "ordinary" },
-            { id: "2", username: "王五", birthDate: new Date(1992, 9), gender: "male", category: "ordinary" }
+            { id: "0", username: "张三", birthDate: new Date(1973, 5, 1), gender: "male", category: "admin" },
+            { id: "1", username: "李四", birthDate: new Date(1985, 7, 2), gender: "female", category: "ordinary" },
+            { id: "2", username: "王五", birthDate: new Date(1992, 9, 7), gender: "male", category: "ordinary" }
         ]
         @RESTful("http://mock-server:8080/backend", "users")
         class UserResourceForMock extends UserResource {

@@ -7,6 +7,8 @@ import { Radio } from "Com/form/radio"
 import { Select, SelectItem } from "Com/form/select"
 import { Textarea } from "Com/form/textarea"
 import { i18n, register, useI18n } from "~/hooks/i18n"
+import { yyyyMMdd } from "~/utils/date"
+import { User } from "./api"
 
 export const UserFormDict = i18n("en-us", () => ({
     notEmpty: "can not be empty.",
@@ -60,24 +62,34 @@ register("zh-cn", (context) => {
     }))
 })
 
-export const UserForm = () => {
+export const UserForm = (user: User) => {
     const dict = useI18n(UserFormDict)({})
     const checkEmpty = (label: string) => (val: InputType) => {
-        if (!val) return label + dict.notEmpty
+        if (!val) return label + " " + dict.notEmpty
         return ""
     }
+    let birthDate = user.birthDate.toLocaleDateString("zh-cn", yyyyMMdd)
+    birthDate = birthDate.replaceAll("/", "-")
+    const category = user.category == "admin" ? dict.category.admin : dict.category.ordinary
     return <Form action="">
+        <input name="id" value={user.id} type="hidden"/>
         <Label label={dict.username}>
-            {({id}) => <Input id={id} name="username" validate={checkEmpty(dict.username)}/>}
+            {({id}) => <Input id={id} name="username" value={user.username} 
+                validate={checkEmpty(dict.username)}/>}
         </Label>
         <Label label={dict.birthDate}>
-            {({id}) => <Input id={id} name="birthDate" type="date" validate={checkEmpty(dict.birthDate)}/>}
+            {({id}) => <Input id={id} name="birthDate" type="date" value={birthDate}
+                validate={checkEmpty(dict.birthDate)}/>}
         </Label>
         <Label label={dict.gender.name}>{
             () => <Group name="gender">{
                 ({name}) => <>
-                    <Radio name={name} value="male" checked>{dict.gender.male}</Radio>
-                    <Radio name={name} value="female">{dict.gender.female}</Radio>
+                    <Radio name={name} value="male" checked={user.gender == "male"}>
+                        {dict.gender.male}
+                    </Radio>
+                    <Radio name={name} value="female" checked={user.gender == "female"}>
+                        {dict.gender.female}
+                    </Radio>
                 </>
             }</Group>
         }</Label>
@@ -90,14 +102,15 @@ export const UserForm = () => {
             }</Group>
         }</Label>
         <Label label={dict.category.name}>{
-            ({id}) => <Select id={id} name="category" label={dict.category.ordinary} value="ordinary">
+            ({id}) => <Select id={id} name="category" label={category} value={user.category}>
                 <SelectItem value="admin">{dict.category.admin}</SelectItem>
                 <SelectItem value="ordinary">{dict.category.ordinary}</SelectItem>
             </Select>
         }</Label>
         <Label label={dict.description.name}>{
             ({id}) => (
-                <Textarea id={id} name="description" placeholder={dict.description.placeholder} maxLen={100}/>
+                <Textarea id={id} name="description" value={user.description}
+                    placeholder={dict.description.placeholder} maxLen={100}/>
             )
         }</Label>
     </Form>
