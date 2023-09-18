@@ -1,66 +1,89 @@
 import { CheckBox } from "Com/form/checkbox"
-import { Form, InputType } from "Com/form/form"
+import { Form, FormPropsDispatcher, FormReference, InputType, NewFormController } from "Com/form/form"
 import { Group } from "Com/form/group"
 import { Input } from "Com/form/input"
 import { Label } from "Com/form/label"
 import { Radio } from "Com/form/radio"
 import { Select, SelectItem } from "Com/form/select"
 import { Textarea } from "Com/form/textarea"
-import { i18n, register, useI18n } from "~/hooks/i18n"
+import { Body, Header, Modal } from "Com/modal"
+import { NewNotifier, NotificationPropsDispatcher } from "Com/notification"
+import { FC, MutableRefObject, RefObject, useEffect, useRef } from "react"
+import { v4 as uuidv4 } from "uuid"
+import { useI18n } from "~/hooks/i18n"
+import { useIoC } from "~/hooks/ioc"
 import { yyyyMMdd } from "~/utils/date"
-import { User } from "./api"
+import { NewForm } from "~/utils/form"
+import { User, UserResource } from "./api"
+import { UserDict, UserFormDict } from "./i18n"
 
-export const UserFormDict = i18n("en-us", () => ({
-    notEmpty: "can not be empty.",
-    username: "Username",
-    birthDate: "Birth date",
-    gender: {
-        name: "Gender",
-        male: "Male",
-        female: "Female"
-    },
-    permission: {
-        name: "Permission",
-        user: "User Management",
-        room: "Room Management"
-    },
-    category: {
-        name: "Category",
-        admin: "Admin",
-        ordinary: "Ordinary"
-    },
-    description: {
-        name: "Description",
-        placeholder: "less then 100 letters."
-    }
-}))
+export type UserModalProps = {
+    openModal: MutableRefObject<() => void>
+    userRes: UserResource
+    refresh: MutableRefObject<() => void>
+    user: User
+}
 
-register("zh-cn", (context) => {
-    context.define(UserFormDict, () => ({
-        notEmpty: "不能为空",
-        username: "用户名称",
-        birthDate: "出生日期",
-        gender: {
-            name: "性别",
-            male: "男",
-            female: "女"
-        },
-        permission: {
-            name: "权限",
-            user: "用户管理",
-            room: "房间管理"
-        },
-        category: {
-            name: "账号类型",
-            admin: "系统管理员",
-            ordinary: "普通用户"
-        },
-        description: {
-            name: "描述",
-            placeholder: "不超过100字"
+export const UserModal: FC<UserModalProps> = (props) => {
+    const {openModal, userRes, refresh, user} = props
+    const context = useIoC()
+    context.define(Header, () => <p className="title">
+        {user.id ? dict.updateUser : dict.createUser}
+    </p>)
+    context.define(Body, () => <UserForm {...user}></UserForm>)
+    const dict = useI18n(UserDict)({})
+    const dictRef = useRef(dict)
+    useEffect(() => {dictRef.current = dict})
+    return <Modal width={360}>{
+        ({ ctl, ctx }) => {
+            openModal.current = ctl.open
+            ctl.onConfirm(() => {
+                const setProps = ctx.inject(NotificationPropsDispatcher)
+                const notifier = NewNotifier(setProps)
+                const setForm = ctx.inject(FormPropsDispatcher)
+                const formCtl = NewFormController(setForm)
+                const formRef: RefObject<HTMLFormElement> = ctx.inject(FormReference)({})
+                if (formRef.current) {
+                    const data = NewForm(formRef.current)
+                    const user: User = {
+                        id: data.getString("id") ?? "",
+                        username: data.getString("username") ?? "",
+                        gender: data.getString("gender") == "male" ? "male" : "female",
+                        birthDate: data.getDate("birthDate") ?? new Date(),
+                        category: data.getString("category") === "admin" ? "admin" : "ordinary",
+                        description: data.getString("description")
+                    }
+                    const callback = async () => {
+                        const tip = dictRef.current
+                        const userId = user.id
+                        if (!userId) {
+                            user.id = uuidv4()
+                        }
+                        const resp = await (userId ? userRes.update(user.id, user) : userRes.create(user))
+                        if (resp.ok) {
+                            ctl.close()
+                            const succeedTip = userId ? tip.updateUserSucceed : tip.createUserSucceed
+                            notifier.info(succeedTip)
+                            await refresh.current()
+                            return
+                        }
+                        const failedTip = userId ? tip.updateUserFailed : tip.createUserFailed
+                        notifier.error(failedTip + resp.statusText)
+                    }
+                    formCtl.validate(formRef, callback);
+                }
+                return true
+            })
+            ctl.onCancel(() => {
+                const setForm = ctx.inject(FormPropsDispatcher)
+                const formCtl = NewFormController(setForm)
+                formCtl.reset()
+                return false
+            })
+            return <></>
         }
-    }))
-})
+    }</Modal> 
+}
 
 export const UserForm = (user: User) => {
     const dict = useI18n(UserFormDict)({})

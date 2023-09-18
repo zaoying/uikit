@@ -8,6 +8,17 @@ export interface GroupController {
     onChange?: (val: InputType) => void
 }
 
+function calSelected(items: Map<string, boolean>) {
+    let selected: string[] = [];
+        items.forEach((val, key) => val && selected.push(key))
+    return selected
+}
+
+function allSelected(all: Map<string,boolean>) {
+    const selected = calSelected(all)
+    return selected.length > 0 && selected.length == all.size
+}
+
 export type GroupProps = {
     name: string
     validate?: (val: InputType) => string
@@ -40,27 +51,32 @@ export const Group = (props: GroupProps) => {
 }
 
 export type CheckboxGroupProps = {
+    onChange: (selected: string[]) => void
     children: FC<{
-        items: Map<string, boolean>,
-        allSelected: boolean,
+        allSelected: boolean
         toggleAll: () => void,
         toggle: (id: string) => (val: InputType) => void,
-        init: (id: string) => boolean
+        init: (id: string) => boolean,
+        reset: () => void
     }>
 }
 
 export const CheckboxGroup = (props: CheckboxGroupProps) => {
     const [items, setItems] = useState(new Map<string, boolean>())
-    let selected = 0;
-    items.forEach(val => val && selected++)
-    const allSelected = items.size > 0 && selected == items.size
-    const toggleAll = () => setItems(all => {
-        const newMap = new Map<string, boolean>()
-        all.forEach((val, key) => {
-            newMap.set(key, !allSelected)
+    useEffect(() => {
+        const selected = calSelected(items)
+        props.onChange(selected)
+    }, [items, props])
+    const toggleAll = () => {
+        setItems(all => {
+            const newMap = new Map<string, boolean>()
+            const checked = allSelected(all)
+            all.forEach((val, key) => {
+                newMap.set(key, !checked)
+            })
+            return newMap
         })
-        return newMap
-    })
+    }
     const toggle = (id: string) => (
         (val: InputType) => {
             setItems(s => {
@@ -77,5 +93,7 @@ export const CheckboxGroup = (props: CheckboxGroupProps) => {
         }
         return items.get(id) ?? false
     }
-    return props.children({items, allSelected, toggleAll, toggle, init})
+
+    const reset = () => setItems(new Map<string, boolean>())
+    return props.children({allSelected: allSelected(items), toggleAll, toggle, init, reset})
 }
