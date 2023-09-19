@@ -25,9 +25,9 @@ test('create user then delete user', async ({ page }) => {
 
     // edit last user
     await page.locator("div.user.page div.table > table > tbody > tr:last-child button.second").click()
+    await page.getByLabel("User Management").check()
     await page.getByLabel("Category").clear()
     await page.getByLabel("Category").click()
-    await page.getByLabel("User Management").check()
     await page.locator("div.select > ul.list > li.item > a", {hasText: "Admin"}).click()
     await page.getByRole('button', { name: "Confirm" }).click()
     const category = page.locator("div.user.page div.table > table > tbody > tr:last-child")
