@@ -9,7 +9,7 @@ test('goto users page', async ({ page }) => {
 });
 
 
-test('create user then delete user', async ({ page }) => {
+test('create user, edit user then delete user', async ({ page }) => {
     await page.goto('http://localhost:3000/users');
 
     // create new user
@@ -40,4 +40,34 @@ test('create user then delete user', async ({ page }) => {
     await page.waitForTimeout(1000)
 
     await expect(page.getByText('test', {exact: true})).not.toBeAttached();
+});
+
+
+test('batch delete user', async ({ page }) => {
+    await page.goto('http://localhost:3000/users');
+
+    // select last user
+    await page.locator("div.user.page div.table > table > tbody > tr:last-child > td:first-child input[type=checkbox]").check()
+
+    const deleteBtn = page.locator("body > div > div.user.page > div > ul > div > button").filter({ hasText: "Delete"})
+    await expect(deleteBtn).toBeEnabled()
+
+    await deleteBtn.click()
+
+    await page.locator("body > div > div.user.page > div > ul > div > div > div > div.center.footer > button.primary.button").click()
+
+    await expect(deleteBtn).toBeDisabled()
+
+    // select all users
+    await page.locator("body > div > div.user.page > div > div.table > table > thead > tr > th:nth-child(1) > div > input").check()
+
+    await expect(deleteBtn).toBeEnabled()
+    
+    await deleteBtn.click()
+
+    await page.locator("body > div > div.user.page > div > ul > div > div > div > div.center.footer > button.primary.button").click()
+
+    await expect(deleteBtn).toBeDisabled()
+
+    await expect((await page.locator("div.user.page div.table > table > tbody > tr").all()).length).toEqual(0)
 });
