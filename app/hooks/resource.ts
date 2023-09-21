@@ -24,6 +24,11 @@ export function addResponseInterceptor(interceptor: ResponseInterceptor) {
     globalResponseInterceptor.push(interceptor)
 }
 
+export interface Page<T> {
+    total: number
+    data: T[]
+}
+
 @RESTful("example.com", "resource")
 export class CURD<T> implements Resource {
     exchange: Exchange
@@ -32,7 +37,7 @@ export class CURD<T> implements Resource {
     }
 
     @Get("?page={page}&pageSize={pageSize}")
-    async list(@PV("page") page?: number, @PV("pageSize") pageSize?: number): Promise<T[]> {
+    async list(@PV("page") page?: number, @PV("pageSize") pageSize?: number): Promise<Page<T>> {
         return (await this.exchange(page ?? 1, pageSize ?? 10)).json()
     }
 

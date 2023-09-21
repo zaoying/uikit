@@ -973,7 +973,15 @@ textarea:focus {
     margin: 0;
 }
 
-.pager .item {
+.pager {
+    display: inline-block;
+}
+
+.pager > .list.horizontal {
+    display: inline-block;
+}
+
+.pager > .list.horizontal > .item {
     display: inline-block;
     width: 1rem;
     height: 1rem;

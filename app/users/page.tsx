@@ -62,6 +62,7 @@ export default function UserPage() {
 
     useMockForDev()
     const [defaultUser, setDefaultUser] = useState<User>(emptyUser)
+    const setTotal = useRef((t: number) => {})
     const userRes = useResource(UserResourceProvider)
 
     const [selected, setSelected] = useState<string[]>([])
@@ -87,18 +88,26 @@ export default function UserPage() {
         await Promise.all(ids.map((id) => deleteUser(id)))
         await refresh.current()
     }
+    const pager = useRef({page: 1, size: 10})
+    const setPager = (page: number, size: number) => {
+        pager.current = {page, size}
+        refresh.current()
+    }
     return (<div>
         <UserModal openModal={openModal} userRes={userRes} refresh={refresh} user={defaultUser}/>
         <ul className="list right">
             <Button onClick={createUser}>{dict.addUser}</Button>
             <DeleteConfirm ids={selected} multiDelete onConfirm={multipleDelete} />
-            <Button type="grey" onClick={refresh.current}>
+            <Button type="grey" onClick={() => refresh.current}>
                 <i className="iconfont small icon-refresh"></i>
             </Button>
         </ul>
         <Table data={new Array<User>()}>{
             ({ ctl, Column }) => {
-                userRes.list().then(users => ctl.setData(users))
+                userRes.list(pager.current.page, pager.current.size).then(page => {
+                    ctl.setData(page.data)
+                    setTotal.current(page.total)
+                })
                 return <WithDict dict={UserDict}>{
                     ({dict}) => {
                     const {columns, gender, category} = dict({})
@@ -106,8 +115,9 @@ export default function UserPage() {
                         <CheckboxGroup onChange={setSelected}>{
                             ({allSelected, toggleAll, toggle, init, reset}) => {
                                 refresh.current = async () => {
-                                    const users = await userRes.list()
-                                    ctl.setData(users)
+                                    const page = await userRes.list(pager.current.page, pager.current.size)
+                                    ctl.setData(page.data)
+                                    setTotal.current(page.total)
                                     reset()
                                 }
                                 const all = <CheckBox name="ids" value="*" checked={allSelected} onChange={toggleAll}/>
@@ -135,7 +145,9 @@ export default function UserPage() {
                                 </>
                             }
                         }</Column>
-                        <Pager current={3} interval={5} total={10}></Pager>
+                        <Pager onChange={setPager}>{
+                            ({renew}) => {setTotal.current = renew; return <></>}
+                        }</Pager>
                     </>}
                 }</WithDict>
             }

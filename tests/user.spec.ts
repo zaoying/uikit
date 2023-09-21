@@ -71,3 +71,26 @@ test('batch delete user', async ({ page }) => {
 
     await expect((await page.locator("div.user.page div.table > table > tbody > tr").all()).length).toEqual(0)
 });
+
+
+test('user pagination', async ({ page }) => {
+    await page.goto('http://localhost:3000/users');
+
+    await page.getByTitle("Each page shows 10 items.").click()
+    await page.locator("div.pager > div.dropdown > ul.list > li.item > a").filter({hasText: /^5$/}).click()
+
+    // create new user
+    await page.getByText('Add User').click()
+    await page.getByLabel("Username").fill("test")
+    await page.getByLabel("Birth Date").fill("1997-08-15")
+    await page.getByLabel("Female").click()
+    await page.getByLabel("User Management").check()
+    await page.getByLabel("Description").fill("user of test")
+    await page.getByRole('button', { name: "Confirm" }).click()
+    
+    await expect(page.getByText('test', {exact: true})).not.toBeAttached();
+    // go to last page
+    await page.getByTitle("Go to last page").click()
+    // check new use is present
+    await expect(page.getByText('test', {exact: true})).toBeAttached();
+});
