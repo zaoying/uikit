@@ -48,6 +48,9 @@ export const Pager: FC<PagerProps> = (props) => {
         setCurrent(c => props.current ? Math.floor(props.current) : c)
         setSize(s => props.size ? Math.floor(props.size) : s)
     }, [props])
+    useEffect(() => {
+        props.onChange && props.onChange(current, size)
+    }, [current, size, props])
 
     const [total, setTotal] = useState(1)
     if (currentPage < 1) {
@@ -80,7 +83,6 @@ export const Pager: FC<PagerProps> = (props) => {
         pages.push(i)
     }
     const setPage = (setter: number | ((page: number) => number)) => {
-        props.onChange && props.onChange(current, size)
         setCurrent(old => {
             const page = typeof setter == "function" ? setter(old) : setter
             return page

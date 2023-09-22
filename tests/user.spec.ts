@@ -49,23 +49,23 @@ test('batch delete user', async ({ page }) => {
     // select last user
     await page.locator("div.user.page div.table > table > tbody > tr:last-child > td:first-child input[type=checkbox]").check()
 
-    const deleteBtn = page.locator("body > div > div.user.page > div > ul > div > button").filter({ hasText: "Delete"})
+    const deleteBtn = page.locator("div.user.page ul.right button.danger").filter({ hasText: "Delete"})
     await expect(deleteBtn).toBeEnabled()
 
     await deleteBtn.click()
 
-    await page.locator("body > div > div.user.page > div > ul > div > div > div > div.center.footer > button.primary.button").click()
+    await page.locator("div.user.page ul.right div.popover div.center.footer > button.primary.button").click()
 
     await expect(deleteBtn).toBeDisabled()
 
     // select all users
-    await page.locator("body > div > div.user.page > div > div.table > table > thead > tr > th:nth-child(1) > div > input").check()
+    await page.locator("div.user.page div.table > table > thead > tr > th:nth-child(1) > div > input").check()
 
     await expect(deleteBtn).toBeEnabled()
     
     await deleteBtn.click()
 
-    await page.locator("body > div > div.user.page > div > ul > div > div > div > div.center.footer > button.primary.button").click()
+    await page.locator("div.user.page ul.right div.popover div.center.footer > button.primary.button").click()
 
     await expect(deleteBtn).toBeDisabled()
 
@@ -87,7 +87,7 @@ test('user pagination', async ({ page }) => {
     await page.getByLabel("User Management").check()
     await page.getByLabel("Description").fill("user of test")
     await page.getByRole('button', { name: "Confirm" }).click()
-    
+
     await expect(page.getByText('test', {exact: true})).not.toBeAttached();
     // go to last page
     await page.getByTitle("Go to last page").click()
