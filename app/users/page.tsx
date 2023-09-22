@@ -98,7 +98,7 @@ export default function UserPage() {
         <ul className="list right">
             <Button onClick={createUser}>{dict.addUser}</Button>
             <DeleteConfirm ids={selected} multiDelete onConfirm={multipleDelete} />
-            <Button type="grey" onClick={() => refresh.current}>
+            <Button type="grey" onClick={() => refresh.current()}>
                 <i className="iconfont small icon-refresh"></i>
             </Button>
         </ul>

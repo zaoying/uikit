@@ -79,11 +79,13 @@ export const Pager: FC<PagerProps> = (props) => {
     for (let i = start; i <= end; i ++) {
         pages.push(i)
     }
-    const setPage = (setter: number | ((page: number) => number)) => setCurrent(old => {
-        const page = typeof setter == "function" ? setter(old) : setter
-        props.onChange && props.onChange(page, size)
-        return page
-    })
+    const setPage = (setter: number | ((page: number) => number)) => {
+        props.onChange && props.onChange(current, size)
+        setCurrent(old => {
+            const page = typeof setter == "function" ? setter(old) : setter
+            return page
+        })
+    }
     const setPageSize = (pSize: number) => {
         setSize(pSize)
         props.onChange && props.onChange(current, pSize)

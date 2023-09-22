@@ -162,6 +162,24 @@ input:focus {
     color: white;
 }
 
+.wrapper {
+    position: relative;
+}
+
+.wrapper > .dimmer {
+    position: absolute;
+    z-index: 1000;
+    backdrop-filter: blur(4px);
+}
+
+.wrapper > .dimmer > .loader {
+    position: absolute;
+    top: 40%;
+    padding: .5rem;
+    border-radius: .2rem;
+    background-color: #eeeeeeee;
+}
+
 .dimmer {
     display: none;
     position: fixed;
@@ -174,6 +192,7 @@ input:focus {
     right: 0;
     background-color: rgba(0, 0, 0, 0.3);
     text-align: center;
+    backdrop-filter: blur(2px);
 }
 
 .dimmer.show {
