@@ -6,6 +6,13 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "1433853",
+      "name": "sun",
+      "font_class": "sun1",
+      "unicode": "e668",
+      "unicode_decimal": 58984
+    },
+    {
       "icon_id": "34379754",
       "name": "slash",
       "font_class": "slash",
@@ -78,28 +85,28 @@
     {
       "icon_id": "1222014",
       "name": "arrow-down",
-      "font_class": "arrowdown",
+      "font_class": "arrow-down",
       "unicode": "e692",
       "unicode_decimal": 59026
     },
     {
       "icon_id": "1222026",
       "name": "arrow-left",
-      "font_class": "arrowleft",
+      "font_class": "arrow-left",
       "unicode": "e693",
       "unicode_decimal": 59027
     },
     {
       "icon_id": "1222030",
       "name": "arrow-right",
-      "font_class": "arrowright",
+      "font_class": "arrow-right",
       "unicode": "e694",
       "unicode_decimal": 59028
     },
     {
       "icon_id": "1222032",
       "name": "arrow-up",
-      "font_class": "arrowup",
+      "font_class": "arrow-up",
       "unicode": "e695",
       "unicode_decimal": 59029
     },
@@ -119,8 +126,8 @@
     },
     {
       "icon_id": "1403045",
-      "name": "日历",
-      "font_class": "calender-office-date-schedule-manage--cfdfcadc",
+      "name": "calendar-color",
+      "font_class": "calendar-color",
       "unicode": "e77a",
       "unicode_decimal": 59258
     },
@@ -133,8 +140,8 @@
     },
     {
       "icon_id": "4765723",
-      "name": "Dollar",
-      "font_class": "Dollar",
+      "name": "dollar",
+      "font_class": "dollar",
       "unicode": "e77d",
       "unicode_decimal": 59261
     },
@@ -154,17 +161,10 @@
     },
     {
       "icon_id": "4936487",
-      "name": "question-circle-fill",
-      "font_class": "question-circle-fill",
+      "name": "question-fill",
+      "font_class": "question-fill",
       "unicode": "e845",
       "unicode_decimal": 59461
-    },
-    {
-      "icon_id": "5317043",
-      "name": "sun",
-      "font_class": "sun",
-      "unicode": "e733",
-      "unicode_decimal": 59187
     },
     {
       "icon_id": "6151097",
@@ -189,8 +189,8 @@
     },
     {
       "icon_id": "7009038",
-      "name": "warning_fill",
-      "font_class": "warning_fill",
+      "name": "warn_fill",
+      "font_class": "warn_fill",
       "unicode": "e73d",
       "unicode_decimal": 59197
     },
@@ -287,8 +287,8 @@
     },
     {
       "icon_id": "34453084",
-      "name": "warning",
-      "font_class": "warning",
+      "name": "warn",
+      "font_class": "warn",
       "unicode": "e849",
       "unicode_decimal": 59465
     },
@@ -336,8 +336,8 @@
     },
     {
       "icon_id": "29056355",
-      "name": "答案",
-      "font_class": "daan",
+      "name": "answer",
+      "font_class": "answer",
       "unicode": "e6d9",
       "unicode_decimal": 59097
     }

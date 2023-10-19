@@ -90,7 +90,6 @@ export default function UserPage() {
     }
     const pager = useRef({page: 1, size: 10})
     const setPager = (page: number, size: number) => {
-        console.info({page, size})
         pager.current = {page, size}
         refresh.current()
     }

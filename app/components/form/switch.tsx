@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react"
+import { FC, ReactNode, useEffect, useState } from "react"
 import { useIoC } from "~/hooks/ioc"
 import { FormPropsDispatcher, InputType, NewFormController } from "./form"
 
@@ -9,8 +9,9 @@ export type SwitchProps = {
     disabled?: boolean
     readonly?: boolean
     value?: string | ReadonlyArray<string> | number | undefined
-    onToggle?: (flag?: boolean) => boolean
+    onToggle?: (flag: boolean) => void
     validate?: (val: InputType) => string
+    children?: ReactNode
 }
 
 export const Switch: FC<SwitchProps> = (props) => {
@@ -24,13 +25,24 @@ export const Switch: FC<SwitchProps> = (props) => {
     const ctl = NewFormController(setForm)
     useEffect(() => ctl.updateOrInsert({name: props.name, validate: validate}))
     
-    const [flag, setFlag] = useState(props.checked)
+    const [flag, setFlag] = useState(props.checked ?? false)
     const onClick = (e: any) => {
-        props.readonly || setFlag(f => props.onToggle ? props.onToggle(f) : !f)
+        if (props.readonly) {
+            return
+        }
+        setFlag(f => !f)
+        props.onToggle && props.onToggle(flag) 
     }
     const className = `switch ${flag ? "active" : ""}`
-    return <button type="button" className={className} name={props.name} value={props.value} id={props.id} 
-        onClick={onClick} disabled={props.disabled}>
-            <span className="dot"></span>
+    const on = <span className="label">On</span>
+    const off = <span className="label">Off</span>
+    const label = flag ? on : off
+    const children = <>
+        {label}
+        <span className="dot" style={{backgroundColor: "white"}}></span>
+    </>
+    return <button type="button" className={className} name={props.name} value={props.value}
+        id={props.id} onClick={onClick} disabled={props.disabled}>
+            {props.children ?? children}
     </button>
 }

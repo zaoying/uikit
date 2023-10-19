@@ -1,5 +1,15 @@
 @import url("../public/fonts/iconfont.css");
 
+:root {
+    --fore-color: black;
+    --bg-color: white;
+    --thirty-three: #33333333;
+    --sixty-six: #00000066;
+    --wheat: #eeeeeeee;
+    --primary-color: dodgerblue;
+    --second-color: rgb(136, 186, 255);
+}
+
 a {
     display: inline-block;
     color: gray;
@@ -23,6 +33,9 @@ button:disabled {
 body {
     position: relative;
     margin: 0;
+    color: var(--fore-color);
+    background-color: var(--bg-color);
+    transition: background-color .5s;
 }
 
 .main {
@@ -42,7 +55,7 @@ body {
 }
 
 a.logo {
-    color: initial;
+    color: var(--fore-color);
     text-decoration: none;
 }
 
@@ -57,7 +70,7 @@ a.logo {
 .navbar {
     position: relative;
     padding: 0 1rem;
-    box-shadow: 0px 1px #33333333;
+    box-shadow: 0px 1px var(--thirty-three);
 }
 
 .navbar > * {
@@ -76,18 +89,30 @@ a.logo {
 }
 
 input {
-    border: #00000066 solid 1px;
+    border: var(--sixty-six) solid 1px;
     border-radius: .2rem;
     padding: .2rem .5rem;
     outline: none;
 }
 
 input:focus {
-    outline: solid 1px dodgerblue;
+    outline: solid 1px var(--primary-color);
 }
 
 .blue {
     color: dodgerblue;
+}
+
+.orange {
+    color: orange;
+}
+
+.white {
+    color: white;
+}
+
+.dark {
+    color: black;
 }
 
 .large {
@@ -130,7 +155,7 @@ input:focus {
 }
 
 .link:hover {
-    color: rgb(136, 186, 255);
+    color: var(--second-color);
 }
 
 .button {
@@ -143,8 +168,8 @@ input:focus {
 }
 
 .primary.button {
-    background-color: deepskyblue;
     color: white;
+    background-color: var(--primary-color);
 }
 
 .second.button {
@@ -177,7 +202,7 @@ input:focus {
     top: 40%;
     padding: .5rem;
     border-radius: .2rem;
-    background-color: #eeeeeeee;
+    background-color: var(--wheat);
 }
 
 .dimmer {
@@ -205,13 +230,13 @@ input:focus {
     top: 20%;
     max-width: 80%;
     max-height: 80%;
-    border: solid #33333333 1px;
+    border: solid var(--thirty-three) 1px;
     border-radius: .5rem;
-    background: white;
+    background: var(--bg-color);
 }
 
 .modal > .header {
-    box-shadow: 0px 1px #33333333;
+    box-shadow: 0px 1px var(--thirty-three);
     text-align: left;
 }
 
@@ -222,7 +247,7 @@ input:focus {
 
 .modal > .footer {
     display: block;
-    box-shadow:0px -1px #33333333;
+    box-shadow:0px -1px var(--thirty-three);
 }
 
 .notification {
@@ -240,7 +265,7 @@ input:focus {
 
 .notification > .item {
     border-radius: .5rem;
-    box-shadow: 0px 0px 2px 1px #33333333;
+    box-shadow: 0px 0px 2px 1px var(--thirty-three);
     margin: .5rem 0;
     padding: .5rem;
     position: relative;
@@ -255,7 +280,7 @@ input:focus {
 }
 
 .notification > .item > .text {
-    color: #000000bb;
+    color: var(--fore-color);
     padding: 0 .5rem;
 }
 
@@ -265,15 +290,15 @@ input:focus {
     right: 2%;
     cursor: pointer;
     display: inline-block;
-    color: #eeeeeeee;
+    color: var(--bg-color);
 }
 
 .info {
-    background-color: deepskyblue
+    background-color: var(--primary-color)
 }
 
 .info > .icon {
-    color: dodgerblue;
+    color: var(--primary-color);
     background: radial-gradient(white 50%, transparent 50%);
 }
 
@@ -298,13 +323,13 @@ input:focus {
 .tab {
     display: block;
     border-radius: 1rem;
-    box-shadow: 0 0 1px 1px #33333333;
+    box-shadow: 0 0 1px 1px var(--thirty-three);
     padding: 1rem;
     margin: .5rem;
 }
 
 .tab > .header {
-    border-bottom: solid #33333333 1px;
+    border-bottom: solid var(--thirty-three) 1px;
 }
 
 .tab > .header > .list {
@@ -337,8 +362,8 @@ input:focus {
 }
 
 .tab > .header > .list > .item.active {
-    color: dodgerblue;
-    border-bottom: solid dodgerblue 1px;
+    color: var(--primary-color);
+    border-bottom: solid var(--primary-color) 1px;
 }
 
 .tab > .body {
@@ -384,7 +409,7 @@ input:focus {
 .according {
     display: block;
     border-radius: .5rem;
-    border: solid #33333333 1px;
+    border: solid var(--thirty-three) 1px;
     margin: .5rem;
 }
 
@@ -394,7 +419,7 @@ input:focus {
     cursor: pointer;
     padding: .5rem 2.5rem .5rem 1rem;
     border-radius: .5rem;
-    box-shadow: 0 0 1px 1px #33333333;
+    box-shadow: 0 0 1px 1px var(--thirty-three);
 }
 
 .according.show > .summary {
@@ -466,7 +491,7 @@ input:focus {
     width: 1rem;
     height: 1rem;
     vertical-align: top;
-    border: solid 1px #00000066;
+    border: solid 1px var(--fore-color);
 }
 
 .checkbox input[type=checkbox]:focus {
@@ -474,8 +499,8 @@ input:focus {
 }
 
 .checkbox input[type=checkbox]:checked {
-    border: solid 1px dodgerblue;
-    background-color: dodgerblue;
+    border: solid 1px var(--primary-color);
+    background-color: var(--primary-color);
 }
 
 .checkbox input[type=checkbox]:checked::before {
@@ -497,7 +522,7 @@ input:focus {
     width: 1rem;
     height: 1rem;
     vertical-align: top;
-    border: solid 1px #00000066;
+    border: solid 1px var(--sixty-six);
     border-radius: 5rem;
 }
 
@@ -506,8 +531,8 @@ input:focus {
 }
 
 .radio input[type=radio]:checked {
-    border: solid 1px dodgerblue;
-    background-color: dodgerblue;
+    border: solid 1px var(--primary-color);
+    background-color: var(--primary-color);
 }
 
 .radio input[type=radio]:checked::before {
@@ -523,39 +548,57 @@ input:focus {
 
 .switch {
     display: inline-block;
-    border: solid 1px #33333333;
+    position: relative;
+    border: solid 1px var(--thirty-three);
     height: 1.3rem;
-    padding-right: 1rem;
-    padding-left: 0;
+    padding: .1rem, 0;
     border-radius: 5rem;
-    background-color: #00000066;
-    transition: padding background-color .3s;
+    vertical-align: super;
+    background-color: var(--second-color);
+    transition: background-color .3s;
+}
+
+.switch > .label {
+    color: white;
+    padding: .1rem .1rem .1rem .1rem;
+    margin-left: 1rem;
+    margin-right: 0;
+}
+
+.switch.active > .label {
+    margin-left: 0;
+    margin-right: 1rem;
 }
 
 .switch > .dot {
-    display: inline-block;
+    position: absolute;
     height: 1rem;
     width: 1rem;
+    left: 0;
+    right: unset;
     vertical-align: middle;
-    background-color: white;
     border-radius: 5rem;
+    transition: position .3s;
 }
 
 .switch.active {
-    padding-right: 0;
-    padding-left: 1rem;
-    background-color: dodgerblue;
+    background-color: var(--primary-color);
+}
+
+.switch.active > .dot {
+    left: unset;
+    right: 0;
 }
 
 textarea {
-    border: #00000066 solid 1px;
+    border: var(--sixty-six) solid 1px;
     border-radius: .2rem;
     padding: .2rem .5rem;
     outline: none;
 }
 
 textarea:focus {
-    outline: solid 1px dodgerblue;
+    outline: solid 1px var(--primary-color);
 }
 
 .spinner {
@@ -581,7 +624,7 @@ textarea:focus {
     min-height: .4rem;
     max-height: .4rem;
     border-radius: 5rem;
-    background-color: dodgerblue;
+    background-color: var(--primary-color);
 }
 
 .slider > .track:first-child {
@@ -604,10 +647,10 @@ textarea:focus {
     right: 0;
     min-width: 1rem;
     min-height: 1rem;
-    color: white;
-    border: solid 1px #eeeeeeee;
+    color: var(--fore-color);
+    border: solid 1px var(--wheat);
     border-radius: 5rem;
-    box-shadow: 0 0 2px 1px #33333333;
+    box-shadow: 0 0 2px 1px var(--thirty-three);
 }
 
 .slider > .track > .active.thumb {
@@ -623,9 +666,9 @@ textarea:focus {
     display: none;
     position: absolute;
     z-index: 99;
-    box-shadow: 0 0 4px 1px #33333333;
+    box-shadow: 0 0 4px 1px var(--thirty-three);
     border-radius: .5rem;
-    background-color: white;
+    background-color: var(--bg-color);
 }
 
 .popover > .content > * {
@@ -664,9 +707,9 @@ textarea:focus {
     top: 20%;
     max-width: 80%;
     max-height: 80%;
-    border: solid #33333333 1px;
+    border: solid var(--thirty-three) 1px;
     border-radius: .5rem;
-    background: white;
+    background-color: var(--bg-color);
 }
 
 .dialog > .header {
@@ -698,7 +741,7 @@ textarea:focus {
     opacity: 0;
     white-space: nowrap;
     padding: .3rem;
-    background-color: #eeeeeeee;
+    background-color: var(--wheat);
     border-radius: .2rem;
     z-index: -9;
 }
@@ -727,7 +770,7 @@ textarea:focus {
     opacity: 0;
     margin: 0;
     padding: .3rem;
-    background-color: #eeeeeeee;
+    background-color: var(--wheat);
     border-radius: .2rem;
     overflow-y: visible;
     white-space: nowrap;
@@ -752,8 +795,8 @@ textarea:focus {
 }
 
 .dropdown.show > .list > .item:hover {
-    color: white !important;
-    background-color: rgb(136, 186, 255);
+    color: var(--fore-color) !important;
+    background-color: var(--second-color);
 }
 
 .select {
@@ -767,7 +810,7 @@ textarea:focus {
     opacity: 0;
     margin: 0;
     padding: .3rem;
-    background-color: #eeeeeeee;
+    background-color: var(--wheat);
     border-radius: .2rem;
     overflow-y: visible;
     white-space: nowrap;
@@ -776,6 +819,8 @@ textarea:focus {
 .select > .list > .item {
     margin: 0;
     border-radius: .2rem;
+    color: var(--fore-color);
+    background-color: var(--bg-color);
 }
 
 .select > .list > .item > *{
@@ -794,19 +839,19 @@ textarea:focus {
 }
 
 .select.show > .list > .item:hover {
-    color: white !important;
-    background-color: rgb(136, 186, 255);
+    color: var(--fore-color) !important;
+    background-color: var(--second-color);
 }
 
 .select.show .header {
-    outline: solid 1px dodgerblue;
+    outline: solid 1px var(--primary-color);
 }
 
 .select .header {
     position: relative;
     width: 100%;
     padding-right: 1rem;
-    border: #00000066 solid 1px;
+    border: var(--sixty-six) solid 1px;
     border-radius: .2rem;
 }
 
@@ -843,7 +888,7 @@ textarea:focus {
 }
 
 .menu > :first-child:hover {
-    background-color: #33333333;
+    background-color: var(--thirty-three);
 }
 
 .menu > .list {
@@ -852,11 +897,11 @@ textarea:focus {
     opacity: 0;
     margin: 0;
     padding: 0;
-    background-color: #eeeeeeee;
+    background-color: var(--wheat);
     border-radius: .2rem;
     overflow-y: visible;
     white-space: nowrap;
-    box-shadow: 0 0 4px 1px #33333333;
+    box-shadow: 0 0 4px 1px var(--thirty-three);
 }
 
 .menu > .list > .item {
@@ -893,16 +938,16 @@ textarea:focus {
 }
 
 .menu.show > .list > .item:hover {
-    color: white !important;
-    background-color: rgb(136, 186, 255);
+    color: var(--fore-color) !important;
+    background-color: var(--second-color);
 }
 
 .fan {
     display: inline-block;
     height: 2rem;
     width: 2rem;
-    border: solid 3px dodgerblue;
-    border-top: solid 3px #33333333;
+    border: solid 3px var(--primary-color);
+    border-top: solid 3px var(--thirty-three);
     border-radius: 5rem;
 }
 
@@ -941,7 +986,7 @@ textarea:focus {
     position: relative;
     padding: .5rem .2rem;
     margin: .2rem;
-    background-color: #33333333;
+    background-color: var(--thirty-three);
     border-radius: 5rem;
     overflow: hidden;
 }
@@ -951,10 +996,10 @@ textarea:focus {
     position: absolute;
     top: 0;
     left: 0;
-    color: white;
+    color: var(--fore-color);
     font-size: .8rem;
     text-align: right;
-    background-color: dodgerblue;
+    background-color: var(--primary-color);
 }
 
 .table > table {
@@ -1010,8 +1055,8 @@ textarea:focus {
 }
 
 .pager .active.item {
-    color: white;
-    background-color: deepskyblue;
+    color: var(--fore-color);
+    background-color: var(--primary-color);
 }
 
 .pager .icon.item {
@@ -1024,7 +1069,7 @@ textarea:focus {
     padding: 1rem 0;
     margin: 0;
     border-radius: .5rem;
-    box-shadow: 0 0 1px 1px #33333333;
+    box-shadow: 0 0 1px 1px var(--thirty-three);
 }
 
 .stepper > .header .item > .icon {
@@ -1033,16 +1078,16 @@ textarea:focus {
     width: 2rem;
     height: 2rem;
     font-size: 1.5rem;
-    color: dodgerblue;
-    background-color: white;
+    color: var(--primary-color);
+    background-color: var(--bg-color);
     border-radius: 5rem;
     margin-right: .5rem;
-    border: solid 2px dodgerblue;
+    border: solid 2px var(--primary-color);
 }
 
 .stepper > .header .passed.item > .icon {
-    color: white;
-    background-color: dodgerblue;
+    color: var(--fore-color);
+    background-color: var(--primary-color);
     border-radius: 5rem;
 }
 
@@ -1051,14 +1096,14 @@ textarea:focus {
     height: 2px;
     width: 5rem;
     margin: .3rem .5rem;
-    background-color: #33333333;
+    background-color: var(--thirty-three);
 }
 
 .stepper > .header .passed.item > .divider {
     display: inline-block;
     height: 2px;
     width: 5rem;
-    background-color: dodgerblue;
+    background-color: var(--bg-color);
 }
 
 .stepper > .body > .content {
@@ -1073,7 +1118,7 @@ textarea:focus {
     margin: .5rem;
     cursor: pointer;
     border-radius: .5rem;
-    box-shadow: 0 0 4px 1px #33333333;
+    box-shadow: 0 0 4px 1px var(--thirty-three);
     overflow: hidden;
 }
 

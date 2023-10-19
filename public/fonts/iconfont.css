@@ -1,8 +1,9 @@
 @font-face {
   font-family: "iconfont"; /* Project id 4250707 */
-  src: url('iconfont.woff2?t=1694621894115') format('woff2'),
-       url('iconfont.woff?t=1694621894115') format('woff'),
-       url('iconfont.ttf?t=1694621894115') format('truetype');
+  src: url('iconfont.woff2?t=1696916644057') format('woff2'),
+       url('iconfont.woff?t=1696916644057') format('woff'),
+       url('iconfont.ttf?t=1696916644057') format('truetype'),
+       url('iconfont.svg?t=1696916644057#iconfont') format('svg');
 }
 
 .iconfont {
@@ -11,6 +12,10 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-sun:before {
+  content: "\e668";
 }
 
 .icon-slash:before {
@@ -77,7 +82,7 @@
   content: "\e609";
 }
 
-.icon-calender-office-date-schedule-manage:before {
+.icon-calendar-color:before {
   content: "\e77a";
 }
 
@@ -85,7 +90,7 @@
   content: "\e601";
 }
 
-.icon-Dollar:before {
+.icon-dollar:before {
   content: "\e77d";
 }
 
@@ -97,12 +102,8 @@
   content: "\e7fd";
 }
 
-.icon-question-circle-fill:before {
+.icon-question-fill:before {
   content: "\e845";
-}
-
-.icon-sun:before {
-  content: "\e733";
 }
 
 .icon-eye-fill:before {
@@ -117,7 +118,7 @@
   content: "\e71e";
 }
 
-.icon-warning_fill:before {
+.icon-warn_fill:before {
   content: "\e73d";
 }
 
@@ -173,7 +174,7 @@
   content: "\e83e";
 }
 
-.icon-warning:before {
+.icon-warn:before {
   content: "\e849";
 }
 
