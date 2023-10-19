@@ -47,7 +47,7 @@ test('batch delete user', async ({ page }) => {
     await page.goto('http://localhost:3000/users');
 
     // select last user
-    await page.locator("div.user.page div.table > table > tbody > tr:last-child > td:first-child").click()
+    await page.locator("div.user.page div.table > table > tbody > tr:last-child > td:first-child input[type=checkbox]").check()
 
     const deleteBtn = page.locator("div.user.page ul.right button.danger").filter({ hasText: "Delete"})
     await expect(deleteBtn).toBeEnabled()
