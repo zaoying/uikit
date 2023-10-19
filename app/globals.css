@@ -1107,7 +1107,7 @@ textarea:focus {
     display: inline-block;
     height: 2px;
     width: 5rem;
-    background-color: var(--bg-color);
+    background-color: var(--primary-color);
 }
 
 .stepper > .body > .content {
