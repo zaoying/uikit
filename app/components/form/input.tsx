@@ -15,13 +15,6 @@ export type InputProps = {
     validate?: (val: InputType) => string
 }
 
-function transformValue(val: InputType)  {
-    if (val instanceof File) {
-        return undefined
-    }
-    return val
-}
-
 export const Input: FC<InputProps> = (props) => {
     const context = useIoC()
 
@@ -44,7 +37,7 @@ export const Input: FC<InputProps> = (props) => {
         setValue(e.target.value)
     }
     const typ = props.type ?? "text"
-    return <input id={props.id} name={props.name} type={typ} value={transformValue(value)} 
+    return <input id={props.id} name={props.name} type={typ} value={value} 
         onChange={onChange} onBlur={props.onBlur} placeholder={props.placeholder}
         readOnly={props.readonly} disabled={props.disabled}/>
 }

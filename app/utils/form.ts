@@ -3,7 +3,6 @@ export interface Form {
     getString(name: string): string | undefined
     getNumber(name: string): number | undefined
     getDate(name: string): Date | undefined
-    getFile(name: string): File | undefined
 }
 
 export function NewForm(form: HTMLFormElement): Form {
@@ -11,10 +10,10 @@ export function NewForm(form: HTMLFormElement): Form {
     return {
         getString(name) {
             const val = data.get(name)
-            if (val == null || val instanceof File) {
-                return undefined
+            if (val != null && typeof val == "string") {
+                return val
             }
-            return val
+            return undefined
         },
         getNumber(name) {
             const val = this.getString(name)
@@ -23,10 +22,6 @@ export function NewForm(form: HTMLFormElement): Form {
         getDate(name) {
             const val = this.getNumber(name)
             return val != undefined ? new Date(val) : val
-        },
-        getFile(name) {
-            const val = data.get(name)
-            return (val != null && val instanceof File) ? val : undefined
-        },
+        }
     }
 }

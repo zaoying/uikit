@@ -2,7 +2,7 @@ import { FC, ReactNode, RefObject, useEffect, useRef, useState } from 'react';
 import { useIoC } from '~/hooks/ioc';
 import { Controller, NameEqualizer, NewController, PropsDispatcher } from '../container';
 
-export type InputType = string | File | ReadonlyArray<string> | number | undefined
+export type InputType = string | ReadonlyArray<string> | number | undefined
 
 export type FieldProps = {
     name: string
@@ -64,7 +64,7 @@ export function NewFormController(setProps: PropsDispatcher<FP>): FormController
                 setProps(p => {
                     const fields = p.fields.map(field => {
                         const val = formData.get(field.name)
-                        const errMsg = field.validate(val ?? "")
+                        const errMsg = field.validate(typeof val == "string" ? val : "")
                         return {...field, errorMsg: errMsg}
                     })
                     const validity = fields.filter(field => field.errorMsg).length == 0
