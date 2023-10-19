@@ -741,6 +741,7 @@ textarea:focus {
     opacity: 0;
     white-space: nowrap;
     padding: .3rem;
+    color: black;
     background-color: var(--wheat);
     border-radius: .2rem;
     z-index: -9;
@@ -786,6 +787,7 @@ textarea:focus {
 .dropdown > .list > .item {
     margin: 0;
     border-radius: .2rem;
+    color: black;
 }
 
 .dropdown > .list > .item > *{
@@ -819,8 +821,7 @@ textarea:focus {
 .select > .list > .item {
     margin: 0;
     border-radius: .2rem;
-    color: var(--fore-color);
-    background-color: var(--bg-color);
+    color: black;
 }
 
 .select > .list > .item > *{
@@ -853,6 +854,7 @@ textarea:focus {
     padding-right: 1rem;
     border: var(--sixty-six) solid 1px;
     border-radius: .2rem;
+    background-color: white;
 }
 
 .select .header > input {
@@ -873,6 +875,7 @@ textarea:focus {
     display: inline-block;
     top: 10%;
     right: .2rem;
+    color: grey;
 }
 
 .menu {
@@ -908,6 +911,7 @@ textarea:focus {
     margin: 0;
     padding: .5rem;
     border-radius: .2rem;
+    color: black;
 }
 
 .menu > .list > .item > a {
