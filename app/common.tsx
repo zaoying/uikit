@@ -16,6 +16,8 @@ export const MenuDict = i18n("en-us", () => ({
     menu: "Menu",
     user: "User Management",
     room: "Room Management",
+    light: "Light",
+    dark: "Dark",
     requestError: "Request error!"
 }))
 
@@ -25,6 +27,8 @@ register("zh-cn", (locale) => {
         menu: "菜单",
         user: "用户管理",
         room: "房间管理",
+        light: "明亮",
+        dark: "暗黑",
         requestError: "网络请求错误！"
     }))
 })
@@ -60,14 +64,20 @@ function I18nNotification() {
     
 }
 
-const sunIcon = <>
-    <i className="iconfont dot orange small icon-sun"></i>
-    <span className="label">Light</span>
-</>
-const moonIcon = <>
-    <span className="label">Dark</span>
-    <i className="iconfont dot white small icon-moon"></i>
-</>
+function ThemeSwitch(props: {theme: Theme, toggleTheme: (f: boolean) => void}) {
+    const dict = useI18n(MenuDict)({})
+    const sunIcon = <>
+        <i className="iconfont dot orange small icon-sun"></i>
+        <span className="label">{dict.light}</span>
+    </>
+    const moonIcon = <>
+        <span className="label">{dict.dark}</span>
+        <i className="iconfont dot white small icon-moon"></i>
+    </>
+    return <Switch name="theme" onToggle={props.toggleTheme}>
+        { props.theme === "light" ? sunIcon : moonIcon}
+    </Switch>
+}
 
 export function CommonNavbar(props: { children: ReactNode }) {
     const [locale, setLocale] = useState("en-us")
@@ -114,9 +124,7 @@ export function CommonNavbar(props: { children: ReactNode }) {
                                 <a onClick={() => setLocale("en-us")}>English</a>
                                 <a onClick={() => setLocale("zh-cn")}>简体中文</a>
                             </Menu>
-                            <Switch name="theme" onToggle={toggleTheme}>
-                                { theme === "light" ? sunIcon : moonIcon}
-                            </Switch>
+                            <ThemeSwitch theme={theme} toggleTheme={toggleTheme}></ThemeSwitch>
                         </div>
                     </Navbar>
                     {props.children}

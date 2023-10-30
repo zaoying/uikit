@@ -96,9 +96,9 @@ export default function UserPage() {
     return (<div>
         <UserModal openModal={openModal} userRes={userRes} refresh={refresh} user={defaultUser}/>
         <ul className="list right">
-            <Button onClick={createUser}>{dict.addUser}</Button>
+            <Button title={dict.addUser} onClick={createUser}>{dict.addUser}</Button>
             <DeleteConfirm ids={selected} multiDelete onConfirm={multipleDelete} />
-            <Button type="grey" onClick={() => refresh.current()}>
+            <Button type="grey" title={dict.refresh} onClick={() => refresh.current()}>
                 <i className="iconfont small icon-refresh"></i>
             </Button>
         </ul>
