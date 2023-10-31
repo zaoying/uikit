@@ -15,7 +15,7 @@ export const I18nContext = createContext<Intl.Locale>(defaultLocale)
  */
 export function useI18n<I, O>(component: Func<I, O>): Func<I,O> {
     const locale = useContext(I18nContext)
-    const localizeCtx = get(locale)
+    const localizeCtx = getOrCreate(locale)
     return localizeCtx.inject(component)
 }
 
@@ -24,11 +24,10 @@ export function useI18n<I, O>(component: Func<I, O>): Func<I,O> {
  * @param locale 地域
  * @param callback 用于注册组件的回调函数
  */
-export function register(locale: string, callback: (locale: Context) => void) {
-    const key = new Intl.Locale(locale).toString()
-    const localizeCtx = GlobalDict.get(key) ?? NewIoCContext()
+export function register(lang: string, callback: (locale: Context) => void) {
+    const locale = new Intl.Locale(lang)
+    const localizeCtx = getOrCreate(locale)
     callback(localizeCtx)
-    GlobalDict.set(key, localizeCtx)
 }
 
 /**
@@ -36,9 +35,14 @@ export function register(locale: string, callback: (locale: Context) => void) {
  * @param locale 地域
  * @returns 组件的上下文
  */
-export function get(locale: Intl.Locale) {
+export function getOrCreate(locale: Intl.Locale) {
     const key = locale.toString()
-    return GlobalDict.get(key) ?? NewIoCContext()
+    let ctx = GlobalDict.get(key)
+    if (!ctx) {
+        ctx = NewIoCContext()
+        GlobalDict.set(key, ctx)
+    }
+    return ctx
 }
 
 /**
@@ -49,6 +53,7 @@ export function get(locale: Intl.Locale) {
  */
 export function i18n<I, O>(locale: string, component: Func<I, O>): Func<I, O> {
     const canonical = new Intl.Locale(locale)
-    const localizeCtx = get(canonical)
-    return localizeCtx.define(component)
+    const localizeCtx = getOrCreate(canonical)
+    localizeCtx.define(component)
+    return component
 }
