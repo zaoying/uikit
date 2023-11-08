@@ -23,6 +23,7 @@ interface SP {
 }
 
 export interface StepperController extends Controller<SIP> {
+    updateOrInsert(item: SIP): void
     jump(step: number): void
     previous(): void
     next(): void
@@ -38,8 +39,23 @@ export function NewStepperController(setProps: PropsDispatcher<SP>): StepperCont
     const ctl = NewController(setItems, IDEqualizer)
     return {
         ...ctl,
+        updateOrInsert(item) {
+            setProps(p => {
+                const index = p.items.findIndex(it => it.id == item.id)
+                if (index >= 0) {
+                    p.items[index] = item
+                    return {...p, items: [...p.items]}
+                }
+                return {...p, items: [...p.items, item]}
+            })
+        },
         jump(step) {
-            setProps(p => ({...p, step: step}))
+            setProps(p => {
+                let s = Math.floor(step)
+                s = Math.max(0, s)
+                s = Math.min(s, p.items.length - 1)
+                return {...p, step: s}
+            })
         },
         previous() {
             setProps(p => {
@@ -49,7 +65,7 @@ export function NewStepperController(setProps: PropsDispatcher<SP>): StepperCont
         },
         next() {
             setProps(p => {
-                const last = p.items ? p.items.length - 1 : 0
+                const last = p.items.length - 1
                 const step = p.step ?? 0
                 return {...p, step: step < last ? step + 1: last}
             })
@@ -62,7 +78,7 @@ export const StepperItem: FC<StepperItemProps> = (props) => {
     const setProps = context.inject(StepperPropsDispatcher)
     const ctl = NewStepperController(setProps)
     const id = useRef(useId())
-    useEffect(() => ctl.insert({...props, id: id.current}), [props, ctl])
+    useEffect(() => ctl.updateOrInsert({...props, id: id.current}), [props, ctl])
     return <></>
 }
 

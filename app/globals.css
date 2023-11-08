@@ -1090,7 +1090,7 @@ textarea:focus {
 }
 
 .stepper > .header .passed.item > .icon {
-    color: var(--fore-color);
+    color: white;
     background-color: var(--primary-color);
     border-radius: 5rem;
 }
