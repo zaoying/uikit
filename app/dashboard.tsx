@@ -52,7 +52,8 @@ const Dashboard: FC = () => {
     return (<div className="dashboard">
         <Card>
             <CardHeader>
-                <p title="title">{dashDict.card}</p></CardHeader>
+                <span title="title">{dashDict.card}</span>
+            </CardHeader>
             <CardBody>
                 <Loader>{dashDict.loading}</Loader>
                 <Progress percentage={40}></Progress>
@@ -63,7 +64,7 @@ const Dashboard: FC = () => {
                 </Dialog>
             </CardFooter>
         </Card>
-        <div>
+        <div className="glass panel">
             <WithState state={"bottom" as Direction}>{
                 ({ state, setState }) => <>
                     <Tooltip message={dashDict.normal} direction={state}>
@@ -82,13 +83,13 @@ const Dashboard: FC = () => {
                 </>
             }</WithState>
             <Spinner name="money" min={0} max={100} value={10}></Spinner>
+            <Slider name="percentage" min={0} max={100}>{
+                (parent) => <>
+                    <SliderTrack {...parent} value={20} validatePos={parent.validateLeftPos}></SliderTrack>
+                    <SliderTrack {...parent} value={70} validatePos={parent.validateRightPos}></SliderTrack>
+                </>
+            }</Slider>
         </div>
-        <Slider name="percentage" min={0} max={100}>{
-            (parent) => <>
-                <SliderTrack {...parent} value={20} validatePos={parent.validateLeftPos}></SliderTrack>
-                <SliderTrack {...parent} value={70} validatePos={parent.validateRightPos}></SliderTrack>
-            </>
-        }</Slider>
 
         <Tab activeTab="abc">
             <TabItem name="abc" title="abc" closeable>123</TabItem>

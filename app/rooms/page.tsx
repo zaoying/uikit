@@ -74,7 +74,9 @@ function I18nStepper(props: {ctl: StepperController}) {
 }
 
 export default function Room() {
-    return <Stepper>{
-        ({ctl}) => <I18nStepper ctl={ctl}></I18nStepper>
-    }</Stepper>
+    return <div className="glass panel">
+        <Stepper>{
+            ({ctl}) => <I18nStepper ctl={ctl}></I18nStepper>
+        }</Stepper>
+    </div>
 }

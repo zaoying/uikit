@@ -12,6 +12,11 @@ import { IoCContext, NewIoCContext } from "./hooks/ioc";
 import { Interceptor, InterceptorContext, NewInterceptors, useInterceptor } from "./hooks/resource";
 import { NewThemeContext, Theme, ThemeContext } from "./hooks/style";
 
+const lightBG = "rgba(255, 255, 255, 0.75)"
+const darkBG = "rgba(17, 25, 40, 0.75)"
+const lightBorder = "rgba(209, 213, 219, 0.3)"
+const darkBorder = "rgba(255, 255, 255, 0.125)"
+
 export const MenuDict = i18n("en-us", () => ({
     menu: "Menu",
     user: "User Management",
@@ -97,7 +102,8 @@ export function CommonNavbar(props: { children: ReactNode }) {
     useEffect(() => {
         var declaration = document.body.style;
         declaration.setProperty("--fore-color", theme == "dark" ? "white" : "black")
-        declaration.setProperty("--bg-color", theme == "dark" ? "black" : "white")
+        declaration.setProperty("--bg-color", theme == "dark" ? darkBG : lightBG)
+        declaration.setProperty("--border-color", theme == "dark" ? darkBorder : lightBorder)
         declaration.setProperty("--thirty-three", theme == "dark" ? "#99999999" : "#33333333")
         declaration.setProperty("--sixty-six", theme == "dark" ? "#eeeeeeee" : "#33333333")
     }, [theme])
@@ -106,7 +112,7 @@ export function CommonNavbar(props: { children: ReactNode }) {
             <ThemeContext.Provider value={theme}>
             <InterceptorContext.Provider value={interceptorContext}>
             <IoCContext.Provider value={iocContext}>
-                <div className="main">
+                <div className="main glass">
                     <I18nNotification></I18nNotification>
                     <Navbar>
                         <div className="left">

@@ -93,15 +93,15 @@ export default function UserPage() {
         pager.current = {page, size}
         refresh.current()
     }
-    return (<div>
+    return (<div className="glass">
         <UserModal openModal={openModal} userRes={userRes} refresh={refresh} user={defaultUser}/>
-        <ul className="list right">
+        <div className="list right">
             <Button title={dict.addUser} onClick={createUser}>{dict.addUser}</Button>
             <DeleteConfirm ids={selected} multiDelete onConfirm={multipleDelete} />
             <Button type="grey" title={dict.refresh} onClick={() => refresh.current()}>
                 <i className="iconfont small icon-refresh"></i>
             </Button>
-        </ul>
+        </div>
         <Table data={new Array<User>()}>{
             ({ ctl, Column }) => {
                 userRes.list(pager.current.page, pager.current.size).then(page => {

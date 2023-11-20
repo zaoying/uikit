@@ -2,7 +2,7 @@
 
 :root {
     --fore-color: black;
-    --bg-color: white;
+    --bg-color: rgba(255, 255, 255, 0.75);
     --thirty-three: #33333333;
     --sixty-six: #00000066;
     --wheat: #eeeeeeee;
@@ -30,12 +30,46 @@ button:disabled {
     background-color: gray!important;
 }
 
+input {
+    border: var(--sixty-six) solid 1px;
+    border-radius: .2rem;
+    padding: .2rem .5rem;
+    outline: none;
+    color: var(--fore-color);
+    background-color: var(--bg-color);
+}
+
+input:focus {
+    outline: solid 1px var(--primary-color);
+}
+
+textarea {
+    border: var(--sixty-six) solid 1px;
+    border-radius: .2rem;
+    padding: .2rem .5rem;
+    outline: none;
+    color: var(--fore-color);
+    background-color: var(--bg-color);
+}
+
+textarea:focus {
+    outline: solid 1px var(--primary-color);
+}
+
 body {
     position: relative;
     margin: 0;
     color: var(--fore-color);
+    background-image: url('https://images.unsplash.com/photo-1519681393784-d120267933ba?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1124&q=100');
+    background-size: cover;
+}
+
+.glass {
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
     background-color: var(--bg-color);
-    transition: background-color .5s;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
 }
 
 .main {
@@ -47,6 +81,14 @@ body {
     width: 100%;
     height: 100%;
     overflow: auto;
+    border-radius: 0 !important;
+}
+
+.panel {
+    padding: .5rem;
+    margin: .5rem;
+    position: relative;
+    z-index: 1;
 }
 
 .logo {
@@ -86,17 +128,6 @@ a.logo {
     display: inline-block;
     position: absolute;
     right: 1rem;
-}
-
-input {
-    border: var(--sixty-six) solid 1px;
-    border-radius: .2rem;
-    padding: .2rem .5rem;
-    outline: none;
-}
-
-input:focus {
-    outline: solid 1px var(--primary-color);
 }
 
 .blue {
@@ -215,7 +246,7 @@ input:focus {
     bottom: 0;
     left: 0;
     right: 0;
-    background-color: rgba(0, 0, 0, 0.3);
+    background-color: rgba(17, 25, 40, 0.75);
     text-align: center;
     backdrop-filter: blur(2px);
 }
@@ -230,9 +261,9 @@ input:focus {
     top: 20%;
     max-width: 80%;
     max-height: 80%;
-    border: solid var(--thirty-three) 1px;
+    border: solid var(--border-color) 1px;
     border-radius: .5rem;
-    background: var(--bg-color);
+    background-color: var(--bg-color);
 }
 
 .modal > .header {
@@ -322,14 +353,14 @@ input:focus {
 
 .tab {
     display: block;
-    border-radius: 1rem;
-    box-shadow: 0 0 1px 1px var(--thirty-three);
+    border-radius: .5rem;
     padding: 1rem;
     margin: .5rem;
+    background-color: var(--bg-color);
 }
 
 .tab > .header {
-    border-bottom: solid var(--thirty-three) 1px;
+    border-bottom: solid var(--border-color) 1px;
 }
 
 .tab > .header > .list {
@@ -409,8 +440,9 @@ input:focus {
 .according {
     display: block;
     border-radius: .5rem;
-    border: solid var(--thirty-three) 1px;
+    border: solid var(--border-color) 1px;
     margin: .5rem;
+    background-color: var(--bg-color);
 }
 
 .according > .summary {
@@ -419,7 +451,7 @@ input:focus {
     cursor: pointer;
     padding: .5rem 2.5rem .5rem 1rem;
     border-radius: .5rem;
-    box-shadow: 0 0 1px 1px var(--thirty-three);
+    box-shadow: 0 1px 0 0 var(--border-color);
 }
 
 .according.show > .summary {
@@ -549,7 +581,7 @@ input:focus {
 .switch {
     display: inline-block;
     position: relative;
-    border: solid 1px var(--thirty-three);
+    border: solid 1px var(--border-color);
     height: 1.3rem;
     padding: .1rem, 0;
     border-radius: 5rem;
@@ -590,19 +622,12 @@ input:focus {
     right: 0;
 }
 
-textarea {
-    border: var(--sixty-six) solid 1px;
-    border-radius: .2rem;
-    padding: .2rem .5rem;
-    outline: none;
-}
-
-textarea:focus {
-    outline: solid 1px var(--primary-color);
-}
-
 .spinner {
     display: inline-block;
+}
+
+.spinner > .icon {
+    border-radius: .2rem;
 }
 
 .spinner > input {
@@ -666,7 +691,7 @@ textarea:focus {
     display: none;
     position: absolute;
     z-index: 99;
-    box-shadow: 0 0 4px 1px var(--thirty-three);
+    box-shadow: 0 0 4px 1px var(--border-color);
     border-radius: .5rem;
     background-color: var(--bg-color);
 }
@@ -707,7 +732,7 @@ textarea:focus {
     top: 20%;
     max-width: 80%;
     max-height: 80%;
-    border: solid var(--thirty-three) 1px;
+    border: solid var(--border-color) 1px;
     border-radius: .5rem;
     background-color: var(--bg-color);
 }
@@ -771,23 +796,25 @@ textarea:focus {
     opacity: 0;
     margin: 0;
     padding: .3rem;
-    background-color: var(--wheat);
+    background-color: var(--bg-color);
     border-radius: .2rem;
     overflow-y: visible;
     white-space: nowrap;
     z-index: -9;
+    pointer-events: none;
 }
 
 .dropdown.show > .list {
     transition: opacity 1s;
     opacity: 100;
     z-index: 9;
+    pointer-events: unset;
 }
 
 .dropdown > .list > .item {
     margin: 0;
     border-radius: .2rem;
-    color: black;
+    color: var(--fore-color);
 }
 
 .dropdown > .list > .item > *{
@@ -812,7 +839,7 @@ textarea:focus {
     opacity: 0;
     margin: 0;
     padding: .3rem;
-    background-color: var(--wheat);
+    background-color: var(--bg-color);
     border-radius: .2rem;
     overflow-y: visible;
     white-space: nowrap;
@@ -821,7 +848,7 @@ textarea:focus {
 .select > .list > .item {
     margin: 0;
     border-radius: .2rem;
-    color: black;
+    color: var(--fore-color);
 }
 
 .select > .list > .item > *{
@@ -854,7 +881,7 @@ textarea:focus {
     padding-right: 1rem;
     border: var(--sixty-six) solid 1px;
     border-radius: .2rem;
-    background-color: white;
+    background-color: var(--bg-color);
 }
 
 .select .header > input {
@@ -900,18 +927,17 @@ textarea:focus {
     opacity: 0;
     margin: 0;
     padding: 0;
-    background-color: var(--wheat);
+    background-color: var(--bg-color);
     border-radius: .2rem;
     overflow-y: visible;
     white-space: nowrap;
-    box-shadow: 0 0 4px 1px var(--thirty-three);
 }
 
 .menu > .list > .item {
     margin: 0;
     padding: .5rem;
     border-radius: .2rem;
-    color: black;
+    color: var(--fore-color);
 }
 
 .menu > .list > .item > a {
@@ -951,7 +977,7 @@ textarea:focus {
     height: 2rem;
     width: 2rem;
     border: solid 3px var(--primary-color);
-    border-top: solid 3px var(--thirty-three);
+    border-top: solid 3px var(--border-color);
     border-radius: 5rem;
 }
 
@@ -982,7 +1008,7 @@ textarea:focus {
 
 .loader > .tip {
     display: block;
-    color: #000000bb;
+    color: var(--fore-color);
 }
 
 .progress {
@@ -1012,11 +1038,11 @@ textarea:focus {
 }
 
 .table > table > thead > tr {
-    border-bottom: solid 1px grey;
+    border-bottom: solid 1px var(--border-color);
 }
 
 .table > table > tbody > tr {
-    border-bottom: solid 1px grey;
+    border-bottom: solid 1px var(--border-color);
 }
 
 .table > .footer{
@@ -1122,18 +1148,18 @@ textarea:focus {
     margin: .5rem;
     cursor: pointer;
     border-radius: .5rem;
-    box-shadow: 0 0 4px 1px var(--thirty-three);
     overflow: hidden;
+    background-color: var(--bg-color);
 }
 
 .card > .header {
-    padding-bottom: .5rem 0;
+    padding: .5rem;
 }
 
 .card > .body {
-    padding: 0;
+    padding: .5rem;
 }
 
 .card > .footer {
-    padding-top: .5rem 0;
+    padding: .5rem 0;
 }
