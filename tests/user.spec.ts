@@ -3,7 +3,7 @@ import { expect, test } from '@playwright/test';
 test('goto users page', async ({ page }) => {
     await page.goto('http://localhost:3000/users');
 
-    await page.getByText('Add User').click()
+    await page.getByTitle('Add User').click()
 
     await expect(page.getByText('Create User')).toBeVisible();
 });
@@ -13,7 +13,7 @@ test('create user, edit user then delete user', async ({ page }) => {
     await page.goto('http://localhost:3000/users');
 
     // create new user
-    await page.getByText('Add User').click()
+    await page.getByTitle('Add User').click()
     await page.getByLabel("Username").fill("test")
     await page.getByLabel("Birth Date").fill("1997-08-15")
     await page.getByLabel("Female").click()
@@ -47,14 +47,16 @@ test('batch delete user', async ({ page }) => {
     await page.goto('http://localhost:3000/users');
 
     // select last user
-    await page.locator("div.user.page div.table > table > tbody > tr:last-child > td:first-child input[type=checkbox]").check()
+    const lastUser = page.locator("div.user.page div.table > table > tbody > tr:last-child > td:first-child input[type=checkbox]")
+    await lastUser.check()
+    await expect(lastUser).toBeChecked()
 
-    const deleteBtn = page.locator("div.user.page ul.right button.danger").filter({ hasText: "Delete"})
+    const deleteBtn = page.locator("div.user.page div.right button.danger").filter({ hasText: "Delete"})
     await expect(deleteBtn).toBeEnabled()
 
     await deleteBtn.click()
 
-    await page.locator("div.user.page ul.right div.popover div.center.footer > button.primary.button").click()
+    await page.locator("div.user.page div.right div.popover div.center.footer > button.primary.button").click()
 
     await expect(deleteBtn).toBeDisabled()
 
@@ -65,7 +67,7 @@ test('batch delete user', async ({ page }) => {
     
     await deleteBtn.click()
 
-    await page.locator("div.user.page ul.right div.popover div.center.footer > button.primary.button").click()
+    await page.locator("div.user.page div.right div.popover div.center.footer > button.primary.button").click()
 
     await expect(deleteBtn).toBeDisabled()
 
