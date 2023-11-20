@@ -1094,6 +1094,11 @@ a.logo {
     padding-top: .1rem;
 }
 
+.stepper {
+    margin: .5rem;
+    padding: .5rem;
+}
+
 .stepper > .header > * {
     display: inline-block;
     padding: 1rem 0;

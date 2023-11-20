@@ -93,7 +93,7 @@ export default function UserPage() {
         pager.current = {page, size}
         refresh.current()
     }
-    return (<div className="glass">
+    return (<div className="glass panel">
         <UserModal openModal={openModal} userRes={userRes} refresh={refresh} user={defaultUser}/>
         <div className="list right">
             <Button title={dict.addUser} onClick={createUser}>{dict.addUser}</Button>
