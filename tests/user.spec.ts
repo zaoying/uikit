@@ -48,7 +48,7 @@ test('batch delete user', async ({ page }) => {
 
     // select last user
     const lastUser = page.locator("div.user.page div.table > table > tbody > tr:last-child > td:first-child input[type=checkbox]")
-    await lastUser.check()
+    await lastUser.click()
     await expect(lastUser).toBeChecked()
 
     const deleteBtn = page.locator("div.user.page div.right button.danger").filter({ hasText: "Delete"})
