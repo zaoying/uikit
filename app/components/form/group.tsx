@@ -79,10 +79,14 @@ export const CheckboxGroup = (props: CheckboxGroupProps) => {
     }
     const toggle = (id: string) => (
         (val: InputType) => {
-            setItems(s => {
-                const checked = s.get(id) ?? false
-                s.set(id, !checked)
-                return new Map<string, boolean>(s.entries())
+            setItems(all => {
+                const newMap = new Map<string, boolean>()
+                all.forEach((val, key) => {
+                    newMap.set(key, val)
+                })
+                const state = all.get(id) ?? false
+                newMap.set(id, !state)
+                return newMap
             })
         }
     )
