@@ -20,7 +20,7 @@ import { UserDict, UserFormDict } from "./i18n"
 export type UserModalProps = {
     openModal: MutableRefObject<() => void>
     userRes: UserResource
-    refresh: MutableRefObject<() => void>
+    refresh: MutableRefObject<() => Promise<void>>
     user: User
 }
 
@@ -34,7 +34,7 @@ export const UserModal: FC<UserModalProps> = (props) => {
     const dict = useI18n(UserDict)({})
     const dictRef = useRef(dict)
     useEffect(() => {dictRef.current = dict})
-    return <Modal width={360}>{
+    return <Modal width={360} className="user modal">{
         ({ ctl, ctx }) => {
             openModal.current = ctl.open
             ctl.onConfirm(() => {
@@ -88,8 +88,7 @@ export const UserModal: FC<UserModalProps> = (props) => {
 export const UserForm = (user: User) => {
     const dict = useI18n(UserFormDict)({})
     const checkEmpty = (label: string) => (val: InputType) => {
-        if (!val) return label + " " + dict.notEmpty
-        return ""
+        return val ? "" : label + " " + dict.notEmpty
     }
     let birthDate = user.birthDate.toLocaleDateString("zh-cn", yyyyMMdd)
     birthDate = birthDate.replaceAll("/", "-")
@@ -118,9 +117,9 @@ export const UserForm = (user: User) => {
         }</Label>
         <Label label={dict.permission.name}>{
             () => <Group name="permission" validate={checkEmpty(dict.permission.name)}>{
-                ({name}) => <>
-                    <CheckBox name={name} value="users">{dict.permission.user}</CheckBox>
-                    <CheckBox name={name} value="rooms">{dict.permission.room}</CheckBox>
+                ({name, onChange}) => <>
+                    <CheckBox name={name} value="users" onChange={onChange}>{dict.permission.user}</CheckBox>
+                    <CheckBox name={name} value="rooms" onChange={onChange}>{dict.permission.room}</CheckBox>
                 </>
             }</Group>
         }</Label>

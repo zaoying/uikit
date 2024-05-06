@@ -1168,3 +1168,7 @@ a.logo {
 .card > .footer {
     padding: .5rem 0;
 }
+
+.user.modal {
+    top: 10%;
+}

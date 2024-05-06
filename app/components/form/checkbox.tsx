@@ -15,7 +15,7 @@ export const CheckBox: FC<CheckBoxProps> = (props) => {
     const [checked, setChecked] = useState(props.checked ?? false)
     const onChange = function(e: any) {
         setChecked(flag => !flag)
-        props.onChange && props.onChange(e.target.value)
+        props.onChange && props.onChange(!checked ? e.target.value : false)
     }
     useEffect(() => setChecked(props.checked ?? false), [props])
 

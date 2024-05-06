@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react"
+import { FC, useEffect, useRef, useState } from "react"
 import { Context, useIoC } from "~/hooks/ioc"
 import { PropsDispatcher } from "../container"
 import { FormPropsDispatcher, InputType, NewFormController } from "./form"
@@ -22,7 +22,8 @@ function allSelected(all: Map<string,boolean>) {
 export type GroupProps = {
     name: string
     validate?: (val: InputType) => string
-    children: FC<{ctx: Context, name: string}>
+    onChange?: (val: InputType) => void
+    children: FC<{ctx: Context, name: string, onChange: (val: InputType) => void}>
 }
 
 export const StepperPropsDispatcher: PropsDispatcher<GroupProps> = (props) => {}
@@ -45,8 +46,14 @@ export const Group = (props: GroupProps) => {
     const ctl = NewFormController(setForm)
     useEffect(() => ctl.updateOrInsert({name: props.name, validate: validate}))
 
+    const onChange = function(val: InputType) {
+        const errMsg = validate(val)
+        ctl.updateOrInsert({name: props.name, validate: validate, errorMsg: errMsg})
+        props.onChange && props.onChange(val)
+    }
+
     return <div className="group">
-        {props.children({ctx: context, name: props.name})}
+        {props.children({ctx: context, name: props.name, onChange: onChange})}
     </div>
 }
 
