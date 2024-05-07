@@ -87,8 +87,11 @@ export const UserModal: FC<UserModalProps> = (props) => {
 
 export const UserForm = (user: User) => {
     const dict = useI18n(UserFormDict)({})
-    const checkEmpty = (label: string) => (val: InputType) => {
+    const checkBlank = (label: string) => (val: InputType) => {
         return val ? "" : label + " " + dict.notEmpty
+    }
+    const checkEmpty = (label: string) => (vals: Set<InputType>) => {
+        return vals.size ? "" : label + " " + dict.notEmpty
     }
     let birthDate = user.birthDate.toLocaleDateString("zh-cn", yyyyMMdd)
     birthDate = birthDate.replaceAll("/", "-")
@@ -97,11 +100,11 @@ export const UserForm = (user: User) => {
         <input name="id" value={user.id} type="hidden"/>
         <Label label={dict.username}>
             {({id}) => <Input id={id} name="username" value={user.username} 
-                validate={checkEmpty(dict.username)}/>}
+                validate={checkBlank(dict.username)}/>}
         </Label>
         <Label label={dict.birthDate}>
             {({id}) => <Input id={id} name="birthDate" type="date" value={birthDate}
-                validate={checkEmpty(dict.birthDate)}/>}
+                validate={checkBlank(dict.birthDate)}/>}
         </Label>
         <Label label={dict.gender.name}>{
             () => <Group name="gender">{

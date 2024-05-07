@@ -1171,4 +1171,5 @@ a.logo {
 
 .user.modal {
     top: 10%;
+    max-height: 100%;
 }

@@ -6,7 +6,7 @@ export type InputType = string | ReadonlyArray<string> | number | undefined
 
 export type FieldProps = {
     name: string
-    validate: (val: InputType) => string | undefined
+    validate: (...val: InputType[]) => string | undefined
     errorMsg?: string
 }
 
@@ -63,8 +63,9 @@ export function NewFormController(setProps: PropsDispatcher<FP>): FormController
                 const formData = new FormData(formRef.current)
                 setProps(p => {
                     const fields = p.fields.map(field => {
-                        const val = formData.get(field.name)
-                        const errMsg = field.validate(typeof val == "string" ? val : "")
+                        const vals = formData.getAll(field.name)
+                        const values = vals.map(val => typeof val == "string" ? val : "")
+                        const errMsg = field.validate(...values)
                         return {...field, errorMsg: errMsg}
                     })
                     const validity = fields.filter(field => field.errorMsg).length == 0

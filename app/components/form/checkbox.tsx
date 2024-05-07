@@ -7,7 +7,7 @@ export type CheckBoxProps = {
     disabled?: boolean
     readonly?: boolean
     checked?: boolean
-    onChange?: (val: InputType) => void
+    onChange?: (val: InputType, checked: boolean) => void
     children?: ReactNode
 }
 
@@ -15,7 +15,7 @@ export const CheckBox: FC<CheckBoxProps> = (props) => {
     const [checked, setChecked] = useState(props.checked ?? false)
     const onChange = function(e: any) {
         setChecked(flag => !flag)
-        props.onChange && props.onChange(!checked ? e.target.value : false)
+        props.onChange && props.onChange(e.target.value, !checked)
     }
     useEffect(() => setChecked(props.checked ?? false), [props])
 

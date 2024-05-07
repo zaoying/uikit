@@ -4,8 +4,7 @@ import { PropsDispatcher } from "../container"
 import { FormPropsDispatcher, InputType, NewFormController } from "./form"
 
 export interface GroupController {
-    name: string
-    onChange?: (val: InputType) => void
+    Update(cb: (p: GroupProps) => GroupProps): void
 }
 
 function calSelected(items: Map<string, boolean>) {
@@ -21,35 +20,45 @@ function allSelected(all: Map<string,boolean>) {
 
 export type GroupProps = {
     name: string
-    validate?: (val: InputType) => string
-    onChange?: (val: InputType) => void
-    children: FC<{ctx: Context, name: string, onChange: (val: InputType) => void}>
+    values?: InputType[]
+    validate?: (vals: Set<InputType>) => string
+    onChange?: (vals: Set<InputType>) => void
+    children: FC<{ctx: Context, name: string, onChange: (val: InputType, checked: boolean) => void}>
 }
 
 export const StepperPropsDispatcher: PropsDispatcher<GroupProps> = (props) => {}
 
 export function NewGroupController(setProps: PropsDispatcher<GroupProps>): GroupController {
     return {
-        name: "",
-        onChange: () => {}
+        Update(cb) {
+            setProps(cb)
+        }
     }
 }
 
 export const Group = (props: GroupProps) => {
     const context = useIoC()
 
-    const validate = function(v: InputType) {
-        return props.validate && props.validate(v)
+    const values = useRef(new Set(props.values ?? []))
+
+    const validate = function(...vals: InputType[]) {
+        return props.validate && props.validate(new Set(vals))
     }
 
     const setForm = context.inject(FormPropsDispatcher)
     const ctl = NewFormController(setForm)
     useEffect(() => ctl.updateOrInsert({name: props.name, validate: validate}))
 
-    const onChange = function(val: InputType) {
-        const errMsg = validate(val)
+    const onChange = function(val: InputType, checked: boolean) {
+        if (checked) {
+            values.current.add(val)
+        } else {
+            values.current.delete(val);
+        }
+        const array = Array.from(values.current)
+        const errMsg = validate(...array)
         ctl.updateOrInsert({name: props.name, validate: validate, errorMsg: errMsg})
-        props.onChange && props.onChange(val)
+        props.onChange && props.onChange(values.current)
     }
 
     return <div className="group">
