@@ -27,16 +27,16 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.37.1",
-    "@storybook/addon-essentials": "7.4.0",
-    "@storybook/addon-interactions": "7.4.0",
+    "@storybook/addon-essentials": "8.6.12",
+    "@storybook/addon-interactions": "7.6.20",
     "@storybook/addon-links": "7.4.0",
-    "@storybook/addon-onboarding": "1.0.8",
-    "@storybook/blocks": "7.4.0",
-    "@storybook/nextjs": "7.4.0",
-    "@storybook/react": "7.4.0",
+    "@storybook/addon-onboarding": "8.6.12",
+    "@storybook/blocks": "8.6.12",
+    "@storybook/nextjs": "8.6.12",
+    "@storybook/react": "8.6.12",
     "@storybook/testing-library": "0.2.0",
     "@types/uuid": "^9.0.2",
     "eslint-plugin-storybook": "^0.6.13",
-    "storybook": "7.4.0"
+    "storybook": "8.6.12"
   }
 }
