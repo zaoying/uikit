@@ -37,6 +37,6 @@
     "@storybook/testing-library": "0.2.0",
     "@types/uuid": "^9.0.2",
     "eslint-plugin-storybook": "^0.6.13",
-    "storybook": "8.6.12"
+    "storybook": "8.6.19"
   }
 }
